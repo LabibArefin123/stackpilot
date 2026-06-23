@@ -1,0 +1,13 @@
+.doctor-card:hover {
+    transform: translateY(-3px);
+
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+}
+
+.member-list li:hover {
+    transform: translateY(-3px);
+
+    background: #f2fbfb;
+
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}

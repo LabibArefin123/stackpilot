@@ -1,0 +1,25 @@
+/* Doctor Image */
+
+.doctor-img {
+    position: absolute;
+    bottom: 0;
+    max-height: 90%;
+    object-fit: contain;
+    transition: transform 0.5s ease;
+}
+
+.slide.active .doctor-img {
+    transform: translateY(-8px);
+}
+
+.doctor-img.left {
+    left: 10%;
+}
+
+.doctor-img.right {
+    right: 10%;
+}
+
+.doctor-image-link img {
+    filter: drop-shadow(0 20px 35px rgba(0, 0, 0, 0.15));
+}

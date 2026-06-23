@@ -1,0 +1,26 @@
+.card-hover {
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+    border-radius: 0.75rem;
+    cursor: pointer;
+}
+
+.card-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card h6 {
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.card-body {
+    padding: 2rem;
+}

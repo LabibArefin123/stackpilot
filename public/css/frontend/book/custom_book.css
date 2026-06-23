@@ -1,0 +1,112 @@
+/* ===============================
+   BOOK PAGE - PROFESSIONAL STYLE
+================================ */
+
+/* Banner */
+.book-banner {
+    background: #f3f4f6;
+    padding: 90px 0 60px;
+    text-align: center;
+}
+
+.book-banner h1 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 15px;
+}
+
+.book-banner .subtitle {
+    font-size: 16px;
+    color: #4b5563;
+}
+
+/* Intro Section */
+.book-intro {
+    padding: 80px 0;
+    background: #ffffff;
+}
+
+.book-intro h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    color: #111827;
+}
+
+.book-intro p {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #4b5563;
+    margin-bottom: 18px;
+}
+
+/* Book Cover */
+.book-cover {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+}
+
+.book-cover img {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+/* Download Button */
+.download-btn {
+    display: inline-block;
+    padding: 10px 26px;
+    background: #111827;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.download-btn:hover {
+    background: #1f2937;
+    color: #fff;
+}
+
+/* Preview Section */
+.book-preview {
+    background: #f9fafb;
+    padding: 80px 0;
+}
+
+.book-preview .section-title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 40px;
+}
+
+.preview-box {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 15px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .book-intro {
+        text-align: center;
+    }
+
+    .book-intro p {
+        text-align: left;
+    }
+
+    .book-cover {
+        margin-top: 40px;
+    }
+}

@@ -1,0 +1,55 @@
+.about-slider {
+    width: 55%;
+    padding: 50px;
+
+    background: linear-gradient(135deg,
+            #d84d62 0%,
+            #f17a89 100%);
+
+    color: white;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.hospital-logo {
+    width: 100%;
+    max-width: 520px;
+    height: 150px;
+
+    object-fit: contain;
+
+    margin: 0 auto 30px;
+}
+
+.about-content {
+    transition: all .5s ease;
+
+    &.full {
+        display: none;
+
+        max-height: 350px;
+        overflow-y: auto;
+
+        padding-right: 10px;
+
+        &::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, .4);
+            border-radius: 20px;
+        }
+    }
+
+    h4 {
+        font-weight: 700;
+    }
+
+    p,
+    li {
+        line-height: 1.8;
+    }
+}

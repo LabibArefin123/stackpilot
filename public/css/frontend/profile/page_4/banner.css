@@ -1,0 +1,53 @@
+.doctor-banner {
+    height: 260px;
+    background-size: cover;
+    background-position: center;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.doctor-banner::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            #003366cc,
+            #008080cc
+        );
+}
+
+.breadcrumb-custom {
+    position: relative;
+    z-index: 2;
+
+    padding: 12px 28px;
+
+    border-radius: 30px;
+
+    background:
+        rgba(255,255,255,.15);
+
+    backdrop-filter: blur(6px);
+
+    color: #fff;
+    font-size: 15px;
+}
+
+.doc-link {
+    color: #fff;
+    font-weight: 500;
+
+    transition: .3s ease;
+}
+
+.doc-link:hover {
+    color: #ffd700;
+}

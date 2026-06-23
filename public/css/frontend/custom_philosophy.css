@@ -1,0 +1,47 @@
+/* ===============================
+   PHILOSOPHY / INDIVIDUALIZED SURGERY SECTION
+================================ */
+
+.philosophy-section {
+    padding: 40px 0;
+    background-color: #f8fbfd; /* same as achievement-section for consistency */
+}
+
+.philosophy-section .section-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 36px;
+    color: #333;
+    position: relative;
+}
+
+/* Optional subtle green line under title */
+.philosophy-section .section-title::after {
+    content: "";
+    display: block;
+    left: 10%;
+    bottom: -15px;
+    width: 80%;
+    height: 8px;    
+    background-color: #5fbf63;
+    margin: 15px auto 0 auto;
+    border-radius: 2px;
+     transform: scaleX(0);
+    transform-origin: left;
+    animation: drawLine 3.5s ease-in-out infinite alternate;
+}
+
+.philosophy-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #444;
+    text-align: justify; /* makes it look professional */
+}
+
+.philosophy-content p {
+    margin-bottom: 20px;
+}

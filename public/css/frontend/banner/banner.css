@@ -1,0 +1,10 @@
+.banner-section {
+    background-color: #f8fbfd;
+}
+
+.doctor-slide {
+    height: 100%;
+    background: linear-gradient(135deg, #f8f9fa, #ffffff);
+    overflow: hidden;
+    position: relative;
+}

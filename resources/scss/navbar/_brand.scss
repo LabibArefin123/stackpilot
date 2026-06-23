@@ -1,0 +1,31 @@
+.navbar-brand {
+    display: flex;
+    align-items: center;
+
+    max-width: 320px;
+
+    text-decoration: none;
+}
+
+.brand-logo {
+    width: 48px;
+    height: 48px;
+
+    border-radius: 10px;
+    object-fit: cover;
+
+    margin-right: 12px;
+}
+
+.brand-name {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+
+    color: #111;
+}
+
+.brand-degree {
+    font-size: 12px;
+    color: #6c757d;
+}

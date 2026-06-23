@@ -1,0 +1,28 @@
+.doctor-name {
+    font-size: 32px;
+    font-weight: 700;
+    color: #004080;
+
+    margin-bottom: 10px;
+}
+
+.doctor-degree {
+    font-size: 18px;
+    color: #008080;
+    font-weight: 500;
+
+    margin-bottom: 25px;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+
+    color: #004080;
+
+    border-left: 4px solid #008080;
+
+    padding-left: 12px;
+
+    margin-bottom: 15px;
+}

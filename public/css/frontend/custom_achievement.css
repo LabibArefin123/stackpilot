@@ -1,0 +1,23 @@
+.achievement-section {
+    padding: 30px 0;
+    background-color: #f8fbfd;
+}
+
+.achievement-section .section-title {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.achievement-content {
+    max-width: 1500px;
+    margin: auto;
+    font-size: 17px;
+    line-height: 1.8;
+    color: #444;
+}
+
+.achievement-content p {
+    margin-bottom: 20px;
+}

@@ -1,0 +1,61 @@
+/* Laptop */
+@media (max-width: 992px) {
+    .doctor-card {
+        padding: 50px;
+    }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+    .doctor-card {
+        padding: 35px;
+    }
+
+    .doctor-name {
+        font-size: 26px;
+    }
+
+    .construction-title {
+        font-size: 18px;
+    }
+
+    .construction-box .construction-icon {
+        width: 180px;
+        height: 150px;
+    }
+
+    .construction-box .large {
+        width: 100px;
+        height: 100px;
+    }
+
+    .construction-box .small {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .doctor-banner {
+        height: 200px;
+    }
+
+    .doctor-card {
+        margin-top: -60px;
+        padding: 25px;
+    }
+
+    .doctor-name {
+        font-size: 22px;
+    }
+
+    .construction-text {
+        font-size: 14px;
+    }
+
+    .construction-box .construction-icon {
+        width: 150px;
+        height: 130px;
+    }
+}
