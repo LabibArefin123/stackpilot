@@ -11,12 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('patient_documents', function (Blueprint $table) {
+        Schema::create('project_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id');
-            $table->string('document_name')->nullable();
-            $table->string('file_path');
-            $table->enum('document_type', ['recommendation', 'report', 'prescription']);
+            $table->foreignId('project_id')->nullable()->index();
+            $table->enum('type', [
+                'info',
+                'warning',
+                'error'
+            ]);
+            $table->longText('message');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('patient_documents');
+        Schema::dropIfExists('project_logs');
     }
 };
