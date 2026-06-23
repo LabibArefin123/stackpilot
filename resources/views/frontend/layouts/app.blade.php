@@ -16,7 +16,6 @@
         @endif
     </title>
 
-  
 
     <!-- Fonts -->
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
@@ -28,7 +27,7 @@
 
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -86,7 +85,6 @@
     <script src="{{ asset('js/custom_frontend/problem-modal.js') }}"></script> {{-- Problem modal JS --}}
     <script src="{{ asset('js/custom_frontend/password-toggle.js') }}"></script> {{-- Password toggle JS --}}
     <script src="{{ asset('js/custom_frontend/language.js') }}"></script> {{-- Language Modal JS --}}
-    <script src="{{ asset('js/custom_frontend/magnified_image_modal.js') }}"></script> {{-- Magnified Image Modal JS --}}
     <script src="{{ asset('js/custom_frontend/scroll_progress.js') }}"></script> {{-- Scroll Progress JS --}}
     <script src="{{ asset('js/custom_frontend/custom_back_top_button.js') }}"></script> {{-- Back to Top JS --}}
 

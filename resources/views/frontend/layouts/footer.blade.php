@@ -1,11 +1,5 @@
 <footer class="main-footer d-flex justify-content-between align-items-center px-4 py-3 bg-light shadow-sm">
-    <div>
-        © {{ date('Y') }}
-        <a href="https://fazlulhaquehospital.com/" target="_blank" class="dev-link fw-bold text-decoration-none">
-            <strong> {{ $orgLogo }}.</strong>
-        </a> All rights reserved.
-    </div>
-
+   
     <div class="footer-right">
         Design and Developed by
         <a href="https://www.labib.work" target="_blank"

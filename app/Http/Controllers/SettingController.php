@@ -395,39 +395,4 @@ class SettingController extends Controller
 
         return back()->with('success', 'Language updated successfully!');
     }
-
-    public function dateTime()
-    {
-        return view('backend.setting_management.setting_menu.system_setting.date_time');
-    }
-
-    public function updateDateTime(Request $request)
-    {
-        // Save timezone
-        config(['app.timezone' => $request->timezone]);
-        date_default_timezone_set($request->timezone);
-
-        // Save formats
-        setting(['date_format' => $request->date_format])->save();
-        setting(['time_format' => $request->time_format])->save();
-
-        return back()->with('success', 'Date & Time settings updated successfully.');
-    }
-
-    public function theme()
-    {
-        return view('backend.setting_management.setting_menu.ui_setting.theme');
-    }
-
-    public function updateTheme(Request $request)
-    {
-        $request->validate([
-            'theme_mode' => 'required|in:light,dark',
-        ]);
-
-        // Store dark/light preference in session
-        Session::put('theme_mode', $request->theme_mode);
-
-        return back()->with('success', 'Theme updated successfully!');
-    }
 }

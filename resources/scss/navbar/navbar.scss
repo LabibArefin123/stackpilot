@@ -1,5 +1,5 @@
-@import "navbar_base";
-@import "navbar_logo";
-@import "navbar_menu";
-@import "navbar_mobile";
-@import "navbar_responsive";
+@use "navbar_base";
+@use "navbar_logo";
+@use "navbar_menu";
+@use "navbar_mobile";
+@use "navbar_responsive";

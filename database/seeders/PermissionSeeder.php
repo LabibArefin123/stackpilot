@@ -16,17 +16,11 @@ class PermissionSeeder extends Seeder
         $permissions = [
             // Profile
             'dashboard',
+            'dashboard.system',
+
             'user_profile_show',
             'user_profile_edit',
             'user_profile_update',
-        
-            'organizations.index',
-            'organizations.create',
-            'organizations.store',
-            'organizations.show',
-            'organizations.edit',
-            'organizations.update',
-            'organizations.destroy',
 
             // Permissions & Roles
             'permissions.index',
@@ -35,6 +29,7 @@ class PermissionSeeder extends Seeder
             'permissions.edit',
             'permissions.update',
             'permissions.destroy',
+            'permissions.deleteSelected',
 
             'roles.index',
             'roles.create',
@@ -51,12 +46,38 @@ class PermissionSeeder extends Seeder
             'system_users.edit',
             'system_users.update',
             'system_users.destroy',
+            'system_users.password.update',
+            
+            // BAN USER
+            'ban_users.index',
+            'ban_users.create',
+            'ban_users.store',
+            'ban_users.show',
+            'ban_users.edit',
+            'ban_users.update', 
+            'ban_users.destroy',
 
+            // SYSTEM PROBLEM
+            'system_problems.index',
+            'system_problems.show',
+
+            // SETTING MODULE
             'settings.index',
-            'progress.data',
-            'awarded.data',
-            'participate.data',
-
+            'settings.password_policy',
+            'settings.2fa',
+            'settings.toggle2fa',
+            'settings.2fa.resend',
+            'settings.2fa.vefiry',
+            'settings.timeout',
+            'settings.timeout.update',
+            'settings.database.backup',
+            'settings.database.backup.download',
+            'settings.logs',
+            'settings.clearLogs',
+            'settings.maintenance',
+            'settings.maintenance.update',
+            'settings.language',
+            'settings.language.update',
         ];
 
         foreach ($permissions as $permission) {

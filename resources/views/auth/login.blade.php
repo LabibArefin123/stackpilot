@@ -1,25 +1,39 @@
 @extends('frontend.layouts.app')
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 @section('content')
-    <div class="login-wrapper">
-        <div class="login-glass" id="sliderContainer">
-            {{-- LEFT : ABOUT --}}
-            @include('auth.custom_login.left')
-            {{-- RIGHT : LOGIN --}}
-            @include('auth.custom_login.right')
+    <div class="stackpilot-login">
+
+        <div class="login-container">
+
+            {{-- LEFT PANEL --}}
+            <div class="about-section">
+
+                @include('auth.custom_login.left')
+
+            </div>
+
+            {{-- RIGHT PANEL --}}
+            <div class="login-section">
+
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    @include('auth.custom_login.right')
+
+                </form>
+
+            </div>
+
         </div>
+
     </div>
 
-    {{-- SYSTEM PROBLEM MODAL --}}
-    @include('modal.problem-modal')
-    {{-- STYLES --}}
     <style>
         body {
-            background: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
-                url('{{ asset('uploads/images/welcome_page/cover.png') }}') center/cover no-repeat;
-            min-height: 100vh;
-            font-family: 'Poppins', sans-serif;
+            background:
+                linear-gradient(rgba(5, 10, 25, .82),
+                    rgba(5, 10, 25, .82)),
+                url('{{ asset('uploads/images/welcome_page/cover.png') }}') center center / cover no-repeat;
         }
     </style>
 @endsection

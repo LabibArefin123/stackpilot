@@ -1,71 +1,94 @@
 <div class="login-panel">
-    <div class="text-center mb-4">
-        <h4 class="fw-bold">Doctor Portal Login</h4>
-        <p class="text-muted">Authorized access for administrative and clinical management</p>
+    <div class="login-header text-center mb-4">
+
+        <h2 class="fw-bold">
+            Welcome Back
+        </h2>
+
+        <p class="text-muted">
+            Sign in to access your StackPilot dashboard
+        </p>
+
+</div>
+
+<form method="POST" action="{{ route('login') }}">
+    @csrf
+
+    <div class="mb-3">
+
+        <label class="form-label fw-semibold">
+            Email or Username
+        </label>
+
+        <input type="text" name="login" class="form-control form-control-lg" placeholder="Enter email or username">
+
     </div>
 
+    <div class="mb-4">
 
-    <form method="POST" action="{{ route('login') }}">
-        @csrf
-        <div class="mb-3">
-            <label class="form-label fw-semibold">Email or Username</label>
-            <input type="text" name="login" class="form-control form-control-lg"
-                placeholder="Enter email or username">
+        <label class="form-label fw-semibold">
+            Password
+        </label>
+
+        <div class="position-relative">
+
+            <input id="password" type="password" class="form-control form-control-lg" name="password"
+                placeholder="Enter your password" required>
+
+            <span class="toggle-password" onclick="togglePassword()">
+
+                <i class="fas fa-eye"></i>
+
+            </span>
+
         </div>
 
-        <div class="mb-4">
-            <div class="position-relative">
-                <input id="password" type="password" class="form-control form-control-lg rounded-3 shadow-sm"
-                    name="password" placeholder="Enter your password" required>
+        @error('password')
+            @unless (session('maintenance'))
+                <div class="invalid-feedback d-block mt-1">
+                    <strong>{{ $message }}</strong>
+                </div>
+            @endunless
+        @enderror
 
-                <span class="toggle-password" onclick="togglePassword()">
-                    <i class="fas fa-eye"></i>
-                </span>
+        @if (session('maintenance'))
+            <div class="alert alert-warning mt-3">
+                <i class="fas fa-tools me-2"></i>
+                {{ session('maintenance') }}
             </div>
+        @endif
 
+        @if (session('banned'))
+            <div class="alert alert-danger mt-3">
+                <i class="fas fa-ban me-2"></i>
+                {{ session('banned') }}
+            </div>
+        @endif
 
-            {{-- Show password errors only if maintenance is OFF --}}
-            @error('password')
-                @unless (session('maintenance'))
-                    <div class="invalid-feedback d-block mt-1"><strong>{{ $message }}</strong></div>
-                @endunless
-            @enderror
+    </div>
 
-            {{-- Maintenance Message --}}
-            @if (session('maintenance'))
-                <div class="alert alert-warning mt-3 mb-0 py-2 px-3 rounded-3">
-                    <i class="fas fa-tools mr-1"></i>
-                    {{ session('maintenance') }}
-                </div>
-            @endif
+    <button class="btn login-btn w-100">
+        Login To StackPilot
+    </button>
 
-            {{-- Banned Message --}}
-            @if (session('banned'))
-                <div class="alert alert-danger mt-3 mb-0 py-2 px-3 rounded-3">
-                    <i class="fas fa-ban mr-1"></i>
-                    {{ session('banned') }}
-                </div>
-            @endif
-        </div>
+    <div class="text-center mt-4">
 
-        <button class="btn login-btn w-100 py-2 rounded-pill mt-3">
-            Login
-        </button>
+        <a href="{{ route('password.request') }}" class="dev-link">
+            Forgot Password?
+        </a>
 
-        <div class="text-center mt-3">
-            <a href="{{ route('password.request') }}" id="forgotPasswordLink" class="text-decoration-none dev-link">
-                Forgot Password?
-            </a>
-        </div>
-        <hr class="my-4">
+    </div>
 
-        <div class="text-center">
-            <a href="javascript:void(0)" onclick="openProblemModal()" class="text-decoration-none dev-link fw-semibold">
-                ⚠ Facing a system problem?
-            </a>
-            <p class="text-muted small mt-1">
-                Let us know — our technical team will take care of it.
-            </p>
-        </div>
-    </form>
+    <hr class="my-4">
+
+    <div class="text-center">
+
+        <small class="text-muted">
+            StackPilot v1.0 • Laravel Monitoring & Diagnostics Platform
+        </small>
+
+    </div>
+
+</form>
+
 </div>

@@ -1,0 +1,55 @@
+.about-section {
+
+    padding: 80px;
+
+    color: white;
+
+    display: flex;
+    align-items: center;
+}
+
+.about-slider {
+    max-width: 700px;
+}
+
+.about-content h2 {
+
+    font-size: 4rem;
+    font-weight: 800;
+
+    margin-bottom: 20px;
+}
+
+.about-content h3 {
+
+    font-size: 2.3rem;
+    font-weight: 700;
+}
+
+.about-content p {
+
+    font-size: 1.1rem;
+
+    line-height: 2;
+
+    opacity: .9;
+}
+
+.about-content ul {
+
+    margin-top: 20px;
+}
+
+.about-content ul li {
+
+    margin-bottom: 12px;
+}
+
+.about-content .badge {
+
+    font-size: .9rem;
+
+    background: rgba(37, 99, 235, .15) !important;
+
+    border: 1px solid rgba(96, 165, 250, .4);
+}

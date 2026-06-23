@@ -37,7 +37,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/global-search', [DashboardController::class, 'globalSearch'])->name('global.search');
     Route::get('/search/result', [DashboardController::class, 'searchResult'])->name('search.result');
 
-
     //Profile Section
     Route::get('/user_profile', [ProfileController::class, 'user_profile_show'])->name('user_profile_show');
     Route::get('/user_profile_edit', [ProfileController::class, 'user_profile_edit'])->name('user_profile_edit');
@@ -50,7 +49,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('system_users', SystemUserController::class);
     Route::resource('ban_users', BanUserController::class);
     Route::resource('system_problems', SystemProblemController::class);
-    Route::resource('contact_requests', ContactRequestController::class);
     Route::post('/system-users/{user}/change-password', [SystemUserController::class, 'updatePassword'])->name('system_users.password.update');
     
     //Setting Routes
@@ -70,10 +68,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/settings/maintenance', [SettingController::class, 'maintenanceUpdate'])->name('settings.maintenance.update');
     Route::get('/settings/language', [SettingController::class, 'language'])->name('settings.language');
     Route::post('/settings/language/update', [SettingController::class, 'updateLanguage'])->name('settings.language.update');
-    Route::get('/settings/datetime', [SettingController::class, 'dateTime'])->name('settings.datetime');
-    Route::post('/settings/datetime/update', [SettingController::class, 'updateDateTime'])->name('settings.datetime.update');
-    Route::get('/settings/theme', [SettingController::class, 'theme'])->name('settings.theme');
-    Route::post('/settings/theme/update', [SettingController::class, 'updateTheme'])->name('settings.theme.update');
 });
 
 require __DIR__ . '/auth.php';

@@ -1,0 +1,32 @@
+.stackpilot-login {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 40px;
+}
+
+.login-container {
+
+    width: 100%;
+    max-width: 1400px;
+
+    display: grid;
+    grid-template-columns: 1.2fr 500px;
+
+    border-radius: 30px;
+
+    overflow: hidden;
+
+    background: rgba(255, 255, 255, .06);
+
+    backdrop-filter: blur(25px);
+
+    border: 1px solid rgba(255, 255, 255, .1);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .35);
+
+}

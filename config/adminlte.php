@@ -16,7 +16,7 @@ return [
     |
     */
 
-    'title' => 'Dr. Asif Almas Haque',
+    'title' => 'StackPilot',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -64,12 +64,12 @@ return [
     | https://github.com/jeroennoten/Laravel-AdminLTE/wiki/Basic-Configuration
     |
     */
-    'logo' => '<span class="brand-text brand-text-hidden">BidTrack</span>',
+    'logo' => '<span class="brand-text brand-text-hidden">StackPilot</span>',
     'logo_img' => 'uploads/images/logo_wide.JPG',
     'logo_img_class' => 'bidtrack-logo', // <- use your custom class
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'BidTrack Logo',
+    'logo_img_alt' => 'StackPilot Logo',
 
     /*
     |--------------------------------------------------------------------------
@@ -312,64 +312,13 @@ return [
 
     'menu' => [
         // Navbar items:
-        [
-            'type' => 'navbar-search',
-            'text' => 'Search tenders...',
-            'id' => 'globalTenderSearch',
-            'topnav_right' => true,
-            'method' => 'GET',
-            'href' => 'global.search', // ✅ Use route name as plain string
-            // <== Redirect to your actual search route
-            'input_name' => 'term',
-        ],
-
-
+  
         [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
 
-        // [
-        //     'text' => '',
-        //     'icon' => 'fas fa-bell position-relative',
-        //     'topnav_right' => true,
-        //     'id' => 'notificationBell',
-        //     'submenu' => [
-        //         [
-        //             'text' => 'Tender List (0)',
-        //             'icon' => 'fas fa-list',             // Left icon
-        //             'right_icon' => 'fas fa-file-alt',   // Right icon
-        //             'label_color' => 'info',
-        //         ],
-        //         [
-        //             'text' => 'Tender Participated Offer Validity List (0)',
-        //             'icon' => 'fas fa-clock',
-        //             'right_icon' => 'fas fa-hourglass-half',
-        //             'label_color' => 'warning',
-        //         ],
-        //         [
-        //             'text' => 'Bid Guarantee (BG) List (0)',
-        //             'icon' => 'fas fa-shield-alt',
-        //             'right_icon' => 'fas fa-exclamation-circle text-warning',
-        //             'label_color' => 'primary',
-        //         ],
-        //         [
-        //             'text' => 'Tender Awarded Delivery Date List (0)',
-        //             'icon' => 'fas fa-trophy',
-        //             'right_icon' => 'fas fa-calendar-day',
-        //             'label_color' => 'primary',
-        //         ],
-        //         [
-        //             'text' => 'Performance Guarantee (PG) List (0)',
-        //             'icon' => 'fas fa-certificate',
-        //             'right_icon' => 'fas fa-shield-alt',
-        //             'label_color' => 'success',
-        //         ],
-        //     ],
-        //     'label' => null,
-        //     'label_color' => 'danger',
-        // ],
-
+      
         [
             'type' => 'navbar-item',
             'topnav_right' => true,
@@ -399,28 +348,7 @@ return [
             'icon' => 'fas fa-home',
         ],
 
-        [
-            'text'    => 'Organization Menu',
-            'icon'    => 'fas fa-cogs',
-            // 'route'    => 'organization_menu',
-            'submenu' => [
-
-                [
-                    'text' => 'Organization List',
-                    'route' => 'organizations.index',
-                    'can' => 'organizations.index',
-                    'icon' => 'fas fa-sliders-h',  // settings sliders icon
-                ],
-            ],
-        ],
-
-        [
-            'text'    => 'Gallery Management',
-            'icon'    => 'fas fa-school',
-            'route'  => 'galleries.index',
-            'active' => ['galleries*'],
-        ],
-      
+    
         [
             'text'    => 'Setting Management',
             'icon'    => 'fas fa-cogs',
@@ -453,13 +381,7 @@ return [
                     'active' => ['ban_users*'],
                     'icon' => 'fas fa-user-slash',
                 ],
-                [
-                    'text' => 'Contact Requests',
-                    'route' => 'contact_requests.index',
-                    'can' => 'contact_requests.index',
-                    'active' => ['contact_requests*'],
-                    'icon' => 'fas fa-envelope-open-text',
-                ],
+          
                 [
                     'text' => 'System Problems',
                     'route' => 'system_problems.index',
