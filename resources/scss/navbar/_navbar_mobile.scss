@@ -1,0 +1,13 @@
+.mobile-menu-btn {
+    display: none;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #111827;
+    padding: 5px;
+
+    &:hover {
+        color: #2563eb;
+    }
+}

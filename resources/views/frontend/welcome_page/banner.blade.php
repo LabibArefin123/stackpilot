@@ -1,97 +1,59 @@
-<link rel="stylesheet" href="{{ asset('css/frontend/banner/banner.css') }}">
-<link rel="stylesheet" href="{{ asset('css/frontend/banner/banner-content.css') }}">
-<link rel="stylesheet" href="{{ asset('css/frontend/banner/banner-slider.css') }}">
-<link rel="stylesheet" href="{{ asset('css/frontend/banner/banner-image.css') }}">
-<link rel="stylesheet" href="{{ asset('css/frontend/banner/banner-responsive.css') }}">
-<section id="banner" class="banner-section w-100">
+<div class="hero-wrapper">
 
-    <div id="slider" class="position-relative w-100" style="height:70vh;">
-        @php
-            $slides = [
-                [
-                    'image' => 'image_2.png',
-                    'align' => 'left',
-                    'name' => 'Dr. Asif Almas Haque',
-                    'designation' => 'MBBS (SSMC), MRCS (ENG)',
-                    'details' => 'FCPS (Surgery), FCPS (Colorectal Surgery), FRCS (ENG)<br>
-                        Fellow of American College of Surgeons (FACS)<br>
-                        Fellow of American Society of Colon & Rectal Surgeons (FASCRS)',
-                    'route' => route('about'),
-                ],
-            ];
-        @endphp
+    <div class="hero-content">
 
-        {{-- Slides --}}
-        @foreach ($slides as $index => $slide)
-            <div class="slide {{ $index === 0 ? 'active' : '' }}" data-route="{{ $slide['route'] }}"
-                style="position:absolute; inset:0;">
+        <span class="hero-subtitle">
+            Laravel Development Toolkit
+        </span>
 
-                <div class="doctor-slide h-100">
-                    <div class="container h-100">
-                        <div class="row h-100 align-items-center">
+        <h1>
+            Monitor, Debug & Optimize Laravel Projects Faster
+        </h1>
 
-                            {{-- Image (Left) --}}
-                            @if ($slide['align'] === 'left')
-                                <div class="col-md-6 h-100 position-relative order-0">
-                                    <a href="{{ $slide['route'] }}" class="doctor-image-link">
-                                        <img src="{{ asset('uploads/images/welcome_page/slider/' . $slide['image']) }}"
-                                            class="doctor-img left" alt="{{ $slide['name'] }}">
-                                    </a>
-                                </div>
-                            @endif
+        <p class="hero-description">
 
+            StackPilot is a developer utility dashboard built for
+            Laravel projects. Check Git deployments, monitor Node.js,
+            analyze logs, detect optimization issues, troubleshoot
+            errors, manage queues, cron jobs and keep your applications
+            running smoothly from one place.
 
-                            {{-- Text Content --}}
-                            <div class="col-md-6 hero-content z-2">
-                                <h2 class="fw-bold display-6 mb-2">{{ $slide['name'] }}</h2>
-                                <p class="fs-5 mb-2">{{ $slide['designation'] }}</p>
-                                <p class="lh-lg opacity-90">{!! $slide['details'] !!}</p>
-                            </div>
+        </p>
 
-                            {{-- Image (Right) --}}
-                            @if ($slide['align'] === 'right')
-                                <div class="col-md-6 h-100 position-relative">
-                                    <a href="{{ $slide['route'] }}" class="doctor-image-link">
-                                        <img src="{{ asset('uploads/images/welcome_page/slider/' . $slide['image']) }}"
-                                            class="doctor-img right" alt="{{ $slide['name'] }}">
-                                    </a>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
+        <div class="hero-tags">
+
+            <span>Laravel</span>
+
+            <span>Git</span>
+
+            <span>Node.js</span>
+
+            <span>Queue Monitor</span>
+
+            <span>Error Logs</span>
+
+            <span>Cron Jobs</span>
+
+        </div>
+
+        <div class="hero-buttons">
+
+            <a href="#features" class="hero-btn primary-btn">
+                Explore Tools
+            </a>
+
+            <a href="#modules" class="hero-btn secondary-btn">
+                View Modules
+            </a>
+
+        </div>
+
     </div>
-</section>
 
-<script>
-    let currentIndex = 0;
+    <div class="hero-image">
 
-    const slides = document.querySelectorAll('#slider .slide');
+        <img src="{{ asset('uploads/images/stackpilot/dashboard-preview.png') }}" alt="StackPilot Dashboard">
 
-    function showSlide(index) {
-        slides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === index);
-        });
+    </div>
 
-        currentIndex = index;
-    }
-
-    function nextSlide() {
-        showSlide((currentIndex + 1) % slides.length);
-    }
-
-    function prevSlide() {
-        showSlide((currentIndex - 1 + slides.length) % slides.length);
-    }
-
-    function goToSlide(index) {
-        showSlide(index);
-    }
-
-    if (slides.length > 0) {
-        setInterval(nextSlide, 15000);
-        showSlide(0);
-    }
-</script>
+</div>

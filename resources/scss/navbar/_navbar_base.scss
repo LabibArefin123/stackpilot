@@ -1,0 +1,20 @@
+.main-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+
+    .header-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 25px;
+        height: 80px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+}

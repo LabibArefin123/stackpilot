@@ -1,183 +1,72 @@
-<nav class="navbar portfolio-navbar fixed-top">
+<header class="main-header">
 
-    <div class="container navbar-wrapper">
+    <nav class="main-navbar">
 
-        {{-- BRAND --}}
-        <a href="{{ route('welcome') }}" class="navbar-brand">
+        <div class="header-container">
 
-            <img src="{{ asset('uploads/images/icon.png') }}" alt="Logo" class="brand-logo">
+            <!-- Logo -->
+            <div class="nav-left">
 
-            <div class="brand-text">
+                <a href="{{ route('welcome') }}" class="brand-logo">
 
-                <div class="brand-name">
-                    Dr. Asif Almas Haque
-                </div>
+                    <div class="brand-text">
 
-                <div class="brand-degree">
-                    Consultant Colorectal & Laparoscopic Surgeon
-                </div>
+                        <h2>StackPilot</h2>
+
+                        <span>
+                            Deploy • Manage • Monitor
+                        </span>
+
+                    </div>
+
+                </a>
 
             </div>
 
-        </a>
+            <!-- Desktop Menu -->
+            <div class="nav-right" id="desktopMenu">
 
-        {{-- DESKTOP MENU --}}
-        <div class="navbar-center">
+                <a href="{{ route('welcome') }}">
+                    Home
+                </a>
 
-            <ul class="portfolio-menu desktop-menu">
+                <a href="#features">
+                    Features
+                </a>
 
-                <li class="nav-item">
-                    <a href="{{ route('welcome') }}" class="nav-link">Home</a>
-                </li>
+                <a href="#frameworks">
+                    Frameworks
+                </a>
 
-                <li class="nav-item">
-                    <a href="{{ route('about') }}" class="nav-link">About</a>
-                </li>
+                <a href="#modules">
+                    Modules
+                </a>
 
-                <li class="nav-item dropdown">
+                <a href="#pricing">
+                    Pricing
+                </a>
 
-                    <a href="#" class="nav-link dropdown-toggle">
-                        Profile
-                    </a>
+                <a href="#faq">
+                    FAQ
+                </a>
 
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ route('page_1') }}" class="dropdown-item">Educational Background</a></li>
-                        <li><a href="{{ route('page_2') }}" class="dropdown-item">International Conference</a></li>
-                        <li><a href="{{ route('page_3') }}" class="dropdown-item">Journal Publication</a></li>
-                        <li><a href="{{ route('page_4') }}" class="dropdown-item">Membership</a></li>
-                    </ul>
+                <a href="#contact">
+                    Contact
+                </a>
 
-                </li>
+                {{-- <a href="{{ route('login') }}" class="btn-login">
+                    Login
+                </a> --}}
 
-                <li class="nav-item dropdown">
+            </div>
 
-                    <a href="#" class="nav-link dropdown-toggle">
-                        Treatments
-                    </a>
-
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ route('piles') }}" class="dropdown-item">Piles</a></li>
-                        <li><a href="{{ route('fissure') }}" class="dropdown-item">Fissure</a></li>
-                        <li><a href="{{ route('fistula') }}" class="dropdown-item">Fistula</a></li>
-                        <li><a href="{{ route('ibs') }}" class="dropdown-item">IBS</a></li>
-                        <li><a href="{{ route('colorectal_cancer') }}" class="dropdown-item">Colorectal Cancer</a></li>
-                    </ul>
-
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('gallery') }}" class="nav-link">Gallery</a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('faq') }}" class="nav-link">FAQ</a>
-                </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('contact') }}" class="nav-link">Contact</a>
-                </li>
-
-            </ul>
-
-        </div>
-
-        {{-- ACTIONS --}}
-        <div class="navbar-actions">
-
-            <a href="{{ route('contact') }}" class="portfolio-btn desktop-book-btn">
-
-                Book Appointment
-
-            </a>
-
-            <button id="navbarOpenBtn" class="navbar-toggler" type="button">
-
-                <i class="fas fa-bars"></i>
-
+            <!-- Mobile Toggle -->
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fa-solid fa-bars"></i>
             </button>
 
         </div>
 
-    </div>
+    </nav>
 
-</nav>
-
-<div class="navbar-overlay"></div>
-
-<div id="navbarCollapse" class="navbar-collapse">
-
-    <div class="drawer-header">
-
-        <h5>Menu</h5>
-
-        <button id="navbarCloseBtn" class="navbar-close-btn">
-
-            <i class="fas fa-times"></i>
-
-        </button>
-
-    </div>
-
-    <ul class="portfolio-menu mobile-menu">
-        <li class="nav-item">
-            <a href="{{ route('welcome') }}" class="nav-link">Home</a>
-        </li>
-
-        <li class="nav-item">
-            <a href="{{ route('about') }}" class="nav-link">About</a>
-        </li>
-
-        <li class="nav-item dropdown">
-
-            <a href="#" class="nav-link dropdown-toggle">
-                Profile
-            </a>
-
-            <ul class="dropdown-menu">
-                <li><a href="{{ route('page_1') }}" class="dropdown-item">Educational Background</a></li>
-                <li><a href="{{ route('page_2') }}" class="dropdown-item">International Conference</a></li>
-                <li><a href="{{ route('page_3') }}" class="dropdown-item">Journal Publication</a></li>
-                <li><a href="{{ route('page_4') }}" class="dropdown-item">Membership</a></li>
-            </ul>
-
-        </li>
-
-        <li class="nav-item dropdown">
-
-            <a href="#" class="nav-link dropdown-toggle">
-                Treatments
-            </a>
-
-            <ul class="dropdown-menu">
-                <li><a href="{{ route('piles') }}" class="dropdown-item">Piles</a></li>
-                <li><a href="{{ route('fissure') }}" class="dropdown-item">Fissure</a></li>
-                <li><a href="{{ route('fistula') }}" class="dropdown-item">Fistula</a></li>
-                <li><a href="{{ route('ibs') }}" class="dropdown-item">IBS</a></li>
-                <li><a href="{{ route('colorectal_cancer') }}" class="dropdown-item">Colorectal Cancer</a></li>
-            </ul>
-
-        </li>
-
-        <li class="nav-item">
-            <a href="{{ route('gallery') }}" class="nav-link">Gallery</a>
-        </li>
-
-        <li class="nav-item">
-            <a href="{{ route('faq') }}" class="nav-link">FAQ</a>
-        </li>
-
-        <li class="nav-item">
-            <a href="{{ route('contact') }}" class="nav-link">Contact</a>
-        </li>
-
-        <li class="nav-item">
-
-            <a href="{{ route('contact') }}" class="nav-link">
-
-                Book Appointment
-
-            </a>
-        </li>
-    </ul>
-
-</div>
+</header>

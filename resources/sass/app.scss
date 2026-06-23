@@ -1,33 +1,8 @@
-// Fonts
-@import url('https://fonts.bunny.net/css?family=Nunito');
-
-// Variables
 @import 'variables';
-
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
-// ======================================
-// NAVBAR
-// ======================================
+//NAVBAR SECTION
 @import '../scss/navbar/navbar';
-@import '../scss/navbar/brand';
-@import '../scss/navbar/menu';
-@import '../scss/navbar/dropdown';
-@import '../scss/navbar/mobile';
-
-// ======================================
-// MEMBERSHIP
-// ======================================
-@import '../scss/custom_membership/membership';
-
-// ======================================
-// AUTH MODULE
-// ======================================
-@import '../scss/auth/variables';
-@import '../scss/auth/animations';
-@import '../scss/auth/layout';
-@import '../scss/auth/about-panel';
-@import '../scss/auth/login-panel';
-@import '../scss/auth/modal';
-@import '../scss/auth/responsive';
+//BANNER SECTION
+@import '../scss/banner/hero';

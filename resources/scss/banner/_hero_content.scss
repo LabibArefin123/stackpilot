@@ -1,0 +1,29 @@
+.hero-content {
+    flex: 1;
+    max-width: 650px;
+}
+
+.hero-subtitle {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 50px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.hero-content h1 {
+    font-size: 3.8rem;
+    line-height: 1.15;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 25px;
+}
+
+.hero-description {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: #6b7280;
+    margin-bottom: 35px;
+}

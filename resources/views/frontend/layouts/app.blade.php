@@ -12,20 +12,13 @@
         @hasSection('title')
             @yield('title')
         @else
-            {{ config('app.name', 'Dr. Asif Almas Haque') }}
+            {{ config('app.name', 'StackPilot') }}
         @endif
     </title>
 
-    @hasSection('meta')
-        @yield('meta')
-    @else
-        <meta name="description"
-            content="Dr. Asif Almas Haque is a leading colorectal surgeon in Bangladesh specializing in piles, fissure, fistula and colorectal cancer treatment.">
-        <link rel="canonical" href="{{ url()->current() }}">
-    @endif
+  
 
     <!-- Fonts -->
-    <link rel="icon" type="image/png" href="{{ asset('uploads/images/icon2.JPG') }}">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
     <!-- AOS CSS -->
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
@@ -36,11 +29,6 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> --}}
-    <link rel="stylesheet" href="{{ asset('css/frontend/frontend.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/frontend/modals/custom_appointment_modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/frontend/modals/custom_contact_modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/frontend/modals/custom_email_modal.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/frontend/modals/custom_location_modal.css') }}">
 </head>
 
 <body>
@@ -56,13 +44,7 @@
         </main>
 
     </div>
-    @include('frontend.modal.phone')
-    @include('frontend.modal.email')
-    @include('frontend.modal.location')
-    @include('frontend.modal.footer.phone')
-    @include('frontend.modal.footer.email')
-    @include('frontend.modal.footer.location')
-
+   
     <!-- Hidden Google Translate Widget -->
     <div id="google_translate_element" style="display:none;"></div>
     <!-- Bootstrap JS + dependencies -->
@@ -103,15 +85,10 @@
     <script src="{{ asset('js/custom_frontend/navbar-collapse.js') }}"></script> {{-- Navbar collapse JS --}}
     <script src="{{ asset('js/custom_frontend/problem-modal.js') }}"></script> {{-- Problem modal JS --}}
     <script src="{{ asset('js/custom_frontend/password-toggle.js') }}"></script> {{-- Password toggle JS --}}
-    <script src="{{ asset('js/custom_frontend/phone.js') }}"></script> {{-- Phone Modal JS --}}
-    <script src="{{ asset('js/custom_frontend/email.js') }}"></script> {{-- Email Modal JS --}}
-    <script src="{{ asset('js/custom_frontend/location.js') }}"></script> {{-- Location Modal JS --}}
-    <script src="{{ asset('js/custom_frontend/land_phone.js') }}"></script> {{-- Land Phone Modal JS --}}
     <script src="{{ asset('js/custom_frontend/language.js') }}"></script> {{-- Language Modal JS --}}
     <script src="{{ asset('js/custom_frontend/magnified_image_modal.js') }}"></script> {{-- Magnified Image Modal JS --}}
     <script src="{{ asset('js/custom_frontend/scroll_progress.js') }}"></script> {{-- Scroll Progress JS --}}
     <script src="{{ asset('js/custom_frontend/custom_back_top_button.js') }}"></script> {{-- Back to Top JS --}}
-    <script src="{{ asset('js/custom_frontend/custom_footer_modal.js') }}"></script> {{-- Footer Modal JS --}}
 
     @if (!Request::is('login'))
         <!-- Google Translate Library -->

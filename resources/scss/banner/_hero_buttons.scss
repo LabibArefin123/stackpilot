@@ -1,0 +1,32 @@
+.hero-buttons {
+    display: flex;
+    gap: 18px;
+}
+
+.hero-btn {
+    text-decoration: none;
+    padding: 15px 28px;
+    border-radius: 10px;
+    font-weight: 600;
+    transition: all .3s ease;
+}
+
+.primary-btn {
+    background: #2563eb;
+    color: #fff;
+
+    &:hover {
+        background: #1d4ed8;
+        transform: translateY(-2px);
+    }
+}
+
+.secondary-btn {
+    border: 2px solid #e5e7eb;
+    color: #111827;
+
+    &:hover {
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+}

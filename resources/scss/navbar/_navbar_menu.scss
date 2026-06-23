@@ -1,0 +1,29 @@
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+
+    a {
+        text-decoration: none;
+        color: #374151;
+        font-size: 0.95rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+
+        &:hover {
+            color: #2563eb;
+        }
+    }
+}
+
+.btn-login {
+    padding: 10px 22px;
+    border-radius: 8px;
+    background: #2563eb;
+    color: #fff !important;
+    font-weight: 600;
+
+    &:hover {
+        background: #1d4ed8;
+    }
+}
