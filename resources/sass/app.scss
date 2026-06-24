@@ -8,6 +8,7 @@
 //NAVBAR + FOOTER SECTION
 @import '../scss/navbar/navbar';
 @import '../scss/footer/footer';
+
 //BANNER SECTION
 @import '../scss/banner/hero';
 
@@ -20,6 +21,9 @@
 //MODULE SECTION
 @import '../scss/modules/module';
 
-//LOGIN SECTION
+//LOGIN PAGE
+@import '../scss/faq_page/faq';
+
+//LOGIN PAGE
 @import '../scss/login_page/login';
 

@@ -42,21 +42,11 @@
                     Modules
                 </a>
 
-                <a href="#pricing">
-                    Pricing
-                </a>
+               
 
-                <a href="#faq">
-                    FAQ
-                </a>
-
-                <a href="#contact">
-                    Contact
-                </a>
-
-                {{-- <a href="{{ route('login') }}" class="btn-login">
+                <a href="{{ route('login') }}" class="btn-login">
                     Login
-                </a> --}}
+                </a>
 
             </div>
 

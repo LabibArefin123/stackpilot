@@ -43,7 +43,7 @@
         </main>
 
     </div>
-   
+
     <!-- Hidden Google Translate Widget -->
     <div id="google_translate_element" style="display:none;"></div>
     <!-- Bootstrap JS + dependencies -->
@@ -70,7 +70,9 @@
             success: @json(session('success')),
             errors: @json($errors->all())
         };
+        const faqAjaxUrl =  "{{ route('faq.ajax') }}";
     </script>
+    <script src="{{ asset('js/custom_frontend/faq_page/faq_ajax.js') }}"></script>
     {{-- End of SweetAlert2 notifications --}}
 
     {{-- Start of Contact Succss Swal Notification --}}

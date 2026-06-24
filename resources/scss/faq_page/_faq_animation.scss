@@ -1,0 +1,29 @@
+.faq-card.active {
+
+    border-color: #2563eb;
+
+    box-shadow:
+        0 15px 35px rgba(37, 99, 235, .08);
+}
+
+.faq-card.active .faq-answer {
+
+    max-height: 300px;
+}
+
+.faq-card.active .faq-toggle {
+
+    background: #2563eb;
+
+    color: #fff;
+}
+
+.faq-card.active .faq-toggle i {
+
+    transform: rotate(180deg);
+}
+
+.faq-toggle i {
+
+    transition: .35s ease;
+}

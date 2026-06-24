@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 //Welcome Section
 Route::get('/', [WelcomePageController::class, 'index'])->name('welcome');
+Route::get('/faq',[WelcomePageController::class, 'faq'])->name('faq');
 //Contact Section
 Route::get('/contact', [WelcomePageController::class, 'contact'])->name('contact');
 
