@@ -1,0 +1,48 @@
+/* Register Form */
+
+.login-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.login-header p {
+    font-size: .95rem;
+}
+
+.register-panel {
+
+    .form-label {
+        font-weight: 600;
+        margin-bottom: .5rem;
+    }
+
+    .form-control {
+        min-height: 58px;
+        border-radius: 14px;
+        padding-inline: 18px;
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    .invalid-feedback {
+        display: block;
+        margin-top: 6px;
+    }
+
+    .toggle-password {
+        position: absolute;
+        top: 50%;
+        right: 18px;
+        transform: translateY(-50%);
+        cursor: pointer;
+    }
+}
+
+.login-btn {
+    height: 58px;
+    border-radius: 50px;
+    font-weight: 600;
+}
+

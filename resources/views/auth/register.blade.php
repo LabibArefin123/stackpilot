@@ -1,63 +1,176 @@
-@extends('auth.layouts.auth-layout')
+blade
+@extends('frontend.layouts.app')
 
-@section('auth-content')
+@section('content')
+    <div class="login-container">
 
-<div class="text-center mb-4">
-    <h4 class="fw-bold">Create Account</h4>
-    <p class="text-muted">Register to access the Doctor Portal</p>
-</div>
+        {{-- LEFT PANEL --}}
+        <div class="about-section">
 
-<form method="POST" action="{{ route('register') }}">
-    @csrf
+            <div class="about-content">
 
-    <div class="mb-3">
-        <label class="form-label">Full Name</label>
-        <input type="text"
-               name="name"
-               value="{{ old('name') }}"
-               class="form-control form-control-lg">
+                <span class="badge bg-primary px-3 py-2 mb-3 rounded-pill">
+                    Laravel Development Toolkit
+                </span>
+
+                <h2 class="fw-bold mb-3">
+                    StackPilot
+                </h2>
+
+                <p class="mb-3">
+                    Create your StackPilot account and start monitoring your Laravel
+                    applications from a single powerful dashboard.
+                </p>
+
+                <p>
+                    Manage deployments, monitor queues, analyze logs,
+                    verify server health and keep your applications running smoothly.
+                </p>
+
+            </div>
+
+        </div>
+
+        {{-- RIGHT PANEL --}}
+        blade
+        {{-- RIGHT PANEL --}}
+        <div class="login-section register-scroll">
+
+            <div class="login-panel register-panel">
+
+                <div class="login-header text-center mb-4">
+
+                    <h2 class="fw-bold">
+                        Create Account
+                    </h2>
+
+                    <p class="text-muted mb-0">
+                        Register to access your StackPilot dashboard
+                    </p>
+
+                </div>
+
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    {{-- Full Name --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Full Name
+                        </label>
+
+                        <input type="text" name="name" value="{{ old('name') }}"
+                            class="form-control form-control-lg @error('name') is-invalid @enderror"
+                            placeholder="Enter your full name" required>
+
+                        @error('name')
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Phone --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Phone Number
+                        </label>
+
+                        <input type="text" name="phone_1" value="{{ old('phone_1') }}"
+                            class="form-control form-control-lg @error('phone_1') is-invalid @enderror"
+                            placeholder="Enter your phone number">
+
+                        @error('phone_1')
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Email --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Email Address
+                        </label>
+
+                        <input type="email" name="email" value="{{ old('email') }}"
+                            class="form-control form-control-lg @error('email') is-invalid @enderror"
+                            placeholder="Enter your email" required>
+
+                        @error('email')
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Password --}}
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Password
+                        </label>
+
+                        <div class="position-relative">
+                            <input id="password" type="password" name="password"
+                                class="form-control form-control-lg @error('password') is-invalid @enderror"
+                                placeholder="Create a password" required>
+
+                            <span class="toggle-password" onclick="togglePassword()">
+                                <i class="fas fa-eye"></i>
+                            </span>
+                        </div>
+
+                        @error('password')
+                            <div class="invalid-feedback d-block">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
+
+                    {{-- Confirm Password --}}
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold">
+                            Confirm Password
+                        </label>
+
+                        <input type="password" name="password_confirmation" class="form-control form-control-lg"
+                            placeholder="Confirm your password" required>
+                    </div>
+
+                    <button type="submit" class="btn login-btn w-100">
+                        Create StackPilot Account
+                    </button>
+
+                    <div class="text-center mt-4">
+                        <a href="{{ route('login') }}" class="dev-link">
+                            Already have an account? Sign In
+                        </a>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="text-center">
+                        <small class="text-muted">
+                            StackPilot v1.0 • Laravel Monitoring & Diagnostics Platform
+                        </small>
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+        
+
+
     </div>
 
-    <div class="mb-3">
-        <label class="form-label">Phone Number</label>
-        <input type="text"
-               name="phone_1"
-               value="{{ old('phone_1') }}"
-               class="form-control form-control-lg">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Email Address</label>
-        <input type="email"
-               name="email"
-               value="{{ old('email') }}"
-               class="form-control form-control-lg">
-    </div>
-
-    <div class="mb-3">
-        <label class="form-label">Password</label>
-        <input type="password"
-               name="password"
-               class="form-control form-control-lg">
-    </div>
-
-    <div class="mb-4">
-        <label class="form-label">Confirm Password</label>
-        <input type="password"
-               name="password_confirmation"
-               class="form-control form-control-lg">
-    </div>
-
-    <button type="submit"
-            class="btn login-btn w-100 py-2 rounded-pill">
-        Create Account
-    </button>
-
-    <div class="text-center mt-3">
-        <a href="{{ route('login') }}" class="dev-link">
-            Already have an account?
-        </a>
-    </div>
-</form>
-
+    <style>
+        body {
+            background:
+                linear-gradient(rgba(5, 10, 25, .82),
+                    rgba(5, 10, 25, .82)),
+                url('{{ asset('uploads/images/welcome_page/cover.png') }}') center center / cover no-repeat;
+        }
+    </style>
 @endsection
