@@ -1,48 +1,34 @@
-/* Register Form */
-
-.login-header h2 {
-    font-size: 2rem;
-    font-weight: 700;
-}
-
-.login-header p {
+.form-label {
     font-size: .95rem;
+    margin-bottom: .5rem;
 }
 
-.register-panel {
+.form-control {
+    min-height: 56px;
 
-    .form-label {
-        font-weight: 600;
-        margin-bottom: .5rem;
-    }
+    border-radius: 14px;
 
-    .form-control {
-        min-height: 58px;
-        border-radius: 14px;
-        padding-inline: 18px;
-
-        &:focus {
-            box-shadow: none;
-        }
-    }
-
-    .invalid-feedback {
-        display: block;
-        margin-top: 6px;
-    }
-
-    .toggle-password {
-        position: absolute;
-        top: 50%;
-        right: 18px;
-        transform: translateY(-50%);
-        cursor: pointer;
-    }
+    transition: $register-transition;
 }
 
-.login-btn {
-    height: 58px;
-    border-radius: 50px;
-    font-weight: 600;
+.form-control:focus {
+    box-shadow: none;
+    border-color: $register-primary-color;
+}
+
+.toggle-password {
+    position: absolute;
+
+    top: 50%;
+    right: 18px;
+
+    transform: translateY(-50%);
+
+    cursor: pointer;
+}
+
+.invalid-feedback {
+    display: block;
+    margin-top: .4rem;
 }
 

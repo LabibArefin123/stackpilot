@@ -1,3 +1,7 @@
-@use "register_layout";
-@use "register_form";
-@use "register_theme";
+@import "register_variables";
+@import "register_layout";
+@import "register_left";
+@import "register_right";
+@import "register_form";
+@import "register_buttons";
+@import "register_responsive";

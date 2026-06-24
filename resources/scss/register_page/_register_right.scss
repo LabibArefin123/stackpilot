@@ -1,0 +1,38 @@
+.register-panel {
+    width: 100%;
+    max-width: 540px;
+
+    background: $register-glass-bg;
+
+    border-radius: $register-border-radius;
+
+    padding: 40px;
+
+    backdrop-filter: blur(12px);
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, .20);
+
+    max-height: 92vh;
+
+    overflow-y: auto;
+}
+
+.register-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.register-panel::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+    background: rgba(0, 0, 0, .2);
+}
+
+.login-header h2 {
+    font-size: 2rem;
+    margin-bottom: .5rem;
+}
+
+.login-header p {
+    color: $register-text-muted;
+}
+
