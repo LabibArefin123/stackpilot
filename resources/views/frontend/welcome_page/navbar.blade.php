@@ -42,6 +42,10 @@
                     Modules
                 </a>
 
+                <a href="{{ route('faq') }}">
+                    FAQ
+                </a>
+
                
 
                 <a href="{{ route('login') }}" class="btn-login">

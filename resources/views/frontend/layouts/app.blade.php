@@ -70,9 +70,8 @@
             success: @json(session('success')),
             errors: @json($errors->all())
         };
-        const faqAjaxUrl =  "{{ route('faq.ajax') }}";
     </script>
-    <script src="{{ asset('js/custom_frontend/faq_page/faq_ajax.js') }}"></script>
+    
     {{-- End of SweetAlert2 notifications --}}
 
     {{-- Start of Contact Succss Swal Notification --}}
@@ -81,6 +80,7 @@
     </script>
     {{-- End of Contact Succss Swal Notification --}}
 
+    <script src="{{ asset('js/custom_frontend/faq_page/faq_toggle.js') }}"></script> {{-- Sweet Alert Notification JS --}}
     <script src="{{ asset('js/custom_frontend/sweet_alert.js') }}"></script> {{-- Sweet Alert Notification JS --}}
     <script src="{{ asset('js/custom_frontend/contact_success.js') }}"></script> {{-- Contact Success Notification JS --}}
     <script src="{{ asset('js/custom_frontend/navbar-collapse.js') }}"></script> {{-- Navbar collapse JS --}}
