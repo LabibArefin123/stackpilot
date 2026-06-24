@@ -1,0 +1,39 @@
+.footer-brand h3 {
+
+    font-size: 2rem;
+
+    font-weight: 800;
+
+    margin-bottom: 20px;
+}
+
+.footer-brand p {
+
+    color: rgba(255, 255, 255, .75);
+
+    line-height: 1.9;
+
+    margin-bottom: 20px;
+}
+
+.footer-badges {
+
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 10px;
+}
+
+.footer-badges span {
+
+    padding: 8px 14px;
+
+    border-radius: 50px;
+
+    background: rgba(255, 255, 255, .08);
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    font-size: .85rem;
+}

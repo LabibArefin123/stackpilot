@@ -1,0 +1,20 @@
+.footer-section {
+
+    background: #0f172a;
+
+    padding-top: 90px;
+
+    color: #ffffff;
+
+    position: relative;
+}
+
+.footer-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr 1fr;
+
+    gap: 50px;
+}

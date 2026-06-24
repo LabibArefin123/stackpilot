@@ -1,0 +1,41 @@
+@media(max-width:992px) {
+
+    .footer-grid {
+
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+}
+
+@media(max-width:768px) {
+
+    .footer-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .footer-bottom {
+
+        flex-direction: column;
+
+        gap: 10px;
+
+        text-align: center;
+    }
+
+}
+
+@media(max-width:576px) {
+
+    .footer-section {
+
+        padding-top: 60px;
+    }
+
+    .footer-brand h3 {
+
+        font-size: 1.7rem;
+    }
+
+}
