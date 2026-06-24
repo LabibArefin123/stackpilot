@@ -2,9 +2,23 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
+//BACK TO TOP BUTTON
+@import '../scss/back_to_top/back_to_top';
+
 //NAVBAR SECTION
 @import '../scss/navbar/navbar';
+
 //BANNER SECTION
 @import '../scss/banner/hero';
+
+//FEATURE SECTION
+@import '../scss/features/feature';
+
+//FRAMEWORK SECTION
+@import '../scss/frameworks/framework';
+
+//MODULE SECTION
+@import '../scss/modules/module';
+
 //LOGIN SECTION
 @import '../scss/login_page/login';

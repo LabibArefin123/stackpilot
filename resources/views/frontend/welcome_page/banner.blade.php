@@ -52,7 +52,7 @@
 
     <div class="hero-image">
 
-        <img src="{{ asset('uploads/images/stackpilot/dashboard-preview.png') }}" alt="StackPilot Dashboard">
+        <img src="{{ asset('uploads/images/welcome_page/dashboard/dashboard.JPG') }}" alt="StackPilot Dashboard">
 
     </div>
 

@@ -1,0 +1,49 @@
+.back-to-top::before {
+
+    content: '';
+
+    position: absolute;
+
+    inset: 0;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, .25),
+            transparent);
+
+    opacity: 0;
+
+    transition: .35s ease;
+}
+
+.back-to-top:hover::before {
+
+    opacity: 1;
+}
+
+.back-to-top.show {
+
+    animation:
+        backToTopFade .5s ease;
+}
+
+@keyframes backToTopFade {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+            translateY(25px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+}

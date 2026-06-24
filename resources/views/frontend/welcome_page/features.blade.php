@@ -4,7 +4,7 @@
 
         <div class="section-header">
 
-            <span>Core Features</span>
+            <span class="section-badge">Core Features</span>
 
             <h2>Everything Needed To Manage Your Applications</h2>
 

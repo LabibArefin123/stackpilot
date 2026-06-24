@@ -1,0 +1,28 @@
+.modules-header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 80px;
+}
+
+.module-badge {
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 50px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.modules-header h2 {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 20px;
+}
+
+.modules-header p {
+    color: #6b7280;
+    font-size: 1.05rem;
+    line-height: 1.9;
+}

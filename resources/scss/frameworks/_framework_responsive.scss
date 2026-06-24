@@ -1,0 +1,30 @@
+@media(max-width:992px) {
+
+    .framework-section {
+
+        padding: 80px 0;
+    }
+
+    .framework-header h2 {
+
+        font-size: 2.3rem;
+    }
+}
+
+@media(max-width:576px) {
+
+    .framework-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .framework-header h2 {
+
+        font-size: 1.9rem;
+    }
+
+    .framework-card {
+
+        padding: 25px;
+    }
+}

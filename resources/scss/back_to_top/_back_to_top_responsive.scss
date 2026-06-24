@@ -1,0 +1,34 @@
+@media (max-width: 768px) {
+
+    .back-to-top {
+
+        width: 50px;
+
+        height: 50px;
+
+        right: 20px;
+
+        bottom: 20px;
+    }
+
+}
+
+@media (max-width: 576px) {
+
+    .back-to-top {
+
+        width: 46px;
+
+        height: 46px;
+
+        right: 15px;
+
+        bottom: 15px;
+    }
+
+    .back-to-top i {
+
+        font-size: 1rem;
+    }
+
+}
