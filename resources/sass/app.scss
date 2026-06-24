@@ -3,23 +3,23 @@
 @import 'bootstrap/scss/bootstrap';
 
 //BACK TO TOP BUTTON
-@import '../scss/back_to_top/back_to_top';
+@import '../scss/custom_layout/back_to_top/back_to_top';
 
 //NAVBAR + FOOTER SECTION
-@import '../scss/navbar/navbar';
-@import '../scss/footer/footer';
+@import '../scss/custom_layout/navbar/navbar';
+@import '../scss/custom_layout/footer/footer';
 
 //BANNER SECTION
-@import '../scss/banner/hero';
+@import '../scss/welcome_page/banner/hero';
 
 //FEATURE SECTION
-@import '../scss/features/feature';
+@import '../scss/welcome_page/features/feature';
 
 //FRAMEWORK SECTION
-@import '../scss/frameworks/framework';
+@import '../scss/welcome_page/frameworks/framework';
 
 //MODULE SECTION
-@import '../scss/modules/module';
+@import '../scss/welcome_page/modules/module';
 
 //LOGIN PAGE
 @import '../scss/faq_page/faq';

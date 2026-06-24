@@ -1,6 +1,6 @@
   <div class="login-section register-scroll">
 
-      <div class="login-panel register-panel">
+      <div class=" register-panel">
 
           <div class="login-header text-center mb-4">
 
