@@ -80,7 +80,8 @@
     </script>
     {{-- End of Contact Succss Swal Notification --}}
 
-    <script src="{{ asset('js/custom_frontend/faq_page/faq_toggle.js') }}"></script> {{-- Sweet Alert Notification JS --}}
+    <script src="{{ asset('js/custom_frontend/login_page/about_toggle.js') }}"></script> {{-- About Toggle JS in Login Page --}}
+    <script src="{{ asset('js/custom_frontend/faq_page/faq_toggle.js') }}"></script> {{-- FAQ Toggle in FAQ page JS --}}
     <script src="{{ asset('js/custom_frontend/sweet_alert.js') }}"></script> {{-- Sweet Alert Notification JS --}}
     <script src="{{ asset('js/custom_frontend/contact_success.js') }}"></script> {{-- Contact Success Notification JS --}}
     <script src="{{ asset('js/custom_frontend/navbar-collapse.js') }}"></script> {{-- Navbar collapse JS --}}

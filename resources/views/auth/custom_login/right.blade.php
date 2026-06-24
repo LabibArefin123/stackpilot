@@ -67,7 +67,7 @@
 
     </div>
 
-    <button class="btn login-btn w-100">
+    <button class="btn login-btn w-100 text-white">
         Login To StackPilot
     </button>
 
