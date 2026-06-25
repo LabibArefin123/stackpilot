@@ -13,13 +13,16 @@ return new class extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->index();
             $table->string('name');
-            $table->string('slug')->unique();
-            $table->string('domain')->nullable();
+            $table->string('domain')->unique();
             $table->string('project_path');
             $table->string('php_version')->nullable();
-            $table->boolean('status')->default(true);
+            $table->string('laravel_version')->nullable();
+            $table->string('server_ip')->nullable();
+            $table->string('git_branch')->nullable();
+            $table->string('git_repository')->nullable();
+            $table->boolean('is_active')->default(true);
+            $table->timestamp('last_checked_at')->nullable();
             $table->timestamps();
         });
     }
