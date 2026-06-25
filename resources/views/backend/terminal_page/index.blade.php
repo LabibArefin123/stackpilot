@@ -3,7 +3,49 @@
 @section('title', 'Terminal Dashboard')
 
 @section('content')
+    <div class="row mb-3">
 
+        <div class="col-md-8">
+
+            <div class="card card-outline card-primary">
+
+                <div class="card-body">
+
+                    <form id="terminal-form" method="POST" action="{{ route('terminal.run') }}">
+
+                        @csrf
+
+                        <div class="row">
+
+                            <div class="col-md-10">
+
+                                <select name="project_id" class="form-control">
+
+                                    @foreach ($projects as $project)
+                                        <option value="{{ $project->id }}">
+
+                                            {{ $project->name }}
+                                            ({{ $project->domain }})
+                                        </option>
+                                    @endforeach
+
+                                </select>
+
+                            </div>
+
+                            <input type="hidden" id="command-input" name="command">
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
     <div class="row">
 
         <div class="col-md-12">
@@ -24,30 +66,38 @@
                     <div class="row mb-4">
 
                         <div class="col-md-3">
-                            <button class="btn btn-success btn-block">
+                            <button type="button" onclick="runCommand('optimize')" class="btn btn-success btn-block">
+
                                 <i class="fas fa-bolt"></i>
                                 Optimize
+
                             </button>
                         </div>
 
                         <div class="col-md-3">
-                            <button class="btn btn-warning btn-block">
+                            <button type="button" onclick="runCommand('optimize_clear')" class="btn btn-warning btn-block">
+
                                 <i class="fas fa-trash"></i>
                                 Optimize Clear
+
                             </button>
                         </div>
 
                         <div class="col-md-3">
-                            <button class="btn btn-info btn-block">
+                            <button type="button" onclick="runCommand('queue_restart')" class="btn btn-info btn-block">
+
                                 <i class="fas fa-sync"></i>
                                 Queue Restart
+
                             </button>
                         </div>
 
                         <div class="col-md-3">
-                            <button class="btn btn-primary btn-block">
+                            <button type="button" onclick="runCommand('git_pull')" class="btn btn-primary btn-block">
+
                                 <i class="fab fa-git-alt"></i>
                                 Git Pull
+
                             </button>
                         </div>
 
@@ -56,8 +106,11 @@
                     <div class="row mb-4">
 
                         <div class="col-md-6">
-                            <button class="btn btn-secondary btn-block">
+                            <button type="button" onclick="runCommand('composer_install')"
+                                class="btn btn-secondary btn-block">
+
                                 Composer Install
+
                             </button>
                         </div>
 
@@ -71,13 +124,13 @@
 
                     <div class="terminal-screen">
 
-                        $ php artisan optimize
+                        @if (session('terminal_output'))
+                            {{ session('terminal_output') }}
+                        @else
+                            StackPilot Terminal Ready...
 
-                        INFO Configuration cached successfully.
-                        INFO Route cache generated.
-                        INFO View cache generated.
-
-                        Completed successfully.
+                            Select a project and execute a command.
+                        @endif
 
                     </div>
 
@@ -170,8 +223,8 @@
             </div>
 
         </div>
-
     </div>
+
 
 @endsection
 
@@ -198,4 +251,7 @@
         }
     </style>
 
+@endsection
+@section('js')
+    <script src="{{ asset('js/custom_backend/terminal_page/terminal.js') }}"></script>
 @endsection

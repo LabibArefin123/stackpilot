@@ -3,13 +3,24 @@
 use App\Http\Controllers\WelcomePageController;
 use App\Http\Controllers\OrganizationController;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\ProfileController;
+
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\GalleryController;
+
+use App\Http\Controllers\TerminalPageController;
+use App\Http\Controllers\GitMonitorController;
+use App\Http\Controllers\DeploymentController;
+use App\Http\Controllers\OptimizationController;
+use App\Http\Controllers\QueueMonitorController;
+use App\Http\Controllers\CronController;
+use App\Http\Controllers\LogController;
+use App\Http\Controllers\ServerHealthController;
+use App\Http\Controllers\EnvironmentController;
+
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\SystemUserController;
 use App\Http\Controllers\BanUserController;
-use App\Http\Controllers\ContactRequestController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\SystemProblemController;
@@ -42,6 +53,18 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/user_profile', [ProfileController::class, 'user_profile_show'])->name('user_profile_show');
     Route::get('/user_profile_edit', [ProfileController::class, 'user_profile_edit'])->name('user_profile_edit');
     Route::put('/user_profile_update', [ProfileController::class, 'user_profile_update'])->name('user_profile_update');
+
+    Route::get('/terminal', [TerminalPageController::class, 'index'])->name('terminal.index');
+    Route::post('/terminal/run', [TerminalPageController::class, 'run'])->name('terminal.run');
+
+    Route::get('/git-monitor', [GitMonitorController::class, 'index'])->name('git.index');
+    Route::get('/deployments', [DeploymentController::class, 'index'])->name('deployments.index');
+    Route::get('/optimization', [OptimizationController::class, 'index'])->name('optimization.index');
+    Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
+    Route::get('/cron-jobs', [CronController::class, 'index'])->name('cron.index');
+    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+    Route::get('/server-health', [ServerHealthController::class, 'index'])->name('server.index');
+    Route::get('/environment', [EnvironmentController::class, 'index'])->name('environment.index');
 
     //Setting Management
     Route::resource('roles', RoleController::class);

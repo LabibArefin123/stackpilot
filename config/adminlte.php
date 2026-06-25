@@ -312,13 +312,13 @@ return [
 
     'menu' => [
         // Navbar items:
-  
+
         [
             'type' => 'fullscreen-widget',
             'topnav_right' => true,
         ],
 
-      
+
         [
             'type' => 'navbar-item',
             'topnav_right' => true,
@@ -348,7 +348,76 @@ return [
             'icon' => 'fas fa-home',
         ],
 
-    
+        [
+            'text' => 'Projects',
+            'icon' => 'fas fa-project-diagram',
+            'submenu' => [
+
+                [
+                    'text' => 'Terminal',
+                    'route' => 'terminal.index',
+                    'can' => 'terminal.index',
+                    'icon' => 'fas fa-terminal',
+                ],
+
+                [
+                    'text' => 'Git Monitor',
+                    'route' => 'git.index',
+                    'can' => 'git.index',
+                    'icon' => 'fab fa-git-alt',
+                ],
+
+                [
+                    'text' => 'Deployments',
+                    'route' => 'deployments.index',
+                    'can' => 'deployments.index',
+                    'icon' => 'fas fa-rocket',
+                ],
+
+                [
+                    'text' => 'Laravel Optimization',
+                    'route' => 'optimization.index',
+                    'can' => 'optimization.index',
+                    'icon' => 'fas fa-bolt',
+                ],
+
+                [
+                    'text' => 'Queue Monitor',
+                    'route' => 'queue.index',
+                    'can' => 'queue.index',
+                    'icon' => 'fas fa-stream',
+                ],
+
+                [
+                    'text' => 'Cron Jobs',
+                    'route' => 'cron.index',
+                    'can' => 'cron.index',
+                    'icon' => 'fas fa-clock',
+                ],
+
+                [
+                    'text' => 'Logs',
+                    'route' => 'logs.index',
+                    'can' => 'logs.index',
+                    'icon' => 'fas fa-file-alt',
+                ],
+
+                [
+                    'text' => 'Server Health',
+                    'route' => 'server.index',
+                    'can' => 'server.index',
+                    'icon' => 'fas fa-server',
+                ],
+
+                [
+                    'text' => 'Environment',
+                    'route' => 'environment.index',
+                    'can' => 'environment.index',
+                    'icon' => 'fas fa-cogs',
+                ],
+            ]
+        ],
+
         [
             'text'    => 'Setting Management',
             'icon'    => 'fas fa-cogs',
@@ -381,7 +450,7 @@ return [
                     'active' => ['ban_users*'],
                     'icon' => 'fas fa-user-slash',
                 ],
-          
+
                 [
                     'text' => 'System Problems',
                     'route' => 'system_problems.index',
