@@ -19,9 +19,8 @@
 
     <style>
         body {
-            background:
-                linear-gradient(rgba(0, 0, 0, .55), rgba(0, 0, 0, .55)),
-                url('{{ asset('uploads/images/welcome_page/cover.png') }}') center/cover no-repeat;
+            background: 
+                url('{{ asset('uploads/images/welcome_page/cover.jpg') }}') center/cover no-repeat;
             min-height: 100vh;
             font-family: 'Poppins', sans-serif;
         }

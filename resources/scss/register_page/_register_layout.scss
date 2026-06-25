@@ -1,18 +1,11 @@
 
 .register-page {
     min-height: 100vh;
-    background:
-        linear-gradient(rgba(5, 10, 25, .85),
-            rgba(5, 10, 25, .85)),
-        url('/images/auth-bg.jpg');
-
     background-size: cover;
     background-position: center;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     padding: 20px;
 }
 

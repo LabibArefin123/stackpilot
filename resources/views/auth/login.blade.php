@@ -31,9 +31,8 @@
     <style>
         body {
             background:
-                linear-gradient(rgba(5, 10, 25, .82),
-                    rgba(5, 10, 25, .82)),
-                url('{{ asset('uploads/images/welcome_page/cover.png') }}') center center / cover no-repeat;
+                
+                url('{{ asset('uploads/images/welcome_page/cover.jpg') }}') center center / cover no-repeat;
         }
     </style>
 @endsection
