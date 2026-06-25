@@ -1,46 +1,39 @@
-@media (max-width: 991px) {
+@media (max-width: 992px) {
 
     .register-container {
         flex-direction: column;
-    }
-
-    .about-section {
-        padding: 40px 25px;
-        text-align: center;
-    }
-
-    .register-scroll {
         min-height: auto;
-        padding: 20px;
     }
 
-    .register-panel {
-        max-width: 100%;
-        max-height: none;
-        padding: 25px;
+    .register-left {
+        padding: 40px 30px;
     }
 
-    .register-content h2 {
-        font-size: 2.2rem;
-    }
-}
-
-@media (max-width: 576px) {
-
-    .register-panel {
-        padding: 20px;
+    .register-right {
+        width: 100%;
+        padding: 30px;
     }
 
-    .login-header h2 {
-        font-size: 1.6rem;
-    }
-
-    .form-control {
-        min-height: 50px;
-    }
-
-    .login-btn {
-        height: 50px;
+    .register-title {
+        font-size: 3rem;
     }
 }
 
+@media (max-width: 768px) {
+
+    .register-page {
+        padding: 10px;
+    }
+
+    .register-left {
+        display: none;
+    }
+
+    .register-right {
+        width: 100%;
+    }
+
+    .register-panel {
+        padding: 10px;
+    }
+}

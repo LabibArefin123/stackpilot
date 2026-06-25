@@ -1,19 +1,33 @@
-.register-content {
-    max-width: 520px;
-    color: #fff;
+.register-left {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 60px;
 }
 
-.register-content h2 {
-    font-size: 3rem;
-    font-weight: 700;
+.register-branding {
+    max-width: 500px;
 }
 
-.register-content p {
+.register-badge {
+    display: inline-block;
+    padding: 10px 18px;
+    background: rgba(79, 70, 229, .2);
+    color: $register-white;
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+
+.register-title {
+    font-size: 4rem;
+    font-weight: 800;
+    color: $register-white;
+    margin-bottom: 20px;
+}
+
+.register-description {
+    color: $register-text;
+    font-size: 1.1rem;
     line-height: 1.8;
-    opacity: .9;
 }
-
-.register-content .badge {
-    font-size: .85rem;
-}
-

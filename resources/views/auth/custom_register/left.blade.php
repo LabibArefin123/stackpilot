@@ -1,19 +1,19 @@
-<div class="register-content">
+<div class="register-branding">
 
-    <span class="badge bg-primary px-3 py-2 mb-3 rounded-pill">
+    <span class="register-badge">
         Laravel Development Toolkit
     </span>
 
-    <h2 class="fw-bold mb-3">
+    <h1 class="register-title">
         StackPilot
-    </h2>
+    </h1>
 
-    <p class="mb-3">
+    <p class="register-description">
         Create your StackPilot account and start monitoring your Laravel
         applications from a single powerful dashboard.
     </p>
 
-    <p>
+    <p class="register-description">
         Manage deployments, monitor queues, analyze logs,
         verify server health and keep your applications running smoothly.
     </p>

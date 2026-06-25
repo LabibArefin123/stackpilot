@@ -1,26 +1,21 @@
 @extends('frontend.layouts.app')
 
 @section('content')
-    <div class="stackpilot-login">
+    <div class="register-page">
+
         <div class="register-container">
-            
-            {{-- LEFT PANEL --}}
-            <div class="register-section">
+
+            {{-- LEFT SIDE --}}
+            <div class="register-left">
                 @include('auth.custom_register.left')
             </div>
 
-            {{-- RIGHT PANEL --}}
-            @include('auth.custom_register.right')
+            {{-- RIGHT SIDE --}}
+            <div class="register-right">
+                @include('auth.custom_register.right')
+            </div>
 
         </div>
-    </div>
 
-    <style>
-        body {
-            background:
-                linear-gradient(rgba(5, 10, 25, .82),
-                    rgba(5, 10, 25, .82)),
-                center center / cover no-repeat;
-        }
-    </style>
+    </div>
 @endsection

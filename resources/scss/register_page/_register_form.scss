@@ -1,34 +1,69 @@
-.form-label {
-    font-size: .95rem;
-    margin-bottom: .5rem;
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    color: $register-white;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
 }
 
 .form-control {
-    min-height: 56px;
-
-    border-radius: 14px;
-
-    transition: $register-transition;
+    height: 56px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, .08);
+    color: $register-white;
+    padding: 0 18px;
 }
 
 .form-control:focus {
-    box-shadow: none;
-    border-color: $register-primary-color;
+    background: rgba(255, 255, 255, .12);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, .3);
+}
+
+.password-wrapper {
+    position: relative;
 }
 
 .toggle-password {
     position: absolute;
-
+    right: 20px;
     top: 50%;
-    right: 18px;
-
     transform: translateY(-50%);
-
     cursor: pointer;
+    color: $register-muted;
 }
 
-.invalid-feedback {
-    display: block;
-    margin-top: .4rem;
+.register-btn {
+    width: 100%;
+    height: 56px;
+    border: none;
+    border-radius: 12px;
+    background: $register-primary;
+    color: white;
+    font-weight: 700;
+    transition: $register-transition;
 }
 
+.register-btn:hover {
+    transform: translateY(-2px);
+}
+
+.register-footer {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.register-footer a {
+    color: $register-primary;
+    text-decoration: none;
+}
+
+.register-version {
+    text-align: center;
+    margin-top: 25px;
+    color: $register-muted;
+    font-size: .85rem;
+}

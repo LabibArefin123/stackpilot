@@ -1,38 +1,25 @@
+.register-right {
+    width: 500px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
 .register-panel {
     width: 100%;
-    max-width: 540px;
-
-    background: $register-glass-bg;
-
-    border-radius: $register-border-radius;
-
-    padding: 40px;
-
-    backdrop-filter: blur(12px);
-
-    box-shadow:
-        0 20px 60px rgba(0, 0, 0, .20);
-
-    max-height: 92vh;
-
-    overflow-y: auto;
 }
 
-.register-panel::-webkit-scrollbar {
-    width: 6px;
-}
+.register-header {
+    text-align: center;
+    margin-bottom: 30px;
 
-.register-panel::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-    background: rgba(0, 0, 0, .2);
-}
+    h2 {
+        color: $register-white;
+        font-weight: 700;
+    }
 
-.login-header h2 {
-    font-size: 2rem;
-    margin-bottom: .5rem;
+    p {
+        color: $register-muted;
+    }
 }
-
-.login-header p {
-    color: $register-text-muted;
-}
-
