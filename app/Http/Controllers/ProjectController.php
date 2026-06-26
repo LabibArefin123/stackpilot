@@ -211,6 +211,43 @@ class ProjectController extends Controller
         $localBranches = $this->runGitCommand($gitPath, 'git branch --format="%(refname:short)"');
 
         $remoteBranches = $this->runGitCommand($gitPath, 'git branch -r --format="%(refname:short)"');
+
+        $remoteName = $this->runGitCommand($gitPath, 'git remote');
+
+        $fetchUrl = $this->runGitCommand($gitPath, 'git remote get-url origin');
+
+        $pushUrl = $this->runGitCommand($gitPath, 'git remote get-url --push origin');
+
+        $defaultRemoteBranch = $this->runGitCommand(
+            $gitPath,
+            'git symbolic-ref refs/remotes/origin/HEAD'
+        );
+
+        $contributors = $this->runGitCommand(
+            $gitPath,
+            'git shortlog -sn'
+        );
+
+        $totalContributors = 0;
+
+        if ($contributors) {
+
+            $totalContributors = count(
+                array_filter(
+                    explode(PHP_EOL, $contributors)
+                )
+            );
+        }
+
+        $lastCommitAuthor = $this->runGitCommand(
+            $gitPath,
+            'git log -1 --pretty=%an'
+        );
+
+        $lastCommitEmail = $this->runGitCommand(
+            $gitPath,
+            'git log -1 --pretty=%ae'
+        );
         return [
 
             'health' => $clean ? 100 : 80,
@@ -263,6 +300,23 @@ class ProjectController extends Controller
                 ->filter()
                 ->values(),
 
+            'remote_name' => $remoteName ?: 'origin',
+
+            'fetch_url' => $fetchUrl,
+
+            'push_url' => $pushUrl,
+
+            'default_remote_branch' => str_replace(
+                'refs/remotes/origin/',
+                '',
+                $defaultRemoteBranch
+            ),
+
+            'total_contributors' => $totalContributors,
+
+            'last_commit_author' => $lastCommitAuthor,
+
+            'last_commit_email' => $lastCommitEmail,
         ];
     }
 
