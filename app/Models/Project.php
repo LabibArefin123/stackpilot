@@ -15,6 +15,12 @@ class Project extends Model
         'last_checked_at'
     ];
 
+    protected $casts = [
+
+        'last_checked_at' => 'datetime',
+
+];
+
     public function commands()
     {
         return $this->hasMany(TerminalCommand::class);

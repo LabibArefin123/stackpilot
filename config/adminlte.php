@@ -368,8 +368,8 @@ return [
 
                 [
                     'text' => 'Git Monitor',
-                    'route' => 'git.index',
-                    'can' => 'git.index',
+                    'route' => 'gits.index',
+                    'can' => 'gits.index',
                     'icon' => 'fab fa-git-alt',
                 ],
 

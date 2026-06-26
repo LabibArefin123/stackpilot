@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/terminal/run', [TerminalPageController::class, 'run'])->name('terminal.run');
 
     Route::resource('projects', ProjectController::class);
-    Route::get('/git-monitor', [GitMonitorController::class, 'index'])->name('git.index');
+    Route::resource('gits', GitMonitorController::class);
     Route::get('/deployments', [DeploymentController::class, 'index'])->name('deployments.index');
     Route::get('/optimization', [OptimizationController::class, 'index'])->name('optimization.index');
     Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
@@ -69,7 +69,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/environment', [EnvironmentController::class, 'index'])->name('environment.index');
 
     //Setting Management
-    Route::resource('roles', RoleController::class);
+Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::post('/permissions/delete-selected', [PermissionController::class, 'deleteSelected'])->name('permissions.deleteSelected');
     Route::resource('system_users', SystemUserController::class);
