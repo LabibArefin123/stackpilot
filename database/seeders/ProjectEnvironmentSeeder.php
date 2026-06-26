@@ -10,10 +10,7 @@ class ProjectEnvironmentSeeder extends Seeder
 {
     public function run(): void
     {
-        $project = Project::where(
-            'domain',
-            'technotechengineeringltd.labib.work'
-        )->first();
+        $project = Project::first();
 
         if (!$project) {
             return;
@@ -29,31 +26,31 @@ class ProjectEnvironmentSeeder extends Seeder
 
             [
 
-                'environment' => 'production',
+                'environment' => 'local',
 
-                'project_path' => '/home/labibwor/technotech_engineering_ltd',
+                'project_path' => 'E:\\laragon\\www\\technotech_company',
 
-                'public_path' => '/home/labibwor/technotech_engineering_ltd/public',
+                'public_path' => 'E:\\laragon\\www\\technotech_company\\public',
 
-                'server_ip' => 'Unknown',
+                'server_ip' => '127.0.0.1',
 
-                'server_name' => 'DianaHost Shared Hosting',
+                'server_name' => 'Laragon',
 
-                'hosting_provider' => 'DianaHost',
+                'hosting_provider' => 'Local Development',
 
-                'php_version' => '8.2',
+                'php_version' => PHP_VERSION,
 
-                'php_binary' => '/usr/bin/php',
+                'php_binary' => PHP_BINARY,
 
-                'composer_binary' => '/usr/local/bin/composer',
+                'composer_binary' => 'composer',
 
-                'node_version' => 'Unknown',
+                'node_version' => '20.x',
 
-                'node_binary' => '/usr/bin/node',
+                'node_binary' => 'node',
 
-                'npm_binary' => '/usr/bin/npm',
+                'npm_binary' => 'npm',
 
-                'laravel_version' => '11.31',
+                'laravel_version' => app()->version(),
 
                 'ssh_user' => null,
 

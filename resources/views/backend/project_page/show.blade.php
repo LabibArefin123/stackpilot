@@ -165,26 +165,30 @@
 
                         <div class="tab-pane" id="terminal">
 
-                            @include('backend.project_page.partials.terminal_page.part_1')
-                            @include('backend.project_page.partials.terminal_page.part_2')
+                            @include('backend.project_page.partials.terminal_section.part_1')
+                            @include('backend.project_page.partials.terminal_section.part_2')
 
                         </div>
 
                         <div class="tab-pane" id="git">
 
-                            @include('backend.project_page.partials.git_page.part_1')
-                            @include('backend.project_page.partials.git_page.part_2')
-                            @include('backend.project_page.partials.git_page.part_3')
-                            @include('backend.project_page.partials.git_page.part_4')
-                            @include('backend.project_page.partials.git_page.part_5')
-                            @include('backend.project_page.partials.git_page.part_6')
-                            @include('backend.project_page.partials.git_page.part_7')
-                            @include('backend.project_page.partials.git_page.part_8')
+                            @include('backend.project_page.partials.git_section.part_1')
+                            @include('backend.project_page.partials.git_section.part_2')
+                            @include('backend.project_page.partials.git_section.part_3')
+                            @include('backend.project_page.partials.git_section.part_4')
+                            @include('backend.project_page.partials.git_section.part_5')
+                            @include('backend.project_page.partials.git_section.part_6')
+                            @include('backend.project_page.partials.git_section.part_7')
+                            @include('backend.project_page.partials.git_section.part_8')
                         </div>
 
                         <div class="tab-pane" id="deployments">
 
-                            Deployment history coming soon...
+                             @include('backend.project_page.partials.deployment_section.part_1')
+                             @include('backend.project_page.partials.deployment_section.part_2')
+                             @include('backend.project_page.partials.deployment_section.part_3')
+                             @include('backend.project_page.partials.deployment_section.part_4')
+                             @include('backend.project_page.partials.deployment_section.part_5')
 
                         </div>
 

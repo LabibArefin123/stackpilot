@@ -34,4 +34,9 @@ class Project extends Model
     {
         return $this->hasOne(ProjectEnvironment::class);
     }
+
+    public function deployment()
+    {
+        return $this->hasOne(Deployment::class);
+    }
 }

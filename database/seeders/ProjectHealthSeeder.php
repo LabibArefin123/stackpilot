@@ -10,10 +10,7 @@ class ProjectHealthSeeder extends Seeder
 {
     public function run(): void
     {
-        $project = Project::where(
-            'domain',
-            'technotechengineeringltd.labib.work'
-        )->first();
+        $project = Project::first();
 
         if (!$project) {
             return;
@@ -43,7 +40,7 @@ class ProjectHealthSeeder extends Seeder
 
                 'env_ok' => true,
 
-                'health_score' => 82,
+                'health_score' => 90,
 
                 'checked_at' => now(),
 

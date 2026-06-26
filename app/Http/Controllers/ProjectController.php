@@ -139,6 +139,7 @@ class ProjectController extends Controller
         $project->load([
             'environment',
             'health',
+            'deployment',
             'commands' => fn($q) => $q->latest()->take(20),
             'sessions',
         ]);
@@ -150,6 +151,8 @@ class ProjectController extends Controller
         }
 
         $git = $this->loadGitInformation($project, $gitPath);
+
+        $deployment = $this->loadDeployment($project, $git);
 
         $stats = $this->loadTerminalStatistics($project);
 
@@ -380,6 +383,69 @@ class ProjectController extends Controller
         }
 
         return $commits;
+    }
+
+    private function loadDeployment(Project $project, array $git)
+    {
+        $deployment = $project->deployment;
+
+        return [
+
+            'status' => $deployment->status ?? 'pending',
+
+            'method' => $deployment->method ?? 'Git Pull',
+
+            'server' => $deployment->server
+                ?? optional($project->environment)->server_name,
+
+            'repository' => $git['remote_url'],
+
+            'branch' => $git['branch'],
+
+            'commit_hash' => $git['last_hash'],
+
+            'commit_message' => $git['last_message'],
+
+            'version' => $deployment->version,
+
+            'release_version' => $deployment->release_version,
+
+            'build_number' => $deployment->build_number,
+
+            'build_duration' => $deployment->build_duration,
+
+            'artifact_name' => $deployment->artifact_name,
+
+            'git_pull_command' =>
+            $deployment->git_pull_command
+                ?? 'git pull origin ' . $git['branch'],
+
+            'composer_install_command' =>
+            $deployment->composer_install_command
+                ?? 'composer install --no-dev --optimize-autoloader',
+
+            'npm_build_command' =>
+            $deployment->npm_build_command
+                ?? 'npm run build',
+
+            'migration_command' =>
+            $deployment->migration_command
+                ?? 'php artisan migrate --force',
+
+            'cache_clear_command' =>
+            $deployment->cache_clear_command
+                ?? 'php artisan optimize',
+
+            'success_count' =>
+            $deployment->success_count ?? 0,
+
+            'failed_count' =>
+            $deployment->failed_count ?? 0,
+
+            'deployed_at' =>
+            $deployment->deployed_at,
+
+        ];
     }
     /**
      * Show the form for editing the specified resource.
