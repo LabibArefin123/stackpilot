@@ -9,10 +9,6 @@ class Project extends Model
     protected $fillable = [
         'name',
         'domain',
-        'project_path',
-        'php_version',
-        'laravel_version',
-        'server_ip',
         'git_branch',
         'git_repository',
         'is_active',
@@ -32,5 +28,10 @@ class Project extends Model
     public function health()
     {
         return $this->hasOne(ProjectHealth::class);
+    }
+
+    public function environment()
+    {
+        return $this->hasOne(ProjectEnvironment::class);
     }
 }

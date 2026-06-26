@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_health', function (Blueprint $table) {
+        Schema::create('project_healths', function (Blueprint $table) {
             $table->id();
             $table->foreignId('project_id')->nullable()->index();
             $table->boolean('git_ok')->default(false);

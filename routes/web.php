@@ -8,6 +8,7 @@ use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\DashboardController;
 
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TerminalPageController;
 use App\Http\Controllers\GitMonitorController;
 use App\Http\Controllers\DeploymentController;
@@ -57,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/terminal', [TerminalPageController::class, 'index'])->name('terminal.index');
     Route::post('/terminal/run', [TerminalPageController::class, 'run'])->name('terminal.run');
 
+    Route::resource('projects', ProjectController::class);
     Route::get('/git-monitor', [GitMonitorController::class, 'index'])->name('git.index');
     Route::get('/deployments', [DeploymentController::class, 'index'])->name('deployments.index');
     Route::get('/optimization', [OptimizationController::class, 'index'])->name('optimization.index');

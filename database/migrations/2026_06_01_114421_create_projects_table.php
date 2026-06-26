@@ -15,10 +15,6 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('domain')->unique();
-            $table->string('project_path');
-            $table->string('php_version')->nullable();
-            $table->string('laravel_version')->nullable();
-            $table->string('server_ip')->nullable();
             $table->string('git_branch')->nullable();
             $table->string('git_repository')->nullable();
             $table->boolean('is_active')->default(true);

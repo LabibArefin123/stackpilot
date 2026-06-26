@@ -354,6 +354,12 @@ return [
             'submenu' => [
 
                 [
+                    'text' => 'Project',
+                    'route' => 'projects.index',
+                    'can' => 'projects.index',
+                    'icon' => 'fas fa-file',
+                ],
+                [
                     'text' => 'Terminal',
                     'route' => 'terminal.index',
                     'can' => 'terminal.index',
