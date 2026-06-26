@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\ProjectEnvironment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\Process\Process;
 
 class ProjectController extends Controller
 {
@@ -131,25 +132,143 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
+
+
     public function show(Project $project)
     {
         $project->load([
             'environment',
             'health',
-            'commands' => function ($query) {
-                $query->latest()->take(20);
-            },
+            'commands' => fn($q) => $q->latest()->take(20),
             'sessions',
         ]);
 
-        $git = [
-            'status' => 'Connected',          // Connected / Disconnected
-            'branch' => 'main',
-            'commits' => $project->commands()->where('command', 'like', '%git%')->count(),
-            'health' => 95,
-        ];
+        $gitPath = $project->project_path ?: env('PROJECT_PATH');
 
-        $stats = [
+        if (! is_dir($gitPath)) {
+            abort(500, "Git project path not found: {$gitPath}");
+        }
+
+        $git = $this->loadGitInformation($project, $gitPath);
+
+        $stats = $this->loadTerminalStatistics($project);
+
+        $commits = $this->loadLatestCommits($gitPath);
+        return view(
+            'backend.project_page.show',
+            compact(
+                'project',
+                'git',
+                'stats',
+                'commits'
+            )
+        );
+    }
+
+    private function runGitCommand($path, $command)
+    {
+        if (empty($path) || !is_dir($path)) {
+            return null;
+        }
+
+        if (!is_dir($path . DIRECTORY_SEPARATOR . '.git')) {
+            return null;
+        }
+
+        $process = Process::fromShellCommandline($command, $path);
+
+        $process->setTimeout(30);
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return null;
+        }
+
+        return trim($process->getOutput());
+    }
+
+    private function loadGitInformation(Project $project, $gitPath)
+    {
+        $branch = $this->runGitCommand($gitPath, 'git branch --show-current');
+
+        $lastHash = $this->runGitCommand($gitPath, 'git rev-parse --short HEAD');
+
+        $lastMessage = $this->runGitCommand($gitPath, 'git log -1 --pretty=%s');
+
+        $lastDate = $this->runGitCommand($gitPath, 'git log -1 --date=local --pretty=%cd');
+
+        $gitVersion = $this->runGitCommand($gitPath, 'git --version');
+
+        $branchCount = (int)$this->runGitCommand($gitPath, 'git branch --list | wc -l');
+
+        $commitCount = (int)$this->runGitCommand($gitPath, 'git rev-list --count HEAD');
+
+        $status = $this->runGitCommand($gitPath, 'git status --porcelain');
+
+        $clean = empty($status);
+
+        $localBranches = $this->runGitCommand($gitPath, 'git branch --format="%(refname:short)"');
+
+        $remoteBranches = $this->runGitCommand($gitPath, 'git branch -r --format="%(refname:short)"');
+        return [
+
+            'health' => $clean ? 100 : 80,
+
+            'status' => $clean ? 'Clean' : 'Modified',
+
+            'branch' => $branch,
+
+            'commits' => $commitCount,
+
+            'repository' => is_dir($gitPath . '/.git'),
+
+            'remote' => filled($project->git_repository),
+
+            'working_tree' => $clean,
+
+            'branch_exists' => filled($branch),
+
+            'latest_commit' => filled($lastHash),
+
+            'connected' => filled($project->git_repository),
+
+            'fetch_ok' => true,
+
+            'push_access' => false,
+
+            'repository_name' => basename($gitPath),
+
+            'remote_url' => $project->git_repository,
+
+            'last_hash' => $lastHash,
+
+            'last_message' => $lastMessage,
+
+            'last_date' => $lastDate,
+
+            'git_version' => $gitVersion,
+
+            'default_branch' => $branch,
+
+            'branch_count' => $branchCount,
+
+            'commit_count' => $commitCount,
+
+            'local_branches' => collect(explode(PHP_EOL, $localBranches ?? ''))
+                ->filter()
+                ->values(),
+
+            'remote_branches' => collect(explode(PHP_EOL, $remoteBranches ?? ''))
+                ->filter()
+                ->values(),
+
+        ];
+    }
+
+    private function loadTerminalStatistics(Project $project)
+    {
+        return [
 
             'total' => $project->commands()->count(),
 
@@ -158,22 +277,56 @@ class ProjectController extends Controller
             'failed' => $project->commands()->where('success', 0)->count(),
 
             'runtime' => number_format(
+
                 $project->commands()->avg('execution_time') ?? 0,
+
                 2
+
             )
 
         ];
-
-        return view(
-            'backend.project_page.show',
-            compact(
-                'project',
-                'stats',
-                'git'
-            )
-        );
     }
 
+    private function loadLatestCommits($gitPath)
+    {
+        $commits = [];
+
+        $process = Process::fromShellCommandline(
+
+            'git log -10 --pretty=format:"%h|%an|%ad|%s" --date=relative',
+
+            $gitPath
+
+        );
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+
+            return [];
+        }
+
+        foreach (explode(PHP_EOL, $process->getOutput()) as $line) {
+
+            if (trim($line) == '') continue;
+
+            [$hash, $author, $date, $message] = explode('|', $line, 4);
+
+            $commits[] = [
+
+                'hash' => $hash,
+
+                'author' => $author,
+
+                'date' => $date,
+
+                'message' => $message
+
+            ];
+        }
+
+        return $commits;
+    }
     /**
      * Show the form for editing the specified resource.
      */

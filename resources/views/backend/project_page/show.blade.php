@@ -173,6 +173,11 @@
                         <div class="tab-pane" id="git">
 
                              @include('backend.project_page.partials.git_page.part_1')
+                             @include('backend.project_page.partials.git_page.part_2')
+                             @include('backend.project_page.partials.git_page.part_3')
+                             @include('backend.project_page.partials.git_page.part_4')
+                             @include('backend.project_page.partials.git_page.part_5')
+                             @include('backend.project_page.partials.git_page.part_6')
                         </div>
 
                         <div class="tab-pane" id="deployments">

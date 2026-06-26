@@ -37,14 +37,27 @@ class TerminalPageController extends Controller
         $project = Project::findOrFail($request->project_id);
 
         $allowedCommands = [
-            'optimize'        => 'php artisan optimize',
-            'optimize_clear'  => 'php artisan optimize:clear',
-            'queue_restart'   => 'php artisan queue:restart',
-            'git_pull'        => 'git pull',
-            'composer_install' => 'composer install',
-            'npm_build'       => 'npm run build',
-        ];
 
+            // Laravel
+            'optimize'           => 'php artisan optimize',
+            'optimize_clear'     => 'php artisan optimize:clear',
+            'queue_restart'      => 'php artisan queue:restart',
+
+            // Git
+            'git_status'         => 'git status',
+            'git_pull'           => 'git pull',
+            'git_fetch'          => 'git fetch',
+            'git_log'            => 'git log --oneline -10',
+            'git_branch'         => 'git branch',
+            'git_remote'         => 'git remote -v',
+
+            // Composer
+            'composer_install'   => 'composer install',
+
+            // Node
+            'npm_build'          => 'npm run build',
+
+        ];
         if (! isset($allowedCommands[$request->command])) {
             abort(403);
         }
