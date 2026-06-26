@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\GitRepositoryScanner;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Str;
 
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -41,7 +42,15 @@ class GitMonitorController extends Controller
             'health',
         ]);
 
-        $gitPath = $this->repositoryPath($project);
+        $gitPath = $this->resolveRepositoryPath($project);
+
+        if (!$gitPath) {
+
+            abort(
+                404,
+                'Git repository could not be found.'
+            );
+        }
 
         $git = $this->loadGitInformation($project, $gitPath);
 
@@ -72,19 +81,7 @@ class GitMonitorController extends Controller
         ));
     }
 
-    private function repositoryPath(Project $project): ?string
-    {
-        $path = "E:\\laragon\\www\\" .
-            strtolower(str_replace(' ', '_', $project->name));
-
-        if (is_dir($path)) {
-
-            return $path;
-        }
-
-        return null;
-    }
-
+    
     /**
      * Execute Git Command
      */
@@ -390,7 +387,57 @@ class GitMonitorController extends Controller
 
         ];
     }
+    private function resolveRepositoryPath(Project $project): ?string
+    {
+        $roots = [
 
+            'E:\\laragon\\www',
+
+            'D:\\laragon\\www',
+
+            base_path('..'),
+
+        ];
+
+        /*
+    |--------------------------------------------------------------------------
+    | Candidate folder names
+    |--------------------------------------------------------------------------
+    */
+
+        $folders = array_unique([
+
+            $project->repository_folder,
+
+            $project->slug,
+
+            Str::slug($project->name, '_'),
+
+            Str::snake($project->name),
+
+            basename($project->git_repository, '.git'),
+
+        ]);
+
+        foreach ($roots as $root) {
+
+            foreach ($folders as $folder) {
+
+                if (blank($folder)) {
+                    continue;
+                }
+
+                $path = $root . DIRECTORY_SEPARATOR . $folder;
+
+                if (is_dir($path . DIRECTORY_SEPARATOR . '.git')) {
+
+                    return realpath($path);
+                }
+            }
+        }
+
+        return null;
+    }
     /**
      * Repository Size
      */
@@ -400,60 +447,86 @@ class GitMonitorController extends Controller
             return '-';
         }
 
-        $exclude = [
+        $folders = [
 
-            'vendor',
+            'app',
 
-            'node_modules',
+            'bootstrap',
 
-            '.git',
+            'config',
 
-            'storage\\logs',
+            'database',
 
-            'storage/logs',
+            'public',
 
-            'storage\\framework\\cache',
+            'resources',
 
-            'storage/framework/cache',
+            'routes',
 
-            'bootstrap\\cache',
+            'tests',
 
-            'bootstrap/cache',
+        ];
+
+        $files = [
+
+            'artisan',
+
+            'composer.json',
+
+            'composer.lock',
+
+            'package.json',
+
+            'package-lock.json',
+
+            'vite.config.js',
+
+            '.env.example',
 
         ];
 
         $size = 0;
 
+        foreach ($folders as $folder) {
+
+            $folderPath = $path . DIRECTORY_SEPARATOR . $folder;
+
+            if (! is_dir($folderPath)) {
+                continue;
+            }
+
+            $size += $this->directorySize($folderPath);
+        }
+
+        foreach ($files as $file) {
+
+            $filePath = $path . DIRECTORY_SEPARATOR . $file;
+
+            if (is_file($filePath)) {
+
+                $size += filesize($filePath);
+            }
+        }
+
+        return $this->formatBytes($size);
+    }
+
+    private function directorySize(string $directory): int
+    {
+        $size = 0;
+
         $iterator = new RecursiveIteratorIterator(
 
             new RecursiveDirectoryIterator(
-                $path,
+                $directory,
                 FilesystemIterator::SKIP_DOTS
             ),
 
-            RecursiveIteratorIterator::SELF_FIRST
+            RecursiveIteratorIterator::LEAVES_ONLY
 
         );
 
         foreach ($iterator as $file) {
-
-            $pathname = $file->getPathname();
-
-            $skip = false;
-
-            foreach ($exclude as $folder) {
-
-                if (str_contains($pathname, DIRECTORY_SEPARATOR . $folder . DIRECTORY_SEPARATOR)) {
-
-                    $skip = true;
-
-                    break;
-                }
-            }
-
-            if ($skip) {
-                continue;
-            }
 
             if ($file->isFile()) {
 
@@ -461,7 +534,7 @@ class GitMonitorController extends Controller
             }
         }
 
-        return $this->formatBytes($size);
+        return $size;
     }
 
     private function formatBytes(int $bytes): string
