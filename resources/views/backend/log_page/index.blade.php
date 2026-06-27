@@ -296,7 +296,7 @@
 
                 <i class="fas fa-server"></i>
 
-                Laravel / Server Logs
+                Laravel Logs (from GitHub Account)
 
             </h3>
 
@@ -347,15 +347,22 @@
 
                             <td>{{ $log['date'] }}</td>
 
-                            <td>{{ $log['message'] }}</td>
+                            <td>
+                                {{ $log['message'] }}
+                            </td>
 
                             <td>
 
-                                <button class="btn btn-xs btn-info">
-
-                                    View
-
-                                </button>
+                                @if (!empty($log['details']))
+                                    <button type="button" class="btn btn-xs btn-info view-log-details"
+                                        data-project="{{ $log['project'] }}" data-level="{{ $log['level'] }}"
+                                        data-date="{{ optional($log['date'])->format('Y-m-d H:i:s') }}"
+                                        data-message="{{ $log['message'] }}" data-details="{{ e($log['details']) }}">
+                                        <i class="fas fa-eye"></i> View
+                                    </button>
+                                @else
+                                    -
+                                @endif
 
                             </td>
 
@@ -381,11 +388,13 @@
                 </tbody>
 
             </table>
-
+            @include('backend.log_page.modals.view_modal')
         </div>
 
     </div>
-
+    <div class="card mt-4">
+        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
+    </div>
 @stop
 
 @section('js')
@@ -429,5 +438,7 @@
 
         });
     </script>
+
+    <script src="{{ asset('js/custom_backend/log_page/index_page/view_modal.js') }}"></script>
 
 @stop
