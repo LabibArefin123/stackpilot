@@ -126,10 +126,10 @@ class GitRepositoryScanner
             return null;
         }
 
-        $json = json_decode(File::get($composer), true);
+        $composer = json_decode(File::get($composer), true);
 
-        return $json['require']['laravel/framework']
-            ?? $json['require']['laravel/laravel']
+        return $composer['require']['laravel/framework']
+            ?? $composer['require']['laravel/laravel']
             ?? null;
     }
 

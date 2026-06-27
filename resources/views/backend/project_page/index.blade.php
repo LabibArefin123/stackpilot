@@ -179,7 +179,6 @@
 
                             {{-- Git Status --}}
                             <td>
-
                                 @switch($project->git_status)
                                     @case('Clean')
                                         <span class="badge badge-success">
@@ -198,53 +197,41 @@
                                             Unknown
                                         </span>
                                 @endswitch
-
                             </td>
 
                             {{-- PHP --}}
                             <td>
-
                                 <span class="badge badge-info">
-
-                                    {{ $project->php_version ?? '-' }}
-
+                                    {{ optional($project->environment)->php_version ?? '-' }}
                                 </span>
-
                             </td>
 
-                            {{-- Laravel --}}
                             <td>
-
                                 <span class="badge badge-danger">
-
-                                    {{ $project->laravel_version ?? '-' }}
-
+                                    {{ optional($project->environment)->laravel_version ?? '-' }}
                                 </span>
-
                             </td>
 
                             {{-- Health --}}
                             <td>
 
                                 @php
-
                                     $score = optional($project->health)->health_score ?? 0;
-
                                 @endphp
 
                                 <div class="progress progress-xs">
 
                                     <div class="progress-bar
 
-                @if ($score >= 90) bg-success
+                                    @if ($score >= 90) bg-success
 
-                @elseif($score >= 70)
+                                    @elseif($score >= 70)
 
-                    bg-warning
+                                        bg-warning
 
-                @else
+                                    @else
 
-                    bg-danger @endif"
+                                        bg-danger @endif"
                                         style="width:{{ $score }}%">
 
                                     </div>

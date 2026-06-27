@@ -21,10 +21,10 @@ class DatabaseSeeder extends Seeder
         $this->call([
             // UserSeeder::class,
             // PermissionSeeder::class,
-            ProjectSeeder::class,
+            // ProjectSeeder::class,
             ProjectEnvironmentSeeder::class,
-            ProjectHealthSeeder::class,
-            DeploymentSeeder::class,
+            // ProjectHealthSeeder::class,
+            // DeploymentSeeder::class,
         ]);
     }
 }

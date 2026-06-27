@@ -15,11 +15,12 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::with([
-            'environment',
-            'health',
-        ])
-            ->latest()
+        $projects = Project::query()
+            ->with([
+                'environment:id,project_id,php_version,laravel_version,environment',
+                'health:id,project_id,health_score',
+            ])
+            ->orderBy('name')
             ->get();
 
         return view('backend.project_page.index', compact('projects'));

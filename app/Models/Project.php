@@ -7,19 +7,44 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     protected $fillable = [
+
         'name',
         'domain',
+
         'git_branch',
+        'default_branch',
         'git_repository',
+        'git_status',
+
+        'project_type',
+
+        'last_commit',
+        'last_commit_date',
+
+        'owner',
+        'visibility',
+        'is_private',
+
         'is_active',
-        'last_checked_at'
+        'last_checked_at',
+
     ];
 
     protected $casts = [
 
-        'last_checked_at' => 'datetime',
+        'is_active'        => 'boolean',
+        'is_private'       => 'boolean',
 
-];
+        'last_checked_at'  => 'datetime',
+        'last_commit_date' => 'datetime',
+
+    ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function commands()
     {
