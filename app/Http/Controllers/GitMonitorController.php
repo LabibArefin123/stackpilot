@@ -387,6 +387,7 @@ class GitMonitorController extends Controller
 
         ];
     }
+    
     private function resolveRepositoryPath(Project $project): ?string
     {
         $roots = [

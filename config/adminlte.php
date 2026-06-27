@@ -354,76 +354,109 @@ return [
             'submenu' => [
 
                 [
-                    'text' => 'Project',
-                    'route' => 'projects.index',
-                    'can' => 'projects.index',
-                    'icon' => 'fas fa-file',
-                ],
-                [
-                    'text' => 'Terminal',
-                    'route' => 'terminal.index',
-                    'can' => 'terminal.index',
-                    'icon' => 'fas fa-terminal',
+                    'text' => 'Project Management',
+                    'icon' => 'fas fa-folder-open',
+                    'submenu' => [
+
+                        [
+                            'text' => 'Projects',
+                            'route' => 'projects.index',
+                            'can' => 'projects.index',
+                            'icon' => 'fas fa-folder',
+                        ],
+
+                        [
+                            'text' => 'Environment',
+                            'route' => 'environment.index',
+                            'can' => 'environment.index',
+                            'icon' => 'fas fa-cogs',
+                        ],
+
+                        [
+                            'text' => 'Server Health',
+                            'route' => 'server.index',
+                            'can' => 'server.index',
+                            'icon' => 'fas fa-server',
+                        ],
+
+                    ],
                 ],
 
                 [
-                    'text' => 'Git Monitor',
-                    'route' => 'gits.index',
-                    'can' => 'gits.index',
+                    'text' => 'Source Control',
                     'icon' => 'fab fa-git-alt',
+                    'submenu' => [
+
+                        [
+                            'text' => 'Git Monitor',
+                            'route' => 'gits.index',
+                            'can' => 'gits.index',
+                            'icon' => 'fab fa-git-alt',
+                        ],
+
+                        [
+                            'text' => 'Deployments',
+                            'route' => 'deployments.index',
+                            'can' => 'deployments.index',
+                            'icon' => 'fas fa-rocket',
+                        ],
+
+                    ],
                 ],
 
                 [
-                    'text' => 'Deployments',
-                    'route' => 'deployments.index',
-                    'can' => 'deployments.index',
-                    'icon' => 'fas fa-rocket',
+                    'text' => 'Application',
+                    'icon' => 'fab fa-laravel',
+                    'submenu' => [
+
+                        [
+                            'text' => 'Laravel Optimization',
+                            'route' => 'optimization.index',
+                            'can' => 'optimization.index',
+                            'icon' => 'fas fa-bolt',
+                        ],
+
+                        [
+                            'text' => 'Terminal',
+                            'route' => 'terminal.index',
+                            'can' => 'terminal.index',
+                            'icon' => 'fas fa-terminal',
+                        ],
+
+                        [
+                            'text' => 'Logs',
+                            'route' => 'logs.index',
+                            'can' => 'logs.index',
+                            'icon' => 'fas fa-file-alt',
+                        ],
+
+                    ],
                 ],
 
                 [
-                    'text' => 'Laravel Optimization',
-                    'route' => 'optimization.index',
-                    'can' => 'optimization.index',
-                    'icon' => 'fas fa-bolt',
+                    'text' => 'Background Services',
+                    'icon' => 'fas fa-tasks',
+                    'submenu' => [
+
+                        [
+                            'text' => 'Queue Monitor',
+                            'route' => 'queue.index',
+                            'can' => 'queue.index',
+                            'icon' => 'fas fa-stream',
+                        ],
+
+                        [
+                            'text' => 'Cron Jobs',
+                            'route' => 'cron.index',
+                            'can' => 'cron.index',
+                            'icon' => 'fas fa-clock',
+                        ],
+
+                    ],
                 ],
 
-                [
-                    'text' => 'Queue Monitor',
-                    'route' => 'queue.index',
-                    'can' => 'queue.index',
-                    'icon' => 'fas fa-stream',
-                ],
-
-                [
-                    'text' => 'Cron Jobs',
-                    'route' => 'cron.index',
-                    'can' => 'cron.index',
-                    'icon' => 'fas fa-clock',
-                ],
-
-                [
-                    'text' => 'Logs',
-                    'route' => 'logs.index',
-                    'can' => 'logs.index',
-                    'icon' => 'fas fa-file-alt',
-                ],
-
-                [
-                    'text' => 'Server Health',
-                    'route' => 'server.index',
-                    'can' => 'server.index',
-                    'icon' => 'fas fa-server',
-                ],
-
-                [
-                    'text' => 'Environment',
-                    'route' => 'environment.index',
-                    'can' => 'environment.index',
-                    'icon' => 'fas fa-cogs',
-                ],
-            ]
+            ],
         ],
-
         [
             'text'    => 'Setting Management',
             'icon'    => 'fas fa-cogs',
