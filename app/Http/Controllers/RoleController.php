@@ -74,21 +74,48 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
 
-        $rolePermissions = $role->permissions()->pluck('name')->toArray();
+        $rolePermissions = $role
+            ->permissions()
+            ->pluck('name')
+            ->toArray();
 
-        // Paginate permissions
-        $permissions = Permission::orderBy('name')->paginate(500);
+        $permissions = Permission::orderBy('name')
+            ->paginate(500);
 
-        // Group paginated items only
-        $groupedPermissions = $permissions->getCollection()->groupBy(function ($permission) {
-            return explode('.', $permission->name)[0];
-        });
-        return view('backend.setting_management.roles_and_permission.roles.edit', compact(
-            'role',
-            'rolePermissions',
-            'permissions',
-            'groupedPermissions',
-        ));
+        $groupedPermissions = $permissions
+            ->getCollection()
+            ->groupBy(function ($permission) {
+
+                return explode('.', $permission->name)[0];
+            })
+            ->sortKeys();
+
+        $newPermissions = $permissions
+            ->getCollection()
+            ->reject(function ($permission) use ($rolePermissions) {
+
+                return in_array(
+                    $permission->name,
+                    $rolePermissions
+                );
+            });
+
+        return view(
+            'backend.setting_management.roles_and_permission.roles.edit',
+            compact(
+
+                'role',
+
+                'permissions',
+
+                'groupedPermissions',
+
+                'rolePermissions',
+
+                'newPermissions'
+
+            )
+        );
     }
 
     public function update(Request $request, $id)
