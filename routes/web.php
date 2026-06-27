@@ -41,9 +41,7 @@ Route::get('/user_profile', function () {
     return view('user_profile');
 })->middleware(['auth', 'verified'])->name('profile');
 
-//Route::group(['middleware' => ['auth', 'permission']], function () {
-Route::group(['middleware' => 'auth'], function () {
-
+Route::group(['middleware' => ['auth', 'permission']], function () {
     // Profile Routes
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/system_dashboard', [DashboardController::class, 'system_index'])->name('dashboard.system');
@@ -69,7 +67,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/cron-jobs', [CronController::class, 'index'])->name('cron.index');
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/server-health', [ServerHealthController::class, 'index'])->name('server.index');
-    Route::get('/environment', [EnvironmentController::class, 'index'])->name('environment.index');
+    Route::resource('environment', EnvironmentController::class);
 
     //Setting Management
 Route::resource('roles', RoleController::class);
