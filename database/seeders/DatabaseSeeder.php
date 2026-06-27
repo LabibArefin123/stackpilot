@@ -22,9 +22,9 @@ class DatabaseSeeder extends Seeder
             // UserSeeder::class,
             // PermissionSeeder::class,
             // ProjectSeeder::class,
-            ProjectEnvironmentSeeder::class,
+            // ProjectEnvironmentSeeder::class,
             // ProjectHealthSeeder::class,
-            // DeploymentSeeder::class,
+            DeploymentSeeder::class,
         ]);
     }
 }

@@ -7,9 +7,13 @@ use App\Models\ProjectEnvironment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Process\Process;
+use App\Services\GitRepositoryScanner;
 
 class ProjectController extends Controller
 {
+    public function __construct(
+        protected GitRepositoryScanner $scanner
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -138,17 +142,23 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         $project->load([
+
             'environment',
+
             'health',
+
             'deployment',
-            'commands' => fn($q) => $q->latest()->take(20),
+
+            'commands' => fn($query) => $query->latest()->take(20),
+
             'sessions',
+
         ]);
 
-        $gitPath = $project->project_path ?: env('PROJECT_PATH');
+        $gitPath = $this->scanner->findRepository($project);
 
-        if (! is_dir($gitPath)) {
-            abort(500, "Git project path not found: {$gitPath}");
+        if (!$gitPath) {
+            abort(404, "Repository not found for {$project->name}");
         }
 
         $git = $this->loadGitInformation($project, $gitPath);
@@ -158,11 +168,13 @@ class ProjectController extends Controller
         $stats = $this->loadTerminalStatistics($project);
 
         $commits = $this->loadLatestCommits($gitPath);
+
         return view(
             'backend.project_page.show',
             compact(
                 'project',
                 'git',
+                'deployment',
                 'stats',
                 'commits'
             )
@@ -386,26 +398,27 @@ class ProjectController extends Controller
         return $commits;
     }
 
-    private function loadDeployment(Project $project, array $git)
+    private function loadDeployment(Project $project, array $git): array
     {
-        $deployment = $project->deployment;
+        $deployment = optional($project->deployment);
 
         return [
 
-            'status' => $deployment->status ?? 'pending',
+            'status' => $deployment->status ?? 'Pending',
 
             'method' => $deployment->method ?? 'Git Pull',
 
             'server' => $deployment->server
-                ?? optional($project->environment)->server_name,
+                ?? optional($project->environment)->server_name
+                ?? php_uname('n'),
 
-            'repository' => $git['remote_url'],
+            'repository' => $git['remote_url'] ?? null,
 
-            'branch' => $git['branch'],
+            'branch' => $git['branch'] ?? null,
 
-            'commit_hash' => $git['last_hash'],
+            'commit_hash' => $git['last_hash'] ?? null,
 
-            'commit_message' => $git['last_message'],
+            'commit_message' => $git['last_message'] ?? null,
 
             'version' => $deployment->version,
 
@@ -417,34 +430,26 @@ class ProjectController extends Controller
 
             'artifact_name' => $deployment->artifact_name,
 
-            'git_pull_command' =>
-            $deployment->git_pull_command
-                ?? 'git pull origin ' . $git['branch'],
+            'git_pull_command' => $deployment->git_pull_command
+                ?? 'git pull origin ' . ($git['branch'] ?? 'main'),
 
-            'composer_install_command' =>
-            $deployment->composer_install_command
+            'composer_install_command' => $deployment->composer_install_command
                 ?? 'composer install --no-dev --optimize-autoloader',
 
-            'npm_build_command' =>
-            $deployment->npm_build_command
+            'npm_build_command' => $deployment->npm_build_command
                 ?? 'npm run build',
 
-            'migration_command' =>
-            $deployment->migration_command
+            'migration_command' => $deployment->migration_command
                 ?? 'php artisan migrate --force',
 
-            'cache_clear_command' =>
-            $deployment->cache_clear_command
+            'cache_clear_command' => $deployment->cache_clear_command
                 ?? 'php artisan optimize',
 
-            'success_count' =>
-            $deployment->success_count ?? 0,
+            'success_count' => $deployment->success_count ?? 0,
 
-            'failed_count' =>
-            $deployment->failed_count ?? 0,
+            'failed_count' => $deployment->failed_count ?? 0,
 
-            'deployed_at' =>
-            $deployment->deployed_at,
+            'deployed_at' => $deployment->deployed_at,
 
         ];
     }

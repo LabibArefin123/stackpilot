@@ -77,6 +77,36 @@ class GitRepositoryScanner
     }
 
     /**
+     * Find a project's local repository path.
+     */
+    public function findRepository(Project $project): ?string
+    {
+        foreach ($this->repositories() as $directory) {
+
+            if (strcasecmp(basename($directory), $project->name) === 0) {
+                return $directory;
+            }
+
+            if (
+                strcasecmp(
+                    str_replace('_', ' ', basename($directory)),
+                    $project->name
+                ) === 0
+            ) {
+                return $directory;
+            }
+
+            $remote = $this->git($directory, 'git remote get-url origin');
+
+            if ($remote && $remote === $project->git_repository) {
+                return $directory;
+            }
+        }
+
+        return null;
+    }
+    
+    /**
      * Return repository directories.
      */
     public function repositories(): array
