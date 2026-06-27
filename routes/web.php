@@ -61,7 +61,10 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('projects', ProjectController::class);
     Route::resource('gits', GitMonitorController::class);
     Route::get('/deployments', [DeploymentController::class, 'index'])->name('deployments.index');
-    Route::get('/optimization', [OptimizationController::class, 'index'])->name('optimization.index');
+
+    Route::resource('optimization', OptimizationController::class)->only(['index']);
+    Route::post('optimization/run',[OptimizationController::class, 'run'])->name('optimization.run');
+    
     Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
     Route::get('/cron-jobs', [CronController::class, 'index'])->name('cron.index');
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');

@@ -2,34 +2,122 @@
 
 @section('title', 'Laravel Optimization')
 
+@section('content_header')
+
+    <div class="d-flex justify-content-between align-items-center">
+
+        <h1>
+
+            <i class="fas fa-bolt text-warning mr-2"></i>
+
+            Laravel Optimization
+
+        </h1>
+
+        <span class="badge badge-success p-2">
+
+            Ready
+
+        </span>
+
+    </div>
+
+@stop
+
 @section('content')
 
     <div class="row">
 
-        <div class="col-md-3">
-            <button class="btn btn-success btn-block">
-                Optimize
-            </button>
-        </div>
+        <div class="col-md-12">
 
-        <div class="col-md-3">
-            <button class="btn btn-danger btn-block">
-                Optimize Clear
-            </button>
-        </div>
+            @include('backend.partials.optimize_page.index_page.part_1')
 
-        <div class="col-md-3">
-            <button class="btn btn-info btn-block">
-                Config Cache
-            </button>
-        </div>
-
-        <div class="col-md-3">
-            <button class="btn btn-primary btn-block">
-                Route Cache
-            </button>
         </div>
 
     </div>
 
-@endsection
+    <div class="row">
+
+        <div class="col-md-12">
+            @include('backend.partials.optimize_page.index_page.part_2')
+        </div>
+
+    </div>
+
+@stop
+
+@push('js')
+    <script>
+        $(function() {
+
+            $('.run-command').click(function() {
+
+                let button = $(this);
+
+                let command = button.data('command');
+
+                button.prop('disabled', true);
+
+                $('#terminalOutput').text('Running ' + command + '...\n');
+
+                $.ajax({
+
+                    url: "{{ route('optimization.run') }}",
+
+                    method: "POST",
+
+                    data: {
+
+                        _token: "{{ csrf_token() }}",
+
+                        command: command
+
+                    },
+
+                    success: function(response) {
+
+                        $('#terminalOutput').text(response.output);
+
+                        $(document).Toasts('create', {
+
+                            class: response.success ?
+                                'bg-success' :
+                                'bg-danger',
+
+                            title: response.success ?
+                                'Completed' :
+                                'Failed',
+
+                            body: response.success ?
+                                'Command executed successfully.' :
+                                'Command execution failed.'
+
+                        });
+
+                    },
+
+                    error: function(xhr) {
+
+                        $('#terminalOutput').text(
+
+                            xhr.responseJSON?.output ??
+
+                            'Unknown Error.'
+
+                        );
+
+                    },
+
+                    complete: function() {
+
+                        button.prop('disabled', false);
+
+                    }
+
+                });
+
+            });
+
+        });
+    </script>
+@endpush
