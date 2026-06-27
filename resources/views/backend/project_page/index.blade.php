@@ -4,23 +4,91 @@
 
 @section('content')
 
-<div class="row">
+    <div class="row">
 
-    <div class="col-md-3">
+        <div class="col-md-3">
 
-        <div class="small-box bg-primary">
+            <div class="small-box bg-primary">
 
-            <div class="inner">
+                <div class="inner">
 
-                <h3>{{ $projects->count() }}</h3>
+                    <h3>{{ $projects->count() }}</h3>
 
-                <p>Total Projects</p>
+                    <p>Total Projects</p>
+
+                </div>
+
+                <div class="icon">
+
+                    <i class="fas fa-project-diagram"></i>
+
+                </div>
 
             </div>
 
-            <div class="icon">
+        </div>
 
-                <i class="fas fa-project-diagram"></i>
+        <div class="col-md-3">
+
+            <div class="small-box bg-success">
+
+                <div class="inner">
+
+                    <h3>{{ $projects->where('is_active', 1)->count() }}</h3>
+
+                    <p>Active</p>
+
+                </div>
+
+                <div class="icon">
+
+                    <i class="fas fa-check-circle"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="small-box bg-warning">
+
+                <div class="inner">
+
+                    <h3>{{ $projects->where('is_active', 0)->count() }}</h3>
+
+                    <p>Inactive</p>
+
+                </div>
+
+                <div class="icon">
+
+                    <i class="fas fa-pause-circle"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="small-box bg-info">
+
+                <div class="inner">
+
+                    <h3>{{ $projects->count() }}</h3>
+
+                    <p>Environments</p>
+
+                </div>
+
+                <div class="icon">
+
+                    <i class="fas fa-server"></i>
+
+                </div>
 
             </div>
 
@@ -28,292 +96,258 @@
 
     </div>
 
-    <div class="col-md-3">
+    <div class="card card-outline card-primary">
 
-        <div class="small-box bg-success">
+        <div class="card-header">
 
-            <div class="inner">
+            <h3 class="card-title">
 
-                <h3>{{ $projects->where('is_active',1)->count() }}</h3>
+                Laravel Projects
 
-                <p>Active</p>
+            </h3>
 
-            </div>
+            <div class="card-tools">
 
-            <div class="icon">
+                <a href="{{ route('projects.create') }}" class="btn btn-primary btn-sm">
 
-                <i class="fas fa-check-circle"></i>
+                    <i class="fas fa-plus"></i>
 
-            </div>
+                    Add Project
 
-        </div>
-
-    </div>
-
-    <div class="col-md-3">
-
-        <div class="small-box bg-warning">
-
-            <div class="inner">
-
-                <h3>{{ $projects->where('is_active',0)->count() }}</h3>
-
-                <p>Inactive</p>
-
-            </div>
-
-            <div class="icon">
-
-                <i class="fas fa-pause-circle"></i>
+                </a>
 
             </div>
 
         </div>
 
-    </div>
-
-    <div class="col-md-3">
-
-        <div class="small-box bg-info">
-
-            <div class="inner">
-
-                <h3>{{ $projects->count() }}</h3>
-
-                <p>Environments</p>
-
-            </div>
-
-            <div class="icon">
-
-                <i class="fas fa-server"></i>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<div class="card card-outline card-primary">
-
-    <div class="card-header">
-
-        <h3 class="card-title">
-
-            Laravel Projects
-
-        </h3>
-
-        <div class="card-tools">
-
-            <a href="{{ route('projects.create') }}"
-               class="btn btn-primary btn-sm">
-
-                <i class="fas fa-plus"></i>
-
-                Add Project
-
-            </a>
-
-        </div>
-
-    </div>
-
-    <div class="card-body p-0">
-
-        <table class="table table-hover">
-
-            <thead>
-
-                <tr>
-
-                    <th>Name</th>
-
-                    <th>Domain</th>
-
-                    <th>Environment</th>
-
-                    <th>PHP</th>
-
-                    <th>Laravel</th>
-
-                    <th>Health</th>
-
-                    <th>Status</th>
-
-                    <th>Actions</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-            @forelse($projects as $project)
-
-                <tr>
-
-                    <td>
-
-                        <strong>{{ $project->name }}</strong>
-
-                    </td>
-
-                    <td>
-
-                        <a href="https://{{ $project->domain }}"
-                           target="_blank">
-
-                            {{ $project->domain }}
-
-                        </a>
-
-                    </td>
-
-                    <td>
-
-                        @if($project->environment)
-
-                            <span class="badge badge-info">
-
-                                {{ ucfirst($project->environment->environment) }}
-
-                            </span>
-
-                        @endif
-
-                    </td>
-
-                    <td>
-
-                        {{ $project->environment->php_version ?? '-' }}
-
-                    </td>
-
-                    <td>
-
-                        {{ $project->environment->laravel_version ?? '-' }}
-
-                    </td>
-
-                    <td>
-
-                        @php
-
-                            $score = optional($project->health)->health_score ?? 0;
-
-                        @endphp
-
-                        <div class="progress progress-xs">
-
-                            <div class="progress-bar
-
-                                @if($score>=90)
-
-                                    bg-success
-
-                                @elseif($score>=70)
-
-                                    bg-warning
-
+        <div class="card-body">
+
+            <table class="table table-hover" id="dataTables">
+
+                <thead>
+
+                    <tr>
+
+                        <th>Project</th>
+                        <th>Domain</th>
+                        <th>Branch</th>
+                        <th>Git Status</th>
+                        <th>PHP</th>
+                        <th>Laravel</th>
+                        <th>Health</th>
+                        <th>Status</th>
+                        <th>Last Commit</th>
+                        <th width="180">Actions</th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+
+                    @forelse($projects as $project)
+                        <tr>
+
+                            {{-- Project --}}
+                            <td>
+                                <div>
+                                    <strong>{{ $project->name }}</strong><br>
+
+                                    <small class="text-muted">
+                                        {{ $project->project_type ?? 'Unknown' }}
+                                    </small>
+                                </div>
+                            </td>
+
+                            {{-- Domain --}}
+                            <td>
+                                @if ($project->domain)
+                                    <a href="https://{{ $project->domain }}" target="_blank">
+                                        {{ $project->domain }}
+                                    </a>
                                 @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </td>
 
-                                    bg-danger
+                            {{-- Git Branch --}}
+                            <td>
+                                <span class="badge badge-primary">
+                                    <i class="fas fa-code-branch"></i>
+                                    {{ $project->git_branch ?? '-' }}
+                                </span>
+                            </td>
 
-                                @endif"
+                            {{-- Git Status --}}
+                            <td>
 
-                                style="width:{{ $score }}%">
+                                @switch($project->git_status)
+                                    @case('Clean')
+                                        <span class="badge badge-success">
+                                            Clean
+                                        </span>
+                                    @break
 
-                            </div>
+                                    @case('Modified')
+                                        <span class="badge badge-warning">
+                                            Modified
+                                        </span>
+                                    @break
 
-                        </div>
+                                    @default
+                                        <span class="badge badge-secondary">
+                                            Unknown
+                                        </span>
+                                @endswitch
 
-                        {{ $score }}%
+                            </td>
 
-                    </td>
+                            {{-- PHP --}}
+                            <td>
 
-                    <td>
+                                <span class="badge badge-info">
 
-                        @if($project->is_active)
+                                    {{ $project->php_version ?? '-' }}
 
-                            <span class="badge badge-success">
+                                </span>
 
-                                Active
+                            </td>
 
-                            </span>
+                            {{-- Laravel --}}
+                            <td>
 
-                        @else
+                                <span class="badge badge-danger">
 
-                            <span class="badge badge-danger">
+                                    {{ $project->laravel_version ?? '-' }}
 
-                                Inactive
+                                </span>
 
-                            </span>
+                            </td>
 
-                        @endif
+                            {{-- Health --}}
+                            <td>
 
-                    </td>
+                                @php
 
-                    <td>
+                                    $score = optional($project->health)->health_score ?? 0;
 
-                        <div class="btn-group">
+                                @endphp
 
-                            <a href="{{ route('projects.show',$project) }}"
-                               class="btn btn-xs btn-info">
+                                <div class="progress progress-xs">
 
-                                <i class="fas fa-eye"></i>
+                                    <div class="progress-bar
 
-                            </a>
+                @if ($score >= 90) bg-success
 
-                            <a href="{{ route('projects.edit',$project) }}"
-                               class="btn btn-xs btn-warning">
+                @elseif($score >= 70)
 
-                                <i class="fas fa-edit"></i>
+                    bg-warning
 
-                            </a>
+                @else
 
-                            <a href="{{ route('terminal.index',['project'=>$project->id]) }}"
-                               class="btn btn-xs btn-dark">
+                    bg-danger @endif"
+                                        style="width:{{ $score }}%">
 
-                                <i class="fas fa-terminal"></i>
+                                    </div>
 
-                            </a>
+                                </div>
 
-                        </div>
+                                {{ $score }}%
 
-                    </td>
+                            </td>
 
-                </tr>
+                            {{-- Active --}}
+                            <td>
 
-            @empty
+                                @if ($project->is_active)
+                                    <span class="badge badge-success">
 
-                <tr>
+                                        Active
 
-                    <td colspan="8"
-                        class="text-center">
+                                    </span>
+                                @else
+                                    <span class="badge badge-danger">
 
-                        No Projects Found
+                                        Inactive
 
-                    </td>
+                                    </span>
+                                @endif
 
-                </tr>
+                            </td>
 
-            @endforelse
+                            {{-- Last Commit --}}
+                            <td>
 
-            </tbody>
+                                @if ($project->last_commit_date)
+                                    <small>
 
-        </table>
+                                        {{ \Carbon\Carbon::parse($project->last_commit_date)->diffForHumans() }}
 
-    </div>
+                                    </small>
+                                @else
+                                    -
+                                @endif
 
-    <div class="card-footer">
+                            </td>
 
-        {{ $projects->links() }}
+                            {{-- Actions --}}
+                            <td>
 
-    </div>
+                                <div class="btn-group">
 
-</div>
+                                    <a href="{{ route('projects.show', $project) }}" class="btn btn-xs btn-info">
 
-@endsection
+                                        <i class="fas fa-eye"></i>
+
+                                    </a>
+
+                                    <a href="{{ route('projects.edit', $project) }}" class="btn btn-xs btn-warning">
+
+                                        <i class="fas fa-edit"></i>
+
+                                    </a>
+
+                                    <a href="{{ route('terminal.index', ['project' => $project->id]) }}"
+                                        class="btn btn-xs btn-dark">
+
+                                        <i class="fas fa-terminal"></i>
+
+                                    </a>
+
+                                    @if ($project->git_repository)
+                                        <a href="{{ $project->git_repository }}" target="_blank"
+                                            class="btn btn-xs btn-secondary">
+
+                                            <i class="fab fa-github"></i>
+
+                                        </a>
+                                    @endif
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="10" class="text-center">
+
+                                    No Projects Found
+
+                                </td>
+
+                            </tr>
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+        </div>
+        <div class="card mt-4">
+            <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
+        </div>
+    @endsection

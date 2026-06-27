@@ -20,7 +20,7 @@ class ProjectController extends Controller
             'health',
         ])
             ->latest()
-            ->paginate(10);
+            ->get();
 
         return view('backend.project_page.index', compact('projects'));
     }
