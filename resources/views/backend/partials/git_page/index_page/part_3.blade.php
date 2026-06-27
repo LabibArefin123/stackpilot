@@ -22,7 +22,6 @@
                      <th>Environment</th>
                      <th>Health </th>
                      <th>Repository</th>
-                     <th>Last Checked</th>
                      <th width="150">Action</th>
                  </tr>
              </thead>
@@ -100,15 +99,7 @@
                                      Not Configured
                                  </span>
                              @endif
-                         </td>
-
-                         <td>
-                             @if ($project->last_checked_at)
-                                 {{ $project->last_checked_at->diffForHumans() }}
-                             @else
-                                 -
-                             @endif
-                         </td>
+                         </td>  
 
                          <td>
                              <a href="{{ route('gits.show', $project) }}" class="btn btn-sm btn-primary">

@@ -44,13 +44,13 @@ class GitMonitorController extends Controller
 
         $gitPath = $this->resolveRepositoryPath($project);
 
-        if (!$gitPath) {
+        // if (!$gitPath) {
 
-            abort(
-                404,
-                'Git repository could not be found.'
-            );
-        }
+        //     abort(
+        //         404,
+        //         'Local Git repository not found.'
+        //     );
+        // }
 
         $git = $this->loadGitInformation($project, $gitPath);
 
@@ -81,7 +81,7 @@ class GitMonitorController extends Controller
         ));
     }
 
-    
+
     /**
      * Execute Git Command
      */
@@ -111,8 +111,109 @@ class GitMonitorController extends Controller
     /**
      * Load complete Git repository information.
      */
-    private function loadGitInformation(Project $project, string $gitPath): array
+    private function loadGitInformation(Project $project, ?string $gitPath): array
     {
+
+        if (blank($gitPath) || ! is_dir($gitPath)) {
+
+            return [
+
+                'health' => 0,
+
+                'status' => 'Repository Not Found',
+
+                'repository' => false,
+
+                'connected' => false,
+
+                'working_tree' => false,
+
+                'fetch_ok' => false,
+
+                'push_access' => false,
+
+                'repository_name' => $project->name,
+
+                'repository_path' => '-',
+
+                'repository_size' => '-',
+
+                'git_version' => '-',
+
+                'branch' => '-',
+
+                'default_branch' => '-',
+
+                'default_remote_branch' => '-',
+
+                'branch_count' => 0,
+
+                'commit_count' => 0,
+
+                'tag_count' => 0,
+
+                'latest_commit' => false,
+
+                'last_hash' => '-',
+
+                'last_message' => '-',
+
+                'last_date' => '-',
+
+                'last_commit_author' => '-',
+
+                'last_commit_email' => '-',
+
+                'head' => '-',
+
+                'local_branches' => collect(),
+
+                'remote_branches' => collect(),
+
+                'remote_name' => '-',
+
+                'fetch_url' => '-',
+
+                'push_url' => '-',
+
+                'remote_url' => $project->git_repository,
+
+                'contributors' => collect(),
+
+                'total_contributors' => 0,
+
+            ];
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Basic Repository
+    |--------------------------------------------------------------------------
+    */
+
+        $repositoryExists = is_dir(
+            $gitPath . DIRECTORY_SEPARATOR . '.git'
+        );
+
+        if (! $repositoryExists) {
+
+            return [
+
+                'repository' => false,
+
+                'status' => 'Missing',
+
+                'health' => 0,
+
+            ];
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | Git Commands
+    |--------------------------------------------------------------------------
+    */
+
         $branch = $this->runGitCommand(
             $gitPath,
             'git branch --show-current'
@@ -121,6 +222,11 @@ class GitMonitorController extends Controller
         $lastHash = $this->runGitCommand(
             $gitPath,
             'git rev-parse --short HEAD'
+        );
+
+        $head = $this->runGitCommand(
+            $gitPath,
+            'git rev-parse HEAD'
         );
 
         $lastMessage = $this->runGitCommand(
@@ -133,23 +239,19 @@ class GitMonitorController extends Controller
             'git log -1 --date=local --pretty=%cd'
         );
 
+        $lastCommitAuthor = $this->runGitCommand(
+            $gitPath,
+            'git log -1 --pretty=%an'
+        );
+
+        $lastCommitEmail = $this->runGitCommand(
+            $gitPath,
+            'git log -1 --pretty=%ae'
+        );
+
         $gitVersion = $this->runGitCommand(
             $gitPath,
             'git --version'
-        );
-
-        $branchCount = (int) (
-            $this->runGitCommand(
-                $gitPath,
-                'git branch --list | wc -l'
-            ) ?? 0
-        );
-
-        $commitCount = (int) (
-            $this->runGitCommand(
-                $gitPath,
-                'git rev-list --count HEAD'
-            ) ?? 0
         );
 
         $status = $this->runGitCommand(
@@ -159,15 +261,94 @@ class GitMonitorController extends Controller
 
         $workingTree = empty($status);
 
-        $localBranches = $this->runGitCommand(
-            $gitPath,
-            'git branch --format="%(refname:short)"'
+        /*
+    |--------------------------------------------------------------------------
+    | Branches
+    |--------------------------------------------------------------------------
+    */
+
+        $localBranches = collect(
+
+            explode(
+                PHP_EOL,
+                $this->runGitCommand(
+                    $gitPath,
+                    'git branch --format="%(refname:short)"'
+                ) ?? ''
+            )
+
+        )->filter()->values();
+
+        $remoteBranches = collect(
+
+            explode(
+                PHP_EOL,
+                $this->runGitCommand(
+                    $gitPath,
+                    'git branch -r --format="%(refname:short)"'
+                ) ?? ''
+            )
+
+        )->filter()->values();
+
+        $branchCount = $localBranches->count();
+
+        /*
+    |--------------------------------------------------------------------------
+    | Commits
+    |--------------------------------------------------------------------------
+    */
+
+        $commitCount = (int) (
+
+            $this->runGitCommand(
+                $gitPath,
+                'git rev-list --count HEAD'
+            ) ?? 0
+
         );
 
-        $remoteBranches = $this->runGitCommand(
-            $gitPath,
-            'git branch -r --format="%(refname:short)"'
-        );
+        /*
+    |--------------------------------------------------------------------------
+    | Tags
+    |--------------------------------------------------------------------------
+    */
+
+        $tags = collect(
+
+            explode(
+                PHP_EOL,
+                $this->runGitCommand(
+                    $gitPath,
+                    'git tag'
+                ) ?? ''
+            )
+
+        )->filter();
+
+        /*
+    |--------------------------------------------------------------------------
+    | Contributors
+    |--------------------------------------------------------------------------
+    */
+
+        $contributors = collect(
+
+            explode(
+                PHP_EOL,
+                $this->runGitCommand(
+                    $gitPath,
+                    'git shortlog -sn --all'
+                ) ?? ''
+            )
+
+        )->filter();
+
+        /*
+    |--------------------------------------------------------------------------
+    | Remote
+    |--------------------------------------------------------------------------
+    */
 
         $remoteName = $this->runGitCommand(
             $gitPath,
@@ -189,55 +370,13 @@ class GitMonitorController extends Controller
             'git symbolic-ref refs/remotes/origin/HEAD'
         );
 
-        $contributors = $this->runGitCommand(
-            $gitPath,
-            'git shortlog -sn --all'
-        );
-
-        $totalContributors = 0;
-
-        if ($contributors) {
-
-            $totalContributors = count(
-                array_filter(
-                    explode(PHP_EOL, $contributors)
-                )
-            );
-        }
-
-        $lastCommitAuthor = $this->runGitCommand(
-            $gitPath,
-            'git log -1 --pretty=%an'
-        );
-
-        $lastCommitEmail = $this->runGitCommand(
-            $gitPath,
-            'git log -1 --pretty=%ae'
-        );
-
-        $tagCount = (int) (
-            $this->runGitCommand(
-                $gitPath,
-                'git tag | wc -l'
-            ) ?? 0
-        );
-
-        $currentHead = $this->runGitCommand(
-            $gitPath,
-            'git rev-parse HEAD'
-        );
-
-        $repositoryExists = is_dir(
-            $gitPath . DIRECTORY_SEPARATOR . '.git'
-        );
+        /*
+    |--------------------------------------------------------------------------
+    | Return
+    |--------------------------------------------------------------------------
+    */
 
         return [
-
-            /*
-        |--------------------------------------------------------------------------
-        | Health
-        |--------------------------------------------------------------------------
-        */
 
             'health' => $workingTree ? 100 : 80,
 
@@ -245,9 +384,9 @@ class GitMonitorController extends Controller
                 ? 'Clean'
                 : 'Modified',
 
-            'repository' => $repositoryExists,
+            'repository' => true,
 
-            'connected' => filled($remoteName),
+            'connected' => filled($fetchUrl),
 
             'working_tree' => $workingTree,
 
@@ -265,9 +404,8 @@ class GitMonitorController extends Controller
 
             'repository_path' => $gitPath,
 
-            'repository_size' => $this->getRepositorySize($gitPath),
-
-            'remote_url' => $project->git_repository,
+            // Disable for now (slow)
+            'repository_size' => '-',
 
             /*
         |--------------------------------------------------------------------------
@@ -291,11 +429,11 @@ class GitMonitorController extends Controller
 
             'commit_count' => $commitCount,
 
-            'tag_count' => $tagCount,
+            'tag_count' => $tags->count(),
 
             /*
         |--------------------------------------------------------------------------
-        | Latest Commit
+        | Commit
         |--------------------------------------------------------------------------
         */
 
@@ -311,7 +449,7 @@ class GitMonitorController extends Controller
 
             'last_commit_email' => $lastCommitEmail,
 
-            'head' => $currentHead,
+            'head' => $head,
 
             /*
         |--------------------------------------------------------------------------
@@ -319,17 +457,9 @@ class GitMonitorController extends Controller
         |--------------------------------------------------------------------------
         */
 
-            'local_branches' => collect(
-                explode(PHP_EOL, $localBranches ?? '')
-            )
-                ->filter()
-                ->values(),
+            'local_branches' => $localBranches,
 
-            'remote_branches' => collect(
-                explode(PHP_EOL, $remoteBranches ?? '')
-            )
-                ->filter()
-                ->values(),
+            'remote_branches' => $remoteBranches,
 
             /*
         |--------------------------------------------------------------------------
@@ -343,29 +473,86 @@ class GitMonitorController extends Controller
 
             'push_url' => $pushUrl,
 
+            'remote_url' => $fetchUrl,
+
             /*
         |--------------------------------------------------------------------------
         | Contributors
         |--------------------------------------------------------------------------
         */
 
-            'total_contributors' => $totalContributors,
+            'contributors' => $contributors,
+
+            'total_contributors' => $contributors->count(),
 
         ];
     }
     /**
      * Repository Status
      */
-    private function getRepositoryStatus(string $gitPath): array
+    /**
+     * Get repository working tree status.
+     */
+    private function getRepositoryStatus(?string $gitPath): array
     {
+        if (
+            blank($gitPath) ||
+            ! is_dir($gitPath) ||
+            ! is_dir($gitPath . DIRECTORY_SEPARATOR . '.git')
+        ) {
+
+            return [
+
+                'exists' => false,
+
+                'clean' => false,
+
+                'status' => 'Repository Not Found',
+
+                'badge' => 'danger',
+
+                'icon' => 'fas fa-times-circle',
+
+                'files' => collect(),
+
+            ];
+        }
+
         $status = $this->runGitCommand(
             $gitPath,
             'git status --porcelain'
         );
 
-        $clean = empty($status);
+        if ($status === null) {
+
+            return [
+
+                'exists' => true,
+
+                'clean' => false,
+
+                'status' => 'Git Error',
+
+                'badge' => 'danger',
+
+                'icon' => 'fas fa-exclamation-circle',
+
+                'files' => collect(),
+
+            ];
+        }
+
+        $files = collect(
+            preg_split('/\r\n|\r|\n/', trim($status))
+        )
+            ->filter()
+            ->values();
+
+        $clean = $files->isEmpty();
 
         return [
+
+            'exists' => true,
 
             'clean' => $clean,
 
@@ -381,59 +568,76 @@ class GitMonitorController extends Controller
                 ? 'fas fa-check-circle'
                 : 'fas fa-exclamation-triangle',
 
-            'files' => $status
-                ? collect(explode(PHP_EOL, $status))
-                : collect(),
+            'files' => $files,
 
         ];
     }
-    
+
     private function resolveRepositoryPath(Project $project): ?string
     {
-        $roots = [
+        $root = 'E:\\laragon\\www';
 
-            'E:\\laragon\\www',
+        if (! File::isDirectory($root)) {
+            return null;
+        }
 
-            'D:\\laragon\\www',
+        $repository = basename(
+            $project->git_repository,
+            '.git'
+        );
 
-            base_path('..'),
+        foreach (File::directories($root) as $directory) {
 
-        ];
+            if (! File::isDirectory(
+                $directory . DIRECTORY_SEPARATOR . '.git'
+            )) {
+                continue;
+            }
 
-        /*
-    |--------------------------------------------------------------------------
-    | Candidate folder names
-    |--------------------------------------------------------------------------
-    */
+            /*
+        |--------------------------------------------------------------------------
+        | Exact repository folder
+        |--------------------------------------------------------------------------
+        */
 
-        $folders = array_unique([
+            if (
+                strcasecmp(
+                    basename($directory),
+                    $repository
+                ) === 0
+            ) {
+                return realpath($directory);
+            }
 
-            $project->repository_folder,
+            /*
+        |--------------------------------------------------------------------------
+        | Verify remote url
+        |--------------------------------------------------------------------------
+        */
 
-            $project->slug,
+            $remote = $this->runGitCommand(
 
-            Str::slug($project->name, '_'),
+                $directory,
 
-            Str::snake($project->name),
+                'git remote get-url origin'
 
-            basename($project->git_repository, '.git'),
+            );
 
-        ]);
+            if (
 
-        foreach ($roots as $root) {
+                filled($remote)
 
-            foreach ($folders as $folder) {
+                &&
 
-                if (blank($folder)) {
-                    continue;
-                }
+                filled($project->git_repository)
 
-                $path = $root . DIRECTORY_SEPARATOR . $folder;
+                &&
 
-                if (is_dir($path . DIRECTORY_SEPARATOR . '.git')) {
+                trim($remote) === trim($project->git_repository)
 
-                    return realpath($path);
-                }
+            ) {
+
+                return realpath($directory);
             }
         }
 
@@ -569,8 +773,12 @@ class GitMonitorController extends Controller
         ) . ' ' . $units[$power];
     }
 
-    private function loadLatestCommits(string $gitPath): array
+    private function loadLatestCommits(?string $gitPath): array
     {
+        if (! $this->validateRepository($gitPath)) {
+            return [];
+        }
+
         $output = $this->runGitCommand(
             $gitPath,
             'git log -10 --pretty=format:"%h|%an|%ae|%ad|%s" --date=relative'
@@ -580,36 +788,47 @@ class GitMonitorController extends Controller
             return [];
         }
 
-        $commits = [];
+        return collect(explode(PHP_EOL, $output))
+            ->map(function ($line) {
 
-        foreach (explode(PHP_EOL, $output) as $line) {
+                $parts = explode('|', $line, 5);
 
-            $parts = explode('|', $line, 5);
+                if (count($parts) < 5) {
+                    return null;
+                }
 
-            if (count($parts) < 5) {
-                continue;
-            }
+                return [
 
-            $commits[] = [
+                    'hash' => $parts[0],
 
-                'hash' => $parts[0],
+                    'author' => $parts[1],
 
-                'author' => $parts[1],
+                    'email' => $parts[2],
 
-                'email' => $parts[2],
+                    'date' => $parts[3],
 
-                'date' => $parts[3],
+                    'message' => $parts[4],
 
-                'message' => $parts[4],
+                ];
+            })
+            ->filter()
+            ->values()
+            ->toArray();
+    }
+
+    private function loadBranches(?string $gitPath): array
+    {
+        if (! $this->validateRepository($gitPath)) {
+
+            return [
+
+                'local' => [],
+
+                'remote' => [],
 
             ];
         }
 
-        return $commits;
-    }
-
-    private function loadBranches(string $gitPath): array
-    {
         $local = $this->runGitCommand(
             $gitPath,
             'git branch --format="%(refname:short)"'
@@ -623,14 +842,14 @@ class GitMonitorController extends Controller
         return [
 
             'local' => collect(
-                explode(PHP_EOL, $local ?? '')
+                preg_split('/\r\n|\r|\n/', $local ?? '')
             )
                 ->filter()
                 ->values()
                 ->toArray(),
 
             'remote' => collect(
-                explode(PHP_EOL, $remote ?? '')
+                preg_split('/\r\n|\r|\n/', $remote ?? '')
             )
                 ->filter()
                 ->values()
@@ -639,8 +858,12 @@ class GitMonitorController extends Controller
         ];
     }
 
-    private function loadContributors(string $gitPath): array
+    private function loadContributors(?string $gitPath): array
     {
+        if (! $this->validateRepository($gitPath)) {
+            return [];
+        }
+
         $output = $this->runGitCommand(
             $gitPath,
             'git shortlog -sn --all'
@@ -650,27 +873,46 @@ class GitMonitorController extends Controller
             return [];
         }
 
-        $contributors = [];
+        return collect(explode(PHP_EOL, $output))
+            ->map(function ($line) {
 
-        foreach (explode(PHP_EOL, $output) as $line) {
+                if (
+                    preg_match(
+                        '/^\s*(\d+)\s+(.*)$/',
+                        $line,
+                        $match
+                    )
+                ) {
 
-            if (preg_match('/^\s*(\d+)\s+(.*)$/', $line, $match)) {
+                    return [
 
-                $contributors[] = [
+                        'commits' => (int) $match[1],
 
-                    'commits' => (int) $match[1],
+                        'author' => trim($match[2]),
 
-                    'author' => trim($match[2]),
+                    ];
+                }
 
-                ];
-            }
-        }
-
-        return $contributors;
+                return null;
+            })
+            ->filter()
+            ->values()
+            ->toArray();
     }
 
-    private function loadWorkingTree(string $gitPath): array
+    private function loadWorkingTree(?string $gitPath): array
     {
+        if (! $this->validateRepository($gitPath)) {
+
+            return [
+
+                'clean' => false,
+
+                'files' => [],
+
+            ];
+        }
+
         $output = $this->runGitCommand(
             $gitPath,
             'git status --porcelain'
@@ -687,30 +929,24 @@ class GitMonitorController extends Controller
             ];
         }
 
-        $files = [];
+        $files = collect(explode(PHP_EOL, $output))
+            ->filter()
+            ->map(function ($line) {
 
-        foreach (explode(PHP_EOL, $output) as $line) {
+                return [
 
-            if (trim($line) == '') {
-                continue;
-            }
+                    'status' => trim(substr($line, 0, 2)),
 
-            $status = trim(substr($line, 0, 2));
+                    'file' => trim(substr($line, 3)),
 
-            $file = trim(substr($line, 3));
-
-            $files[] = [
-
-                'status' => $status,
-
-                'file' => $file,
-
-            ];
-        }
+                ];
+            })
+            ->values()
+            ->toArray();
 
         return [
 
-            'clean' => false,
+            'clean' => empty($files),
 
             'files' => $files,
 
@@ -718,13 +954,30 @@ class GitMonitorController extends Controller
     }
 
     private function loadRepositoryHealth(
-        string $gitPath,
+        ?string $gitPath,
         array $repositoryStatus
     ): array {
 
-        $repositoryExists = is_dir(
-            $gitPath . DIRECTORY_SEPARATOR . '.git'
-        );
+        if (! $this->validateRepository($gitPath)) {
+
+            return [
+
+                'score' => 0,
+
+                'repository_exists' => false,
+
+                'working_tree' => false,
+
+                'remote_connected' => false,
+
+                'branch_exists' => false,
+
+                'git_installed' => false,
+
+                'git_version' => null,
+
+            ];
+        }
 
         $remote = $this->runGitCommand(
             $gitPath,
@@ -743,23 +996,19 @@ class GitMonitorController extends Controller
 
         $score = 0;
 
-        if ($repositoryExists) {
-
+        if ($repositoryStatus['exists'] ?? false) {
             $score += 30;
         }
 
-        if ($repositoryStatus['clean']) {
-
+        if ($repositoryStatus['clean'] ?? false) {
             $score += 30;
         }
 
         if (filled($remote)) {
-
             $score += 20;
         }
 
         if (filled($branch)) {
-
             $score += 20;
         }
 
@@ -767,7 +1016,7 @@ class GitMonitorController extends Controller
 
             'score' => $score,
 
-            'repository_exists' => $repositoryExists,
+            'repository_exists' => true,
 
             'working_tree' => $repositoryStatus['clean'],
 
@@ -780,5 +1029,12 @@ class GitMonitorController extends Controller
             'git_version' => $gitVersion,
 
         ];
+    }
+
+    private function validateRepository(?string $gitPath): bool
+    {
+        return filled($gitPath)
+            && is_dir($gitPath)
+            && is_dir($gitPath . DIRECTORY_SEPARATOR . '.git');
     }
 }

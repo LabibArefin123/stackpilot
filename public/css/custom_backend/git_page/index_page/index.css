@@ -1,0 +1,11 @@
+.info-box {
+    min-height: 110px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.badge {
+    font-size: 90%;
+}
