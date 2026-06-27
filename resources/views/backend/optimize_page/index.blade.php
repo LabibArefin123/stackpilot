@@ -25,7 +25,7 @@
 @stop
 
 @section('content')
-
+    @include('backend.partials.optimize_page.index_page.part_3')
     <div class="row">
 
         <div class="col-md-12">
@@ -44,6 +44,9 @@
 
     </div>
 
+    <div class="card mt-4">
+        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
+    </div>
 @stop
 
 @push('js')
@@ -81,12 +84,10 @@
                         $(document).Toasts('create', {
 
                             class: response.success ?
-                                'bg-success' :
-                                'bg-danger',
+                                'bg-success' : 'bg-danger',
 
                             title: response.success ?
-                                'Completed' :
-                                'Failed',
+                                'Completed' : 'Failed',
 
                             body: response.success ?
                                 'Command executed successfully.' :

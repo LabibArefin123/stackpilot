@@ -4,14 +4,21 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
+use App\Models\Project;
+
 class OptimizationController extends Controller
 {
     public function index()
     {
+        $projects = Project::with('health')
+            ->orderBy('name')
+            ->get();
+
         $commands = [
 
             [
                 'title' => 'Optimize',
+                'description' => 'Build all Laravel caches.',
                 'command' => 'optimize',
                 'artisan' => 'php artisan optimize',
                 'icon' => 'fas fa-bolt',
@@ -20,6 +27,7 @@ class OptimizationController extends Controller
 
             [
                 'title' => 'Optimize Clear',
+                'description' => 'Clear every cache.',
                 'command' => 'optimize:clear',
                 'artisan' => 'php artisan optimize:clear',
                 'icon' => 'fas fa-trash',
@@ -28,6 +36,7 @@ class OptimizationController extends Controller
 
             [
                 'title' => 'Config Cache',
+                'description' => 'Cache configuration files.',
                 'command' => 'config:cache',
                 'artisan' => 'php artisan config:cache',
                 'icon' => 'fas fa-cogs',
@@ -36,6 +45,7 @@ class OptimizationController extends Controller
 
             [
                 'title' => 'Route Cache',
+                'description' => 'Cache application routes.',
                 'command' => 'route:cache',
                 'artisan' => 'php artisan route:cache',
                 'icon' => 'fas fa-route',
@@ -44,6 +54,7 @@ class OptimizationController extends Controller
 
             [
                 'title' => 'View Cache',
+                'description' => 'Compile Blade templates.',
                 'command' => 'view:cache',
                 'artisan' => 'php artisan view:cache',
                 'icon' => 'fas fa-eye',
@@ -52,6 +63,7 @@ class OptimizationController extends Controller
 
             [
                 'title' => 'Event Cache',
+                'description' => 'Cache Laravel events.',
                 'command' => 'event:cache',
                 'artisan' => 'php artisan event:cache',
                 'icon' => 'fas fa-broadcast-tower',
@@ -62,7 +74,10 @@ class OptimizationController extends Controller
 
         return view(
             'backend.optimize_page.index',
-            compact('commands')
+            compact(
+                'commands',
+                'projects'
+            )
         );
     }
 

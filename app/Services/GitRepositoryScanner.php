@@ -68,4 +68,34 @@ class GitRepositoryScanner
 
         return trim($process->getOutput());
     }
+
+    /**
+     * Return all Git repository folders.
+     */
+    public function repositories(): array
+    {
+        if (! File::isDirectory($this->rootPath)) {
+            return [];
+        }
+
+        $repositories = [];
+
+        foreach (File::directories($this->rootPath) as $directory) {
+
+            if (File::isDirectory($directory . DIRECTORY_SEPARATOR . '.git')) {
+
+                $repositories[] = $directory;
+            }
+        }
+
+        return $repositories;
+    }
+
+    /**
+     * Execute any git command.
+     */
+    public function command(string $path, string $command): ?string
+    {
+        return $this->git($path, $command);
+    }
 }
