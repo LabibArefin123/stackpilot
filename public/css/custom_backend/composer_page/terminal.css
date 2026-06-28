@@ -1,0 +1,179 @@
+/* ==========================================================
+   Composer Terminal
+========================================================== */
+
+.terminal-wrapper {
+    background: #161b22;
+
+    border: 1px solid #2d333b;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+
+/* ==========================================================
+   Header
+========================================================== */
+
+.terminal-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 14px 20px;
+
+    background: #20262e;
+
+    border-bottom: 1px solid #2d333b;
+}
+
+.terminal-header-left {
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+.terminal-dot {
+    width: 12px;
+
+    height: 12px;
+
+    border-radius: 50%;
+
+    display: inline-block;
+}
+
+.terminal-red {
+    background: #ff5f57;
+}
+
+.terminal-yellow {
+    background: #febc2e;
+}
+
+.terminal-green {
+    background: #28c840;
+}
+
+.terminal-title {
+    margin-left: 10px;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    color: #f8f9fa;
+
+    letter-spacing: 0.5px;
+}
+
+.terminal-status {
+    color: #8b949e;
+
+    font-size: 13px;
+
+    font-weight: 500;
+}
+
+/* ==========================================================
+   Body
+========================================================== */
+
+.composer-terminal {
+    height: 550px;
+
+    overflow-y: auto;
+
+    padding: 22px;
+
+    background: #0d1117;
+
+    color: #7ee787;
+
+    font-family: Consolas, "Cascadia Code", "JetBrains Mono", monospace;
+
+    font-size: 14px;
+
+    line-height: 1.7;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+    scroll-behavior: smooth;
+}
+
+/* ==========================================================
+   Scrollbar
+========================================================== */
+
+.composer-terminal::-webkit-scrollbar {
+    width: 10px;
+}
+
+.composer-terminal::-webkit-scrollbar-track {
+    background: #161b22;
+}
+
+.composer-terminal::-webkit-scrollbar-thumb {
+    background: #3b434d;
+
+    border-radius: 20px;
+}
+
+.composer-terminal::-webkit-scrollbar-thumb:hover {
+    background: #5b6570;
+}
+
+/* ==========================================================
+   Selection
+========================================================== */
+
+.composer-terminal::selection {
+    background: #2f81f7;
+
+    color: #fff;
+}
+
+/* ==========================================================
+   Cursor Animation
+========================================================== */
+
+.composer-terminal::after {
+    content: "█";
+
+    animation: terminalBlink 1s infinite;
+
+    color: #58a6ff;
+}
+
+@keyframes terminalBlink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ==========================================================
+   Responsive
+========================================================== */
+
+@media (max-width: 768px) {
+    .composer-terminal {
+        height: 420px;
+
+        font-size: 13px;
+
+        padding: 18px;
+    }
+
+    .terminal-title {
+        font-size: 14px;
+    }
+}

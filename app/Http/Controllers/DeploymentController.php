@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Deployment;
 use Illuminate\Http\Request;
+
 class DeploymentController extends Controller
 {
     public function index()
@@ -17,6 +18,9 @@ class DeploymentController extends Controller
             'project.health',
 
         ])
+            ->whereHas('project', function ($query) {
+                $query->where('project_type', 'Laravel');
+            })
             ->latest('deployed_at')
             ->paginate(15);
 

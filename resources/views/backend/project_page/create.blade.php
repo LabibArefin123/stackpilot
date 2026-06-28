@@ -32,17 +32,17 @@
 
             <!-- Project Information -->
             @include('backend.project_page.partials.create_page.part_1')
-            
+
             <!-- Git Information -->
             @include('backend.project_page.partials.create_page.part_2')
-            
+
             <!-- Project Details -->
             @include('backend.project_page.partials.create_page.part_3')
-            
+
             <!-- Status -->
             @include('backend.project_page.partials.create_page.part_4')
 
-          
+
 
             <!-- Buttons -->
 
@@ -71,9 +71,7 @@
         </div>
 
     </form>
-    <div class="card mt-4">
-        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
-    </div>
+    <div style="height: 50px;"></div>
 @stop
 
 @section('css')

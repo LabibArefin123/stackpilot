@@ -2,6 +2,7 @@
 
 @section('title', 'Composer Terminal')
 
+<link rel="stylesheet" href="{{ asset('css/custom_backend/composer_page/terminal.css') }}">
 @section('content')
 
     <div class="row">
@@ -127,21 +128,47 @@
 
                     <hr>
 
-                    <div id="terminalOutput"
-                        style="
-                        background:#111;
-                        color:#00ff66;
-                        font-family:Consolas,monospace;
-                        height:550px;
-                        overflow:auto;
-                        padding:20px;
-                        border-radius:5px;
-                        white-space:pre-wrap;
-                    ">
+                    <div class="terminal-wrapper">
 
-                        Welcome to Composer Terminal
+                        <div class="terminal-header">
 
-                        Select a project and execute a Composer command.
+                            <div class="terminal-header-left">
+
+                                <span class="terminal-dot terminal-red"></span>
+
+                                <span class="terminal-dot terminal-yellow"></span>
+
+                                <span class="terminal-dot terminal-green"></span>
+
+                                <span class="terminal-title">
+
+                                    <i class="fas fa-terminal mr-2"></i>
+
+                                    Composer Terminal
+
+                                </span>
+
+                            </div>
+
+                            <div class="terminal-status">
+
+                                Ready
+
+                            </div>
+
+                        </div>
+
+                        <div id="terminalOutput" class="composer-terminal">
+
+                            Welcome to Composer Terminal
+
+                            ────────────────────────────────────────────
+
+                            Select a project and execute a Composer command.
+
+                            Happy Coding 🚀
+
+                        </div>
 
                     </div>
 
@@ -152,7 +179,7 @@
         </div>
 
     </div>
-
+    <div style="height: 50px;"></div>
 @endsection
 
 @push('js')

@@ -41,18 +41,16 @@
     {{-- Project Filter --}}
 
     @include('backend.partials.log_page.index_page.part_2')
-    
+
     {{-- Git Logs --}}
-    
+
     @include('backend.partials.log_page.index_page.part_3')
-    
+
     {{-- Laravel Logs --}}
-    
+
     @include('backend.partials.log_page.index_page.part_4')
-  
-    <div class="card mt-4">
-        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
-    </div>
+
+    <div style="height: 50px;"></div>
 @stop
 
 @section('js')

@@ -301,9 +301,7 @@
         </div>
 
     </div>
-    <div class="card mt-4">
-        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
-    </div>
+    <div style="height: 50px;"></div>
 @endsection
 @push('js')
     <script src="{{ asset('js/custom_backend/composer_page/index_page/composer_modal.js') }}"></script>
