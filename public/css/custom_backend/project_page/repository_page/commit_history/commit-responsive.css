@@ -1,0 +1,17 @@
+@media (max-width: 768px) {
+    .commit-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+    .commit-right {
+        margin-top: 15px;
+
+        flex-wrap: wrap;
+    }
+
+    .commit-table {
+        font-size: 13px;
+    }
+}

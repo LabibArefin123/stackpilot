@@ -1,0 +1,51 @@
+.commit-table {
+    margin: 0;
+}
+
+.commit-table thead {
+    background: #f8fafc;
+}
+
+.commit-table th {
+    border: none;
+
+    font-size: 13px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.05em;
+
+    color: #6c757d;
+
+    font-weight: 700;
+}
+
+.commit-table td {
+    vertical-align: middle;
+
+    border-top: 1px solid #edf0f4;
+}
+
+.commit-table tbody tr {
+    transition: 0.25s;
+}
+
+.commit-table tbody tr:hover {
+    background: #f9fbff;
+}
+
+.commit-file {
+    font-weight: 500;
+}
+
+.commit-added-text {
+    color: #16a34a;
+
+    font-weight: 700;
+}
+
+.commit-deleted-text {
+    color: #dc3545;
+
+    font-weight: 700;
+}

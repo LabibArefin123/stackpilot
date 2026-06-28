@@ -61,6 +61,122 @@ class GitRepositoryScanner
     }
 
     /**
+     *Git Repository Count Commit and Last Commit Date Dynamically
+     */
+    public function repositoryStatistics(Project $project): array
+    {
+        $path = $this->findRepository($project);
+
+        if (!$path) {
+            return [
+                'last_commit_date' => null,
+                'commit_count' => 0,
+            ];
+        }
+
+        return [
+
+            'last_commit_date' => $this->git(
+                $path,
+                'git log -1 --format=%ci'
+            ),
+
+            'commit_count' => (int) $this->git(
+                $path,
+                'git rev-list --count HEAD'
+            ),
+
+        ];
+    }
+
+    /**
+     *Git Repository Commit Broke
+     */
+    public function repositoryCommits(string $gitPath): array
+    {
+        $process = Process::fromShellCommandline(
+            'git log --date=short --numstat --pretty=format:"--COMMIT--%n%H|%h|%an|%ad|%s"',
+            $gitPath
+        );
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return [];
+        }
+
+        $commits = [];
+
+        $blocks = preg_split(
+            '/--COMMIT--\R/',
+            trim($process->getOutput()),
+            -1,
+            PREG_SPLIT_NO_EMPTY
+        );
+
+        foreach ($blocks as $block) {
+
+            $lines = preg_split('/\R/', trim($block), -1, PREG_SPLIT_NO_EMPTY);
+
+            if (empty($lines)) {
+                continue;
+            }
+
+            $header = explode('|', array_shift($lines), 5);
+
+            if (count($header) < 5) {
+                continue;
+            }
+
+            [$hash, $shortHash, $author, $date, $message] = $header;
+
+            $commit = [
+                'hash'       => $hash,
+                'short_hash' => $shortHash,
+                'author'     => $author,
+                'date'       => $date,
+                'message'    => $message,
+                'added'      => 0,
+                'deleted'    => 0,
+                'files'      => [],
+            ];
+
+            foreach ($lines as $line) {
+
+                if (trim($line) === '') {
+                    continue;
+                }
+
+                $parts = explode("\t", $line);
+
+                if (count($parts) < 3) {
+                    $parts = preg_split('/\s+/', trim($line), 3);
+                }
+
+                if (count($parts) < 3) {
+                    continue;
+                }
+
+                $added   = is_numeric($parts[0]) ? (int) $parts[0] : 0;
+                $deleted = is_numeric($parts[1]) ? (int) $parts[1] : 0;
+
+                $commit['added'] += $added;
+                $commit['deleted'] += $deleted;
+
+                $commit['files'][] = [
+                    'file'    => trim($parts[2]),
+                    'added'   => $parts[0],
+                    'deleted' => $parts[1],
+                ];
+            }
+
+            $commits[] = $commit;
+        }
+
+        return $commits;
+    }
+
+    /**
      * Execute git command.
      */
     protected function git(string $path, string $command): ?string

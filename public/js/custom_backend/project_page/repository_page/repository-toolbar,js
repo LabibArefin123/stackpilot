@@ -1,0 +1,70 @@
+"use strict";
+
+/*
+|--------------------------------------------------------------------------
+| Repository Toolbar
+|--------------------------------------------------------------------------
+*/
+
+window.RepositoryToolbar = {
+
+    initialize() {
+
+        this.copy();
+
+        this.wrap();
+
+        this.fullscreen();
+
+    },
+
+    copy() {
+
+        $(document).on("click", ".btn-copy-code", function () {
+
+            const code = $(this)
+                .closest(".card")
+                .find("pre code")
+                .text();
+
+            navigator.clipboard.writeText(code);
+
+            toastr.success("Copied to clipboard");
+
+        });
+
+    },
+
+    wrap() {
+
+        $(document).on("click", ".btn-wrap-code", function () {
+
+            $(this)
+                .closest(".card")
+                .find("pre")
+                .toggleClass("text-wrap");
+
+        });
+
+    },
+
+    fullscreen() {
+
+        $(document).on("click", ".btn-fullscreen-code", function () {
+
+            $(this)
+                .closest(".card")
+                .find("pre")
+                .toggleClass("repo-fullscreen");
+
+        });
+
+    }
+
+};
+
+$(function () {
+
+    RepositoryToolbar.initialize();
+
+});

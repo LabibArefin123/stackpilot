@@ -137,6 +137,7 @@
                         <th>Health</th>
                         <th>Status</th>
                         <th>Last Commit</th>
+                        <th>Total Commits</th>
                         <th width="180">Actions</th>
 
                     </tr>
@@ -264,15 +265,31 @@
                             {{-- Last Commit --}}
                             <td>
 
-                                @if ($project->last_commit_date)
+                                @if (!empty($project->git['last_commit_date']))
                                     <small>
-
-                                        {{ \Carbon\Carbon::parse($project->last_commit_date)->diffForHumans() }}
-
+                                        {{ \Carbon\Carbon::parse($project->git['last_commit_date'])->diffForHumans() }}
                                     </small>
                                 @else
                                     -
                                 @endif
+
+                            </td>
+
+                            {{-- Total Commits --}}
+                            <td class="text-center">
+
+                                <a href="{{ route('projects.repository', $project) }}" class="text-decoration-none"
+                                    title="View Repository Commits">
+
+                                    <span class="badge badge-info">
+
+                                        <i class="fas fa-code-branch"></i>
+
+                                        {{ number_format($project->git['commit_count'] ?? 0) }}
+
+                                    </span>
+
+                                </a>
 
                             </td>
 

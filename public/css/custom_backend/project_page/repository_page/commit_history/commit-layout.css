@@ -1,0 +1,28 @@
+.container-fluid{
+    padding:5px;
+}
+
+.commit-card{
+    margin-bottom:5px;
+}
+
+.commit-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+}
+
+.commit-info h5{
+    margin:0;
+}
+
+.commit-meta{
+    margin-top:0px;
+}
+
+.commit-right{
+    display:flex;
+    gap:10px;
+    align-items:center;
+}

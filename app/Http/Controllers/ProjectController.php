@@ -21,17 +21,27 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::query()
-            ->with([
-                'environment:id,project_id,php_version,laravel_version,environment',
-                'health:id,project_id,health_score',
-            ])
+        $projects = Project::with([
+            'environment:id,project_id,php_version,laravel_version,environment',
+            'health:id,project_id,health_score',
+        ])
             ->where('project_type', 'Laravel')
             ->orderBy('name')
             ->get();
 
-        return view('backend.project_page.index', compact('projects'));
+        foreach ($projects as $project) {
+
+            $git = $this->scanner->repositoryStatistics($project);
+
+            $project->git = $git;
+        }
+
+        return view(
+            'backend.project_page.index',
+            compact('projects')
+        );
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -191,7 +201,7 @@ class ProjectController extends Controller
         );
     }
 
-    
+
     /**
      * Show the form for editing the specified resource.
      */
@@ -338,5 +348,168 @@ class ProjectController extends Controller
         return redirect()
             ->route('backend.project_page.index')
             ->with('success', 'Project deleted successfully.');
+    }
+
+    public function projectRepository(Project $project)
+    {
+        $gitPath = $this->scanner->findRepository($project);
+
+        if (!$gitPath) {
+            abort(404, 'Repository not found.');
+        }
+
+        $commits = $this->scanner->repositoryCommits($gitPath);
+
+        return view(
+            'backend.project_page.repository',
+            compact('project', 'commits')
+        );
+    }
+
+    public function repositorySearch(Request $request, Project $project)
+    {
+        $gitPath = $this->scanner->findRepository($project);
+
+        abort_if(!$gitPath, 404);
+
+        $keyword = trim($request->keyword);
+
+        $commits = collect(
+            $this->scanner->repositoryCommits($gitPath)
+        );
+
+        if ($keyword != '') {
+
+            $commits = $commits->filter(function ($commit) use ($keyword) {
+
+                return str_contains(
+                    strtolower($commit['message']),
+                    strtolower($keyword)
+                )
+
+                    ||
+
+                    str_contains(
+                        strtolower($commit['author']),
+                        strtolower($keyword)
+                    )
+
+                    ||
+
+                    str_contains(
+                        strtolower($commit['short_hash']),
+                        strtolower($keyword)
+                    );
+            });
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $commits->values()
+        ]);
+    }
+
+    public function repositoryTimeline(Project $project)
+    {
+        $gitPath = $this->scanner->findRepository($project);
+
+        abort_if(!$gitPath, 404);
+
+        $commits = collect(
+            $this->scanner->repositoryCommits($gitPath)
+        );
+
+        $timeline = $commits
+            ->groupBy('date')
+            ->map(function ($items) {
+
+                return [
+
+                    'date' => $items->first()['date'],
+
+                    'total' => $items->count(),
+
+                    'commits' => $items->values()
+
+                ];
+            })
+            ->values();
+
+        return response()->json([
+            'success' => true,
+            'data' => $timeline
+        ]);
+    }
+
+    public function repositoryFilter(Request $request, Project $project)
+    {
+        $gitPath = $this->scanner->findRepository($project);
+
+        abort_if(!$gitPath, 404);
+
+        $commits = collect(
+            $this->scanner->repositoryCommits($gitPath)
+        );
+
+        if ($request->filled('author')) {
+
+            $commits = $commits->where(
+                'author',
+                $request->author
+            );
+        }
+
+        if ($request->filled('date')) {
+
+            $commits = $commits->where(
+                'date',
+                $request->date
+            );
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => $commits->values()
+        ]);
+    }
+
+    public function repositoryCommit(Project $project, string $hash)
+    {
+        $gitPath = $this->scanner->findRepository($project);
+
+        abort_if(!$gitPath, 404);
+
+        $commit = collect(
+            $this->scanner->repositoryCommits($gitPath)
+        )->firstWhere(
+            'hash',
+            $hash
+        );
+
+        if (!$commit) {
+
+            return response()->json([
+                'success' => false
+            ], 404);
+        }
+
+        return response()->json([
+
+            'success' => true,
+
+            'data' => $commit
+
+        ]);
+    }
+
+    public function repositoryHash(Project $project, string $hash)
+    {
+        return response()->json([
+
+            'success' => true,
+
+            'hash' => $hash
+
+        ]);
     }
 }
