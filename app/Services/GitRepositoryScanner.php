@@ -105,7 +105,7 @@ class GitRepositoryScanner
 
         return null;
     }
-    
+
     /**
      * Return repository directories.
      */
@@ -132,7 +132,7 @@ class GitRepositoryScanner
     /**
      * Read PHP version from composer.json.
      */
-    protected function phpVersion(string $directory): ?string
+    public function phpVersion(string $directory): ?string
     {
         $composer = $directory . DIRECTORY_SEPARATOR . 'composer.json';
 
@@ -148,7 +148,7 @@ class GitRepositoryScanner
     /**
      * Read Laravel version.
      */
-    protected function laravelVersion(string $directory): ?string
+    public function laravelVersion(string $directory): ?string
     {
         $composer = $directory . DIRECTORY_SEPARATOR . 'composer.json';
 
@@ -156,10 +156,10 @@ class GitRepositoryScanner
             return null;
         }
 
-        $composer = json_decode(File::get($composer), true);
+        $json = json_decode(File::get($composer), true);
 
-        return $composer['require']['laravel/framework']
-            ?? $composer['require']['laravel/laravel']
+        return $json['require']['laravel/framework']
+            ?? $json['require']['laravel/laravel']
             ?? null;
     }
 
@@ -238,5 +238,117 @@ class GitRepositoryScanner
         $name = basename($repository);
 
         return str_replace('.git', '', $name);
+    }
+
+    public function composerPackages(string $path): array
+    {
+        $lock = $path . DIRECTORY_SEPARATOR . 'composer.lock';
+
+        if (!File::exists($lock)) {
+
+            return [];
+        }
+
+        $json = json_decode(
+
+            File::get($lock),
+
+            true
+
+        );
+
+        return $json['packages'] ?? [];
+    }
+
+    public function composerShow(string $path): ?string
+    {
+        return $this->command(
+
+            $path,
+
+            'composer show'
+
+        );
+    }
+
+    public function composerUpdate(string $path): ?string
+    {
+        return $this->command(
+
+            $path,
+
+            'composer update'
+
+        );
+    }
+
+    public function composerDumpAutoload(string $path): ?string
+    {
+        return $this->command(
+
+            $path,
+
+            'composer dump-autoload'
+
+        );
+    }
+
+    public function composerVersion(): ?string
+    {
+        $process = Process::fromShellCommandline(
+            'composer --version'
+        );
+
+        $process->run();
+
+        return $process->isSuccessful()
+            ? trim($process->getOutput())
+            : null;
+    }
+
+    public function composerJson(string $path): array
+    {
+        $file = $path . DIRECTORY_SEPARATOR . 'composer.json';
+
+        if (!File::exists($file)) {
+
+            return [];
+        }
+
+        return json_decode(
+            File::get($file),
+            true
+        ) ?? [];
+    }
+
+    public function autoloadExists(string $path): bool
+    {
+        return File::exists(
+
+            $path
+                . DIRECTORY_SEPARATOR
+                . 'vendor'
+                . DIRECTORY_SEPARATOR
+                . 'autoload.php'
+
+        );
+    }
+
+    public function vendorExists(string $path): bool
+    {
+        return File::isDirectory(
+
+            $path . DIRECTORY_SEPARATOR . 'vendor'
+
+        );
+    }
+
+    public function composerLockExists(string $path): bool
+    {
+        return File::exists(
+
+            $path . DIRECTORY_SEPARATOR . 'composer.lock'
+
+        );
     }
 }

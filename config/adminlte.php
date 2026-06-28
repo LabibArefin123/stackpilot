@@ -381,7 +381,37 @@ return [
 
                     ],
                 ],
+                [
+                    'text' => 'Composer Manager',
+                    'icon' => 'fab fa-php',
+                    'can'  => 'composer.index',
+                    'submenu' => [
 
+                        [
+                            'text'  => 'Composer Dashboard',
+                            'route' => 'composer.index',
+                            'icon'  => 'fas fa-home',
+                            'can'   => 'composer.index',
+                        ],
+
+                        // Future Pages
+
+                        [
+                            'text'  => 'Installed Packages',
+                            'route' => 'composer.index',
+                            'icon'  => 'fas fa-cubes',
+                            'can'   => 'composer.index',
+                        ],
+
+                        [
+                            'text'  => 'Composer Terminal',
+                            'route' => 'composer.index',
+                            'icon'  => 'fas fa-terminal',
+                            'can'   => 'composer.index',
+                        ],
+
+                    ],
+                ],
                 [
                     'text' => 'Source Control',
                     'icon' => 'fab fa-git-alt',

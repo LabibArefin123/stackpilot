@@ -12,6 +12,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\TerminalPageController;
 use App\Http\Controllers\GitMonitorController;
 use App\Http\Controllers\DeploymentController;
+use App\Http\Controllers\ComposerController;
 use App\Http\Controllers\OptimizationController;
 use App\Http\Controllers\QueueMonitorController;
 use App\Http\Controllers\CronController;
@@ -61,6 +62,10 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     Route::resource('deployments', DeploymentController::class);
 
+    Route::resource('composer', ComposerController::class);
+    Route::get('composer/{project}/json',[ComposerController::class, 'show'])->name('composer.json');
+    Route::get('composer/{project}/packages',[ComposerController::class, 'packages'])->name('composer.packages');
+    Route::get('composer/{project}/terminal',[ComposerController::class, 'terminal'])->name('composer.terminal');
     Route::resource('optimization', OptimizationController::class)->only(['index']);
     Route::post('optimization/run',[OptimizationController::class, 'run'])->name('optimization.run');
     
