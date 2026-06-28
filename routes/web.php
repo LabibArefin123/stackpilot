@@ -32,7 +32,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 //Welcome Section
 Route::get('/', [WelcomePageController::class, 'index'])->name('welcome');
-Route::get('/faq',[WelcomePageController::class, 'faq'])->name('faq');
+Route::get('/faq', [WelcomePageController::class, 'faq'])->name('faq');
 //Contact Section
 Route::get('/contact', [WelcomePageController::class, 'contact'])->name('contact');
 
@@ -62,30 +62,50 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     Route::resource('deployments', DeploymentController::class);
 
-    Route::get('composer/{project}/json',[ComposerController::class, 'show'])->name('composer.json');
-    Route::get('composer/{project}/packages',[ComposerController::class, 'packages'])->name('composer.packages');
-    Route::post('composer/{project}/terminal',[ComposerController::class, 'terminal'])->name('composer.terminal');
+    Route::get('composer/{project}/json', [ComposerController::class, 'show'])->name('composer.json');
+    Route::get('composer/{project}/packages', [ComposerController::class, 'packages'])->name('composer.packages');
+    Route::post('composer/{project}/terminal', [ComposerController::class, 'terminal'])->name('composer.terminal');
     Route::get('composer/installed-packages', [ComposerController::class, 'installedPackages'])->name('composer.installed-packages');
     Route::get('/composer/terminal', [ComposerController::class, 'terminalPage'])->name('composer.terminal-page');
     Route::resource('composer', ComposerController::class);
     Route::resource('optimization', OptimizationController::class)->only(['index']);
-    Route::post('optimization/run',[OptimizationController::class, 'run'])->name('optimization.run');
-    
+    Route::post('optimization/run', [OptimizationController::class, 'run'])->name('optimization.run');
+
     Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
-    Route::get('/cron-jobs', [CronController::class, 'index'])->name('cron.index');
+    /*
+    |--------------------------------------------------------------------------
+    | CRON Dashboard
+    |--------------------------------------------------------------------------
+    */
+
+    Route::get('/cron', [CronController::class, 'index'])->name('cron.index');
+
+    /*
+    |--------------------------------------------------------------------------
+    | CRON Ajax
+    |--------------------------------------------------------------------------
+    */
+
+    Route::post('/cron/{project}/run', [CronController::class, 'run'])->name('cron.run');
+
+    Route::get('/cron/{project}/logs', [CronController::class, 'logs'])->name('cron.logs');
+
+    Route::get('/cron/{project}/status', [CronController::class, 'status'])->name('cron.status');
+
+    Route::get('/cron/{project}/history', [CronController::class, 'history'])->name('cron.history');
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/server-health', [ServerHealthController::class, 'index'])->name('server.index');
     Route::resource('environment', EnvironmentController::class);
 
     //Setting Management
-Route::resource('roles', RoleController::class);
+    Route::resource('roles', RoleController::class);
     Route::resource('permissions', PermissionController::class);
     Route::post('/permissions/delete-selected', [PermissionController::class, 'deleteSelected'])->name('permissions.deleteSelected');
     Route::resource('system_users', SystemUserController::class);
     Route::resource('ban_users', BanUserController::class);
     Route::resource('system_problems', SystemProblemController::class);
     Route::post('/system-users/{user}/change-password', [SystemUserController::class, 'updatePassword'])->name('system_users.password.update');
-    
+
     //Setting Routes
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::get('/settings/password_policy', [SettingController::class, 'password_policy'])->name('settings.password_policy');

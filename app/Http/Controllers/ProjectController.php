@@ -24,6 +24,7 @@ class ProjectController extends Controller
                 'environment:id,project_id,php_version,laravel_version,environment',
                 'health:id,project_id,health_score',
             ])
+            ->where('project_type', 'Laravel')
             ->orderBy('name')
             ->get();
 
