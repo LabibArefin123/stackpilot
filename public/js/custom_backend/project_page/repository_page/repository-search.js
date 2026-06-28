@@ -4,42 +4,135 @@ window.RepositorySearch = {
     timer: null,
 
     initialize() {
-        this.search();
+        this.bindSearch();
     },
 
-    search() {
+    bindSearch() {
         $("#repository-search").on("keyup", () => {
             clearTimeout(this.timer);
 
             this.timer = setTimeout(() => {
-                $.ajax({
-                    url: window.repositorySearchUrl,
-
-                    type: "GET",
-
-                    data: {
-                        keyword: $("#repository-search").val(),
-                    },
-
-                    success: (response) => {
-                        RepositorySearch.render(response.data);
-                    },
-                });
+                this.load();
             }, 300);
         });
     },
 
-    render(commits) {
+    load() {
+        $.ajax({
+            url: window.repositorySearchUrl,
+
+            type: "GET",
+
+            data: {
+                keyword: $("#repository-search").val().trim(),
+
+                author: $("#repository-author").val(),
+
+                date: $("#repository-date").val(),
+            },
+
+            success: (response) => {
+                if (response.success) {
+                    this.render(response.data);
+                }
+            },
+        });
+    },
+
+    highlight(text, keyword) {
+        if (!keyword) {
+            return text;
+        }
+
+        const escaped = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+        const regex = new RegExp("(" + escaped + ")", "gi");
+
+        return text.replace(
+            regex,
+            "<mark class='repository-highlight'>$1</mark>",
+        );
+    },
+
+    render(timeline) {
         let html = "";
 
-        commits.forEach((commit) => {
-            html += RepositorySearch.card(commit);
+        if (!timeline.length) {
+            html = `
+
+                <div class="alert alert-info text-center">
+
+                    No commits found.
+
+                </div>
+
+            `;
+
+            $("#repository-commits").html(html);
+
+            return;
+        }
+
+        timeline.forEach((day) => {
+            html += `
+
+            <div class="repository-date-header mb-3">
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <h4>
+
+                        <i class="far fa-calendar-alt text-primary"></i>
+
+                        ${day.date}
+
+                    </h4>
+
+                    <div>
+
+                        <span class="badge badge-primary">
+
+                            ${day.total} Commits
+
+                        </span>
+
+                        <span class="badge badge-success">
+
+                            +${day.added}
+
+                        </span>
+
+                        <span class="badge badge-danger">
+
+                            -${day.deleted}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            `;
+
+            day.commits.forEach((commit) => {
+                html += this.card(commit);
+            });
         });
 
         $("#repository-commits").html(html);
     },
 
     card(commit) {
+        const keyword = $("#repository-search").val().trim();
+
+        const message = this.highlight(commit.message, keyword);
+
+        const author = this.highlight(commit.author, keyword);
+
+        const hash = this.highlight(commit.short_hash, keyword);
+
         let files = "";
 
         commit.files.forEach((file) => {
@@ -47,17 +140,31 @@ window.RepositorySearch = {
 
             <tr>
 
-                <td>${file.file}</td>
+                <td class="repository-file">
 
-                <td class="text-center text-success">
+                    <i class="far fa-file-code text-primary mr-2"></i>
 
-                    +${file.added}
+                  ${this.highlight(file.file, keyword)}
 
                 </td>
 
-                <td class="text-center text-danger">
+                <td class="text-center">
 
-                    -${file.deleted}
+                    <span class="text-success">
+
+                        +${file.added}
+
+                    </span>
+
+                </td>
+
+                <td class="text-center">
+
+                    <span class="text-danger">
+
+                        -${file.deleted}
+
+                    </span>
 
                 </td>
 
@@ -68,55 +175,101 @@ window.RepositorySearch = {
 
         return `
 
-<div class="card commit-card repository-card">
+<div class="card commit-card repository-card mb-3">
 
-<div class="card-header">
+    <div class="card-header">
 
-<div class="commit-header">
+        <div class="commit-header">
 
-<div>
+            <div class="commit-info">
 
-<h5>${commit.message}</h5>
+                <h5 class="commit-title">
 
-<div class="commit-meta">
+                    ${message}
 
-${commit.author}
+                </h5>
 
-•
+                <div class="commit-meta">
 
-${commit.date}
+                    <i class="fas fa-user"></i>
 
-</div>
+                    ${author}
 
-</div>
+                    <span class="commit-dot">•</span>
 
-<div>
+                    <i class="far fa-calendar-alt"></i>
 
-<span class="commit-hash">${commit.short_hash}</span>
+                    ${commit.date}
 
-<span class="commit-added">+${commit.added}</span>
+                </div>
 
-<span class="commit-deleted">-${commit.deleted}</span>
+            </div>
 
-</div>
+            <div class="commit-right">
 
-</div>
+                <span class="commit-hash">
 
-</div>
+                    ${hash}
 
-<div class="card-body p-0">
+                </span>
 
-<table class="table commit-table">
+                <span class="commit-added">
 
-<tbody>
+                    +${commit.added}
 
-${files}
+                </span>
 
-</tbody>
+                <span class="commit-deleted">
 
-</table>
+                    -${commit.deleted}
 
-</div>
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="card-body p-0">
+
+        <div class="table-responsive">
+
+            <table class="table commit-table mb-0">
+
+                <thead>
+
+                    <tr>
+
+                        <th>File</th>
+
+                        <th width="110" class="text-center">
+
+                            Added
+
+                        </th>
+
+                        <th width="110" class="text-center">
+
+                            Deleted
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    ${files}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
 
 </div>
 

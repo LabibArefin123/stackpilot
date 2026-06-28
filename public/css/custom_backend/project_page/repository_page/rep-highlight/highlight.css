@@ -1,41 +1,7 @@
-.repo-line {
-    display: flex;
-}
-
-.repo-number {
-    width: 60px;
-
-    padding-right: 15px;
-
-    text-align: right;
-
-    color: #999;
-
-    user-select: none;
-}
-
-.repo-code {
-    flex: 1;
-
-    white-space: pre;
-}
-
-.repo-fullscreen {
-    position: fixed;
-
-    top: 0;
-
-    left: 0;
-
-    right: 0;
-
-    bottom: 0;
-
-    z-index: 99999;
-
-    background: #1e1e1e;
-
-    overflow: auto;
-
-    padding: 20px;
+.repository-highlight{
+    background:#ffe066;
+    color:#222;
+    padding:2px 4px;
+    border-radius:4px;
+    font-weight:700;
 }

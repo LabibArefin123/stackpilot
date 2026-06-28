@@ -1,31 +1,35 @@
 "use strict";
 
 window.RepositoryFilter = {
+
     initialize() {
-        this.events();
+
+        this.bindEvents();
+
     },
 
-    events() {
-        $("#repository-author,#repository-date").change(() => {
-            $.ajax({
-                url: window.repositoryFilterUrl,
+    bindEvents();
 
-                type: "GET",
+    bindEvents() {
 
-                data: {
-                    author: $("#repository-author").val(),
+        $("#repository-author").on("change", function () {
 
-                    date: $("#repository-date").val(),
-                },
+            RepositorySearch.load();
 
-                success: (response) => {
-                    RepositorySearch.render(response.data);
-                },
-            });
         });
-    },
+
+        $("#repository-date").on("change", function () {
+
+            RepositorySearch.load();
+
+        });
+
+    }
+
 };
 
 $(function () {
+
     RepositoryFilter.initialize();
+
 });

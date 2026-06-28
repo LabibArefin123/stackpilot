@@ -350,19 +350,66 @@ class ProjectController extends Controller
             ->with('success', 'Project deleted successfully.');
     }
 
+    private function buildRepositoryTimeline($commits)
+    {
+        return collect($commits)
+            ->groupBy('date')
+            ->sortKeysDesc()
+            ->map(function ($items, $date) {
+
+                return [
+
+                    'date'     => $date,
+
+                    'total'    => $items->count(),
+
+                    'added'    => $items->sum('added'),
+
+                    'deleted'  => $items->sum('deleted'),
+
+                    'commits'  => $items->values(),
+
+                ];
+            })
+            ->values();
+    }
+
     public function projectRepository(Project $project)
     {
         $gitPath = $this->scanner->findRepository($project);
 
-        if (!$gitPath) {
-            abort(404, 'Repository not found.');
-        }
+        abort_if(!$gitPath, 404, 'Repository not found.');
 
-        $commits = $this->scanner->repositoryCommits($gitPath);
+        $today = now()->format('Y-m-d');
+
+        $commits = collect(
+            $this->scanner->repositoryCommits($gitPath)
+        )->where('date', $today);
+
+        $timeline = $commits
+            ->groupBy('date')
+            ->sortKeysDesc()
+            ->map(function ($items, $date) {
+
+                return [
+
+                    'date' => $date,
+
+                    'total' => $items->count(),
+
+                    'added' => $items->sum('added'),
+
+                    'deleted' => $items->sum('deleted'),
+
+                    'commits' => $items->values()->all(),
+
+                ];
+            })
+            ->values();
 
         return view(
             'backend.project_page.repository',
-            compact('project', 'commits')
+            compact('project', 'timeline')
         );
     }
 
@@ -372,42 +419,34 @@ class ProjectController extends Controller
 
         abort_if(!$gitPath, 404);
 
-        $keyword = trim($request->keyword);
+        $keyword = strtolower(trim($request->keyword));
 
         $commits = collect(
             $this->scanner->repositoryCommits($gitPath)
         );
 
-        if ($keyword != '') {
+        if ($keyword !== '') {
 
             $commits = $commits->filter(function ($commit) use ($keyword) {
 
-                return str_contains(
-                    strtolower($commit['message']),
-                    strtolower($keyword)
-                )
+                return
+                    str_contains(strtolower($commit['message']), $keyword) ||
 
-                    ||
+                    str_contains(strtolower($commit['author']), $keyword) ||
 
-                    str_contains(
-                        strtolower($commit['author']),
-                        strtolower($keyword)
-                    )
-
-                    ||
-
-                    str_contains(
-                        strtolower($commit['short_hash']),
-                        strtolower($keyword)
-                    );
+                    str_contains(strtolower($commit['short_hash']), $keyword);
             });
         }
 
         return response()->json([
+
             'success' => true,
-            'data' => $commits->values()
+
+            'data' => $this->buildRepositoryTimeline($commits),
+
         ]);
     }
+
 
     public function repositoryTimeline(Project $project)
     {
@@ -415,29 +454,14 @@ class ProjectController extends Controller
 
         abort_if(!$gitPath, 404);
 
-        $commits = collect(
-            $this->scanner->repositoryCommits($gitPath)
-        );
-
-        $timeline = $commits
-            ->groupBy('date')
-            ->map(function ($items) {
-
-                return [
-
-                    'date' => $items->first()['date'],
-
-                    'total' => $items->count(),
-
-                    'commits' => $items->values()
-
-                ];
-            })
-            ->values();
-
         return response()->json([
+
             'success' => true,
-            'data' => $timeline
+
+            'data' => $this->buildRepositoryTimeline(
+                $this->scanner->repositoryCommits($gitPath)
+            ),
+
         ]);
     }
 
@@ -453,23 +477,20 @@ class ProjectController extends Controller
 
         if ($request->filled('author')) {
 
-            $commits = $commits->where(
-                'author',
-                $request->author
-            );
+            $commits = $commits->where('author', $request->author);
         }
 
         if ($request->filled('date')) {
 
-            $commits = $commits->where(
-                'date',
-                $request->date
-            );
+            $commits = $commits->where('date', $request->date);
         }
 
         return response()->json([
+
             'success' => true,
-            'data' => $commits->values()
+
+            'data' => $this->buildRepositoryTimeline($commits),
+
         ]);
     }
 
@@ -481,15 +502,12 @@ class ProjectController extends Controller
 
         $commit = collect(
             $this->scanner->repositoryCommits($gitPath)
-        )->firstWhere(
-            'hash',
-            $hash
-        );
+        )->firstWhere('hash', $hash);
 
         if (!$commit) {
 
             return response()->json([
-                'success' => false
+                'success' => false,
             ], 404);
         }
 
@@ -497,7 +515,7 @@ class ProjectController extends Controller
 
             'success' => true,
 
-            'data' => $commit
+            'data' => $commit,
 
         ]);
     }
@@ -508,7 +526,7 @@ class ProjectController extends Controller
 
             'success' => true,
 
-            'hash' => $hash
+            'hash' => $hash,
 
         ]);
     }

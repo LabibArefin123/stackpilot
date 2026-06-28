@@ -42,7 +42,7 @@
 
                 <div>
                     <span class="badge badge-primary p-2 mr-2">
-                        {{ count($commits) }}
+                        {{-- {{ count($commits) }} --}}
                         Commits
                         <button class="btn btn-sm btn-light btn-expand ml-2">
 
@@ -56,25 +56,44 @@
 @endsection
 
 @section('content')
+
     <section class="content">
+
+        @php
+
+            $authors = collect($timeline)
+                ->flatMap(fn($day) => $day['commits'])
+                ->pluck('author')
+                ->unique()
+                ->sort()
+                ->values();
+
+        @endphp
+
         <div class="card repository-toolbar mb-3">
+
             <div class="card-body">
+
                 <div class="row align-items-center">
+
                     <div class="col-lg-3">
 
                         <input id="repository-search" class="form-control" type="text"
                             placeholder="Search commit, author or hash...">
 
                     </div>
+
                     <div class="col-lg-2">
 
                         <select id="repository-author" class="form-control">
 
                             <option value="">All Authors</option>
 
-                            @foreach (collect($commits)->pluck('author')->unique() as $author)
+                            @foreach ($authors as $author)
                                 <option value="{{ $author }}">
+
                                     {{ $author }}
+
                                 </option>
                             @endforeach
 
@@ -88,47 +107,7 @@
 
                     </div>
 
-                    <div class="col-lg-8 text-right mt-3 mt-lg-0">
-                        <button class="btn btn-outline-primary btn-copy-code">
-                            <i class="far fa-copy"></i>
-                            Copy
-                        </button>
-
-                        <button class="btn btn-outline-success btn-wrap-code">
-
-                            <i class="fas fa-align-left"></i>
-
-                            Wrap
-
-                        </button>
-
-                        <button class="btn btn-outline-warning btn-fullscreen-code">
-
-                            <i class="fas fa-expand"></i>
-
-                            Fullscreen
-
-                        </button>
-
-                        <button class="btn btn-outline-info btn-code-theme">
-
-                            <i class="fas fa-adjust"></i>
-
-                            Theme
-
-                        </button>
-
-                        <button class="btn btn-outline-secondary btn-font-minus">
-
-                            A-
-
-                        </button>
-
-                        <button class="btn btn-outline-secondary btn-font-plus">
-
-                            A+
-
-                        </button>
+                    <div class="col-lg-5 text-right">
 
                         <button class="btn btn-outline-dark btn-scroll-top">
 
@@ -143,134 +122,195 @@
             </div>
 
         </div>
-        <div class="container-fluid commit-layout" id="repository-commits">
 
-            @foreach ($commits as $commit)
-                <div class="card commit-card repository-card">
+        <div id="repository-commits" class="container-fluid commit-layout">
 
-                    <div class="card-header">
+            @forelse($timeline as $day)
 
-                        <div class="commit-header">
+                <div class="repository-date-header mb-4">
 
-                            <div class="commit-info">
+                    <div class="d-flex justify-content-between align-items-center">
 
-                                <h5 class="commit-title">
-                                    {{ $commit['message'] }}
-                                </h5>
+                        <div>
 
-                                <div class="commit-meta">
+                            <h4 class="mb-1">
 
-                                    <i class="fas fa-user"></i>
-                                    {{ $commit['author'] }}
+                                <i class="far fa-calendar-alt text-primary"></i>
 
-                                    <span class="commit-dot">•</span>
+                                {{ \Carbon\Carbon::parse($day['date'])->format('d M Y') }}
 
-                                    <i class="far fa-calendar-alt"></i>
-                                    {{ $commit['date'] }}
-
-                                </div>
-
-                            </div>
-
-                            <div class="commit-right">
-
-                                <span class="commit-hash">
-                                    <i class="fas fa-code-branch"></i>
-                                    {{ $commit['short_hash'] }}
-                                </span>
-
-                                <span class="commit-added">
-                                    +{{ $commit['added'] }}
-                                </span>
-
-                                <span class="commit-deleted">
-                                    -{{ $commit['deleted'] }}
-                                </span>
-
-                            </div>
+                            </h4>
 
                         </div>
 
-                    </div>
+                        <div>
 
-                    <div class="card-body p-0">
+                            <span class="badge badge-primary">
 
-                        <div class="table-responsive">
+                                {{ $day['total'] }} Commits
 
-                            <table class="table commit-table mb-0">
+                            </span>
 
-                                <thead>
+                            <span class="badge badge-success">
 
-                                    <tr>
+                                +{{ $day['added'] }}
 
-                                        <th>
-                                            <i class="far fa-file-code"></i>
-                                            File
-                                        </th>
+                            </span>
 
-                                        <th width="110" class="text-center">
-                                            Added
-                                        </th>
+                            <span class="badge badge-danger">
 
-                                        <th width="110" class="text-center">
-                                            Deleted
-                                        </th>
+                                -{{ $day['deleted'] }}
 
-                                    </tr>
-
-                                </thead>
-
-                                <tbody>
-
-                                    @foreach ($commit['files'] as $file)
-                                        <tr>
-
-                                            <td class="commit-file repository-file">
-
-                                                <i class="far fa-file-code text-primary mr-2"></i>
-
-                                                {{ $file['file'] }}
-
-                                            </td>
-
-                                            <td class="text-center">
-
-                                                <span class="commit-added-text">
-
-                                                    +{{ $file['added'] }}
-
-                                                </span>
-
-                                            </td>
-
-                                            <td class="text-center">
-
-                                                <span class="commit-deleted-text">
-
-                                                    -{{ $file['deleted'] }}
-
-                                                </span>
-
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-
-                                </tbody>
-
-                            </table>
+                            </span>
 
                         </div>
 
                     </div>
 
                 </div>
-            @endforeach
+
+                @foreach ($day['commits'] as $commit)
+                    <div class="card commit-card repository-card mb-3">
+
+                        <div class="card-header">
+
+                            <div class="commit-header">
+
+                                <div class="commit-info">
+
+                                    <h5 class="commit-title">
+
+                                        {{ $commit['message'] }}
+
+                                    </h5>
+
+                                    <div class="commit-meta">
+
+                                        <i class="fas fa-user"></i>
+
+                                        {{ $commit['author'] }}
+
+                                        <span class="commit-dot mx-2">•</span>
+
+                                        <i class="far fa-clock"></i>
+
+                                        {{ $commit['date'] }}
+
+                                    </div>
+
+                                </div>
+
+                                <div class="commit-right">
+
+                                    <span class="commit-hash">
+
+                                        {{ $commit['short_hash'] }}
+
+                                    </span>
+
+                                    <span class="commit-added">
+
+                                        +{{ $commit['added'] }}
+
+                                    </span>
+
+                                    <span class="commit-deleted">
+
+                                        -{{ $commit['deleted'] }}
+
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="card-body p-0">
+
+                            <div class="table-responsive">
+
+                                <table class="table commit-table mb-0">
+
+                                    <thead>
+
+                                        <tr>
+
+                                            <th>File</th>
+
+                                            <th width="110" class="text-center">
+
+                                                Added
+
+                                            </th>
+
+                                            <th width="110" class="text-center">
+
+                                                Deleted
+
+                                            </th>
+
+                                        </tr>
+
+                                    </thead>
+
+                                    <tbody>
+
+                                        @foreach ($commit['files'] as $file)
+                                            <tr>
+
+                                                <td class="repository-file">
+
+                                                    <i class="far fa-file-code text-primary mr-2"></i>
+
+                                                    {{ $file['file'] }}
+
+                                                </td>
+
+                                                <td class="text-center text-success">
+
+                                                    +{{ $file['added'] }}
+
+                                                </td>
+
+                                                <td class="text-center text-danger">
+
+                                                    -{{ $file['deleted'] }}
+
+                                                </td>
+
+                                            </tr>
+                                        @endforeach
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                @endforeach
+
+            @empty
+
+                <div class="alert alert-info">
+
+                    No commits found.
+
+                </div>
+
+            @endforelse
 
         </div>
 
     </section>
+    <div class="card mt-4">
+        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
+    </div>
 @endsection
+
 @section('js')
     {{-- TOP SECTION PART --}}
     <script>
