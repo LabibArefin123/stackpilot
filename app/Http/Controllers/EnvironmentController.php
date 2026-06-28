@@ -14,6 +14,9 @@ class EnvironmentController extends Controller
     public function index()
     {
         $environments = ProjectEnvironment::with('project')
+            ->whereHas('project', function ($query) {
+                $query->where('project_type', 'Laravel');
+            })
             ->orderBy('environment')
             ->get();
 

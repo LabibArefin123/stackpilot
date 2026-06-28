@@ -17,10 +17,28 @@ class CronController extends Controller
         $projects = Project::where('project_type', 'Laravel')
             ->orderBy('name')
             ->get();
-            
+
+        foreach ($projects as $project) {
+
+            $path = $project->project_path
+                ?? $project->path
+                ?? $project->directory
+                ?? '';
+
+            $project->cron = [
+
+                'command' => "* * * * * php {$path}/artisan schedule:run >> /dev/null 2>&1",
+
+                'status' => file_exists($path . DIRECTORY_SEPARATOR . 'artisan'),
+
+            ];
+        }
+
+        $cronProjects = $projects->take(2);
+
         return view(
             'backend.cron_page.index',
-            compact('projects')
+            compact('projects', 'cronProjects')
         );
     }
 
