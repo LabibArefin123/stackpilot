@@ -184,11 +184,11 @@
 
                         <div class="tab-pane" id="deployments">
 
-                             @include('backend.project_page.partials.deployment_section.part_1')
-                             @include('backend.project_page.partials.deployment_section.part_2')
-                             @include('backend.project_page.partials.deployment_section.part_3')
-                             @include('backend.project_page.partials.deployment_section.part_4')
-                             @include('backend.project_page.partials.deployment_section.part_5')
+                            @include('backend.project_page.partials.deployment_section.part_1')
+                            @include('backend.project_page.partials.deployment_section.part_2')
+                            @include('backend.project_page.partials.deployment_section.part_3')
+                            @include('backend.project_page.partials.deployment_section.part_4')
+                            @include('backend.project_page.partials.deployment_section.part_5')
 
                         </div>
 
@@ -201,5 +201,7 @@
         </div>
 
     </div>
-
+    <div class="card mt-4">
+        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
+    </div>
 @stop

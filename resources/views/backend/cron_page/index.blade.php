@@ -29,7 +29,6 @@
 @stop
 
 @section('content')
-
     {{-- CRON STATISTICS --}}
     @include('backend.partials.cron_page.index_page.part_1')
     {{-- CRON TABLE --}}

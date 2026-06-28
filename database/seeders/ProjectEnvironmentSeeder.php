@@ -46,25 +46,15 @@ class ProjectEnvironmentSeeder extends Seeder
                         : 'Production',
 
                     'php_version' => PHP_VERSION,
-
                     'php_binary' => PHP_BINARY,
-
                     'composer_binary' => $this->binary('composer'),
-
                     'node_version' => $this->nodeVersion(),
-
                     'node_binary' => $this->binary('node'),
-
                     'npm_binary' => $this->binary('npm'),
-
                     'laravel_version' => $this->laravelVersion($projectPath),
-
                     'ssh_user' => null,
-
                     'ssh_port' => 22,
-
                     'last_checked_at' => now(),
-
                     'is_default' => true,
 
                 ]

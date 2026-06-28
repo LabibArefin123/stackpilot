@@ -8,11 +8,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\Process\Process;
 use App\Services\GitRepositoryScanner;
+use App\Services\ProjectControllerService;
 
 class ProjectController extends Controller
 {
     public function __construct(
-        protected GitRepositoryScanner $scanner
+        protected GitRepositoryScanner $scanner,
+        protected ProjectControllerService $projectService
     ) {}
     /**
      * Display a listing of the resource.
@@ -47,86 +49,93 @@ class ProjectController extends Controller
         $validated = $request->validate([
 
             // Project
-            'name' => 'required|max:255',
-            'domain' => 'required|max:255|unique:projects,domain',
-            'git_repository' => 'nullable|max:255',
-            'git_branch' => 'required|max:100',
+            'name'              => 'required|string|max:255',
+            'domain' => 'required|string|max:255|unique:projects,domain',
+            'project_type'      => 'nullable|string|max:100',
+
+            'git_repository'    => 'nullable|string|max:255',
+            'git_branch'        => 'nullable|string|max:100',
+            'default_branch'    => 'nullable|string|max:100',
+            'git_status'        => 'nullable|string|max:100',
+
+            'last_commit'       => 'nullable|string',
+            'last_commit_date'  => 'nullable|date',
+
+            'owner'             => 'nullable|string|max:255',
+            'visibility'        => 'nullable|string|max:100',
+
+            'is_private' => 'sometimes|boolean',
+            'is_active'  => 'sometimes|boolean',
 
             // Environment
-            'environment' => 'required',
-            'hosting_provider' => 'nullable|max:255',
-            'project_path' => 'required|max:500',
-            'public_path' => 'nullable|max:500',
+            'environment'       => 'required|string|max:100',
+            'hosting_provider'  => 'nullable|string|max:255',
 
-            'server_name' => 'nullable|max:255',
-            'server_ip' => 'nullable|max:100',
+            'project_path'      => 'nullable|string|max:500',
+            'public_path'       => 'nullable|string|max:500',
 
-            'php_version' => 'nullable|max:50',
-            'laravel_version' => 'nullable|max:50',
+            'server_name'       => 'nullable|string|max:255',
+            'server_ip'         => 'nullable|string|max:100',
 
-            'php_binary' => 'nullable|max:255',
-            'composer_binary' => 'nullable|max:255',
+            'php_version'       => 'nullable|string|max:50',
+            'laravel_version'   => 'nullable|string|max:50',
 
-            'node_version' => 'nullable|max:50',
-            'node_binary' => 'nullable|max:255',
-            'npm_binary' => 'nullable|max:255',
+            'php_binary'        => 'nullable|string|max:255',
+            'composer_binary'   => 'nullable|string|max:255',
 
-            'ssh_user' => 'nullable|max:255',
-            'ssh_port' => 'nullable|integer',
+            'node_version'      => 'nullable|string|max:50',
+            'node_binary'       => 'nullable|string|max:255',
+            'npm_binary'        => 'nullable|string|max:255',
+
+            'ssh_user'          => 'nullable|string|max:255',
+            'ssh_port'          => 'nullable|integer',
 
         ]);
 
-        DB::transaction(function () use ($validated) {
+        DB::transaction(function () use ($validated, $request) {
 
             $project = Project::create([
+                'name'             => $validated['name'],
+                'domain'           => $validated['domain'],
 
-                'name' => $validated['name'],
-                'domain' => $validated['domain'],
-                'git_repository' => $validated['git_repository'],
-                'git_branch' => $validated['git_branch'],
-                'is_active' => true,
-                'last_checked_at' => now(),
+                'project_type'     => $validated['project_type'] ?? null,
 
+                'git_repository'   => $validated['git_repository'] ?? null,
+                'git_branch'       => $validated['git_branch'] ?? null,
+                'default_branch'   => $validated['default_branch'] ?? 'main',
+                'git_status'       => $validated['git_status'] ?? 'Unknown',
+
+                'last_commit'      => $validated['last_commit'] ?? null,
+                'last_commit_date' => $validated['last_commit_date'] ?? null,
+
+                'owner'            => $validated['owner'] ?? null,
+                'visibility'       => $validated['visibility'] ?? 'Private',
+
+                'is_private'       => $request->boolean('is_private'),
+                'is_active'        => $request->boolean('is_active'),
+
+                'last_checked_at'  => now(),
             ]);
 
             ProjectEnvironment::create([
-
                 'project_id' => $project->id,
-
                 'environment' => $validated['environment'],
-
                 'hosting_provider' => $validated['hosting_provider'] ?? null,
-
                 'project_path' => $validated['project_path'],
-
                 'public_path' => $validated['public_path'] ?? null,
-
                 'server_name' => $validated['server_name'] ?? null,
-
                 'server_ip' => $validated['server_ip'] ?? null,
-
                 'php_version' => $validated['php_version'] ?? null,
-
                 'laravel_version' => $validated['laravel_version'] ?? null,
-
                 'php_binary' => $validated['php_binary'] ?? '/usr/bin/php',
-
                 'composer_binary' => $validated['composer_binary'] ?? '/usr/local/bin/composer',
-
                 'node_version' => $validated['node_version'] ?? null,
-
                 'node_binary' => $validated['node_binary'] ?? null,
-
                 'npm_binary' => $validated['npm_binary'] ?? null,
-
                 'ssh_user' => $validated['ssh_user'] ?? null,
-
                 'ssh_port' => $validated['ssh_port'] ?? 22,
-
                 'last_checked_at' => now(),
-
                 'is_default' => true,
-
             ]);
         });
 
@@ -162,13 +171,13 @@ class ProjectController extends Controller
             abort(404, "Repository not found for {$project->name}");
         }
 
-        $git = $this->loadGitInformation($project, $gitPath);
+        $git = $this->projectService->loadGitInformation($project, $gitPath);
 
-        $deployment = $this->loadDeployment($project, $git);
+        $deployment = $this->projectService->loadDeployment($project, $git);
 
-        $stats = $this->loadTerminalStatistics($project);
+        $stats = $this->projectService->loadTerminalStatistics($project);
 
-        $commits = $this->loadLatestCommits($gitPath);
+        $commits = $this->projectService->loadLatestCommits($gitPath);
 
         return view(
             'backend.project_page.show',
@@ -182,278 +191,7 @@ class ProjectController extends Controller
         );
     }
 
-    private function runGitCommand($path, $command)
-    {
-        if (empty($path) || !is_dir($path)) {
-            return null;
-        }
-
-        if (!is_dir($path . DIRECTORY_SEPARATOR . '.git')) {
-            return null;
-        }
-
-        $process = Process::fromShellCommandline($command, $path);
-
-        $process->setTimeout(30);
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-            return null;
-        }
-
-        return trim($process->getOutput());
-    }
-
-    private function loadGitInformation(Project $project, $gitPath)
-    {
-        $branch = $this->runGitCommand($gitPath, 'git branch --show-current');
-
-        $lastHash = $this->runGitCommand($gitPath, 'git rev-parse --short HEAD');
-
-        $lastMessage = $this->runGitCommand($gitPath, 'git log -1 --pretty=%s');
-
-        $lastDate = $this->runGitCommand($gitPath, 'git log -1 --date=local --pretty=%cd');
-
-        $gitVersion = $this->runGitCommand($gitPath, 'git --version');
-
-        $branchCount = (int)$this->runGitCommand($gitPath, 'git branch --list | wc -l');
-
-        $commitCount = (int)$this->runGitCommand($gitPath, 'git rev-list --count HEAD');
-
-        $status = $this->runGitCommand($gitPath, 'git status --porcelain');
-
-        $clean = empty($status);
-
-        $localBranches = $this->runGitCommand($gitPath, 'git branch --format="%(refname:short)"');
-
-        $remoteBranches = $this->runGitCommand($gitPath, 'git branch -r --format="%(refname:short)"');
-
-        $remoteName = $this->runGitCommand($gitPath, 'git remote');
-
-        $fetchUrl = $this->runGitCommand($gitPath, 'git remote get-url origin');
-
-        $pushUrl = $this->runGitCommand($gitPath, 'git remote get-url --push origin');
-
-        $defaultRemoteBranch = $this->runGitCommand(
-            $gitPath,
-            'git symbolic-ref refs/remotes/origin/HEAD'
-        );
-
-        $contributors = $this->runGitCommand(
-            $gitPath,
-            'git shortlog -sn'
-        );
-
-        $totalContributors = 0;
-
-        if ($contributors) {
-
-            $totalContributors = count(
-                array_filter(
-                    explode(PHP_EOL, $contributors)
-                )
-            );
-        }
-
-        $lastCommitAuthor = $this->runGitCommand(
-            $gitPath,
-            'git log -1 --pretty=%an'
-        );
-
-        $lastCommitEmail = $this->runGitCommand(
-            $gitPath,
-            'git log -1 --pretty=%ae'
-        );
-        return [
-
-            'health' => $clean ? 100 : 80,
-
-            'status' => $clean ? 'Clean' : 'Modified',
-
-            'branch' => $branch,
-
-            'commits' => $commitCount,
-
-            'repository' => is_dir($gitPath . '/.git'),
-
-            'remote' => filled($project->git_repository),
-
-            'working_tree' => $clean,
-
-            'branch_exists' => filled($branch),
-
-            'latest_commit' => filled($lastHash),
-
-            'connected' => filled($project->git_repository),
-
-            'fetch_ok' => true,
-
-            'push_access' => false,
-
-            'repository_name' => basename($gitPath),
-
-            'remote_url' => $project->git_repository,
-
-            'last_hash' => $lastHash,
-
-            'last_message' => $lastMessage,
-
-            'last_date' => $lastDate,
-
-            'git_version' => $gitVersion,
-
-            'default_branch' => $branch,
-
-            'branch_count' => $branchCount,
-
-            'commit_count' => $commitCount,
-
-            'local_branches' => collect(explode(PHP_EOL, $localBranches ?? ''))
-                ->filter()
-                ->values(),
-
-            'remote_branches' => collect(explode(PHP_EOL, $remoteBranches ?? ''))
-                ->filter()
-                ->values(),
-
-            'remote_name' => $remoteName ?: 'origin',
-
-            'fetch_url' => $fetchUrl,
-
-            'push_url' => $pushUrl,
-
-            'default_remote_branch' => str_replace(
-                'refs/remotes/origin/',
-                '',
-                $defaultRemoteBranch
-            ),
-
-            'total_contributors' => $totalContributors,
-
-            'last_commit_author' => $lastCommitAuthor,
-
-            'last_commit_email' => $lastCommitEmail,
-        ];
-    }
-
-    private function loadTerminalStatistics(Project $project)
-    {
-        return [
-
-            'total' => $project->commands()->count(),
-
-            'success' => $project->commands()->where('success', 1)->count(),
-
-            'failed' => $project->commands()->where('success', 0)->count(),
-
-            'runtime' => number_format(
-
-                $project->commands()->avg('execution_time') ?? 0,
-
-                2
-
-            )
-
-        ];
-    }
-
-    private function loadLatestCommits($gitPath)
-    {
-        $commits = [];
-
-        $process = Process::fromShellCommandline(
-
-            'git log -10 --pretty=format:"%h|%an|%ad|%s" --date=relative',
-
-            $gitPath
-
-        );
-
-        $process->run();
-
-        if (!$process->isSuccessful()) {
-
-            return [];
-        }
-
-        foreach (explode(PHP_EOL, $process->getOutput()) as $line) {
-
-            if (trim($line) == '') continue;
-
-            [$hash, $author, $date, $message] = explode('|', $line, 4);
-
-            $commits[] = [
-
-                'hash' => $hash,
-
-                'author' => $author,
-
-                'date' => $date,
-
-                'message' => $message
-
-            ];
-        }
-
-        return $commits;
-    }
-
-    private function loadDeployment(Project $project, array $git): array
-    {
-        $deployment = optional($project->deployment);
-
-        return [
-
-            'status' => $deployment->status ?? 'Pending',
-
-            'method' => $deployment->method ?? 'Git Pull',
-
-            'server' => $deployment->server
-                ?? optional($project->environment)->server_name
-                ?? php_uname('n'),
-
-            'repository' => $git['remote_url'] ?? null,
-
-            'branch' => $git['branch'] ?? null,
-
-            'commit_hash' => $git['last_hash'] ?? null,
-
-            'commit_message' => $git['last_message'] ?? null,
-
-            'version' => $deployment->version,
-
-            'release_version' => $deployment->release_version,
-
-            'build_number' => $deployment->build_number,
-
-            'build_duration' => $deployment->build_duration,
-
-            'artifact_name' => $deployment->artifact_name,
-
-            'git_pull_command' => $deployment->git_pull_command
-                ?? 'git pull origin ' . ($git['branch'] ?? 'main'),
-
-            'composer_install_command' => $deployment->composer_install_command
-                ?? 'composer install --no-dev --optimize-autoloader',
-
-            'npm_build_command' => $deployment->npm_build_command
-                ?? 'npm run build',
-
-            'migration_command' => $deployment->migration_command
-                ?? 'php artisan migrate --force',
-
-            'cache_clear_command' => $deployment->cache_clear_command
-                ?? 'php artisan optimize',
-
-            'success_count' => $deployment->success_count ?? 0,
-
-            'failed_count' => $deployment->failed_count ?? 0,
-
-            'deployed_at' => $deployment->deployed_at,
-
-        ];
-    }
+    
     /**
      * Show the form for editing the specified resource.
      */
@@ -511,17 +249,30 @@ class ProjectController extends Controller
 
         ]);
 
-        DB::transaction(function () use ($validated, $project) {
+        DB::transaction(function () use ($validated, $project, $request) {
 
             $project->update([
 
-                'name' => $validated['name'],
+                'name'             => $validated['name'],
+                'domain'           => $validated['domain'],
 
-                'domain' => $validated['domain'],
+                'project_type'     => $validated['project_type'] ?? null,
 
-                'git_repository' => $validated['git_repository'],
+                'git_repository'   => $validated['git_repository'] ?? null,
+                'git_branch'       => $validated['git_branch'] ?? null,
+                'default_branch'   => $validated['default_branch'] ?? 'main',
+                'git_status'       => $validated['git_status'] ?? 'Unknown',
 
-                'git_branch' => $validated['git_branch'],
+                'last_commit'      => $validated['last_commit'] ?? null,
+                'last_commit_date' => $validated['last_commit_date'] ?? null,
+
+                'owner'            => $validated['owner'] ?? null,
+                'visibility'       => $validated['visibility'] ?? 'Private',
+
+                'is_private'       => $request->boolean('is_private'),
+                'is_active'        => $request->boolean('is_active'),
+
+                'last_checked_at'  => now(),
 
             ]);
 
