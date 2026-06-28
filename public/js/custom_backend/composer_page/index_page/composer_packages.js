@@ -11,13 +11,18 @@ $(function () {
         $.get("/composer/" + id + "/packages", function (data) {
             let html = "";
 
-            $.each(data, function (name, version) {
+            $.each(data, function (index, pkg) {
                 html += `
-                    <tr>
-                        <td>${name}</td>
-                        <td>${version}</td>
-                    </tr>
-                `;
+        <tr>
+            <td>${pkg.name}</td>
+            <td>${pkg.version}</td>
+            <td>
+                <span class="badge badge-${pkg.type === "Dependency" ? "success" : "warning"}">
+                    ${pkg.type}
+                </span>
+            </td>
+        </tr>
+    `;
             });
 
             if (html === "") {

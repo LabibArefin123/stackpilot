@@ -242,22 +242,33 @@ class GitRepositoryScanner
 
     public function composerPackages(string $path): array
     {
-        $lock = $path . DIRECTORY_SEPARATOR . 'composer.lock';
+        $package = $path . DIRECTORY_SEPARATOR . 'package.json';
 
-        if (!File::exists($lock)) {
-
+        if (!File::exists($package)) {
             return [];
         }
 
-        $json = json_decode(
+        $json = json_decode(File::get($package), true);
 
-            File::get($lock),
+        $packages = [];
 
-            true
+        foreach ($json['dependencies'] ?? [] as $name => $version) {
+            $packages[] = [
+                'name' => $name,
+                'version' => $version,
+                'type' => 'Dependency',
+            ];
+        }
 
-        );
+        foreach ($json['devDependencies'] ?? [] as $name => $version) {
+            $packages[] = [
+                'name' => $name,
+                'version' => $version,
+                'type' => 'Dev Dependency',
+            ];
+        }
 
-        return $json['packages'] ?? [];
+        return $packages;
     }
 
     public function composerShow(string $path): ?string
@@ -295,15 +306,21 @@ class GitRepositoryScanner
 
     public function composerVersion(): ?string
     {
-        $process = Process::fromShellCommandline(
-            'composer --version'
-        );
+        $output = $this->command(base_path(), 'composer --version');
 
-        $process->run();
+        if (!$output) {
+            return null;
+        }
 
-        return $process->isSuccessful()
-            ? trim($process->getOutput())
-            : null;
+        // Remove ANSI escape sequences
+        $output = preg_replace('/\e\[[\d;]*m/', '', $output);
+
+        // Extract version number
+        if (preg_match('/\d+\.\d+\.\d+/', $output, $match)) {
+            return $match[0];
+        }
+
+        return trim($output);
     }
 
     public function composerJson(string $path): array

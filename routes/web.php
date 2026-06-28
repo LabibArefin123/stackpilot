@@ -62,10 +62,12 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     Route::resource('deployments', DeploymentController::class);
 
-    Route::resource('composer', ComposerController::class);
     Route::get('composer/{project}/json',[ComposerController::class, 'show'])->name('composer.json');
     Route::get('composer/{project}/packages',[ComposerController::class, 'packages'])->name('composer.packages');
-    Route::get('composer/{project}/terminal',[ComposerController::class, 'terminal'])->name('composer.terminal');
+    Route::post('composer/{project}/terminal',[ComposerController::class, 'terminal'])->name('composer.terminal');
+    Route::get('composer/installed-packages', [ComposerController::class, 'installedPackages'])->name('composer.installed-packages');
+    Route::get('/composer/terminal', [ComposerController::class, 'terminalPage'])->name('composer.terminal-page');
+    Route::resource('composer', ComposerController::class);
     Route::resource('optimization', OptimizationController::class)->only(['index']);
     Route::post('optimization/run',[OptimizationController::class, 'run'])->name('optimization.run');
     

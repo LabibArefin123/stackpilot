@@ -95,22 +95,47 @@ class ComposerController extends Controller
     public function terminal(Request $request, Project $project)
     {
         $request->validate([
-
             'command' => 'required|string'
-
         ]);
 
         $path = $this->scanner->findRepository($project);
 
         abort_if(!$path, 404);
 
+        $output = $this->scanner->command(
+            $path,
+            'composer --no-ansi --no-interaction ' . $request->command
+        );
+
+        // Remove ANSI color codes
+        $output = preg_replace('/\x1B\[[0-9;]*[A-Za-z]/', '', $output);
+
+        // Remove OSC 8 hyperlinks
+        $output = preg_replace('/\x1B\].*?\x07/', '', $output);
+        $output = preg_replace('/\x1B\].*?\x1B\\\\/', '', $output);
+
         return response()->json([
-
-            'output' => $this->scanner->command(
-                $path,
-                'composer ' . $request->command
-            )
-
+            'output' => trim($output)
         ]);
+    }
+
+    public function installedPackages()
+    {
+        $projects = Project::orderBy('name')->get();
+
+        return view(
+            'backend.composer_page.installed_packages',
+            compact('projects')
+        );
+    }
+
+    public function terminalPage()
+    {
+        $projects = Project::orderBy('name')->get();
+
+        return view(
+            'backend.composer_page.terminal',
+            compact('projects')
+        );
     }
 }

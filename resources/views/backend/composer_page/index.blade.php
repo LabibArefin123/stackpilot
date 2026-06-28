@@ -176,13 +176,10 @@
                             </td>
 
                             <td>
-
-                                <span class="badge badge-primary">
-
+                                <span class="badge badge-primary text-wrap"
+                                    style="white-space: normal; max-width:120px; display:inline-block;">
                                     {{ $project->composer['version'] ?? '-' }}
-
                                 </span>
-
                             </td>
 
                             <td>

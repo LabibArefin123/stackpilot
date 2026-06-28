@@ -396,18 +396,19 @@ return [
 
                         // Future Pages
 
+
                         [
                             'text'  => 'Installed Packages',
-                            'route' => 'composer.index',
+                            'route' => 'composer.installed-packages',
                             'icon'  => 'fas fa-cubes',
-                            'can'   => 'composer.index',
+                            'can'   => 'composer.installed-packages',
                         ],
 
                         [
                             'text'  => 'Composer Terminal',
-                            'route' => 'composer.index',
+                            'route' => 'composer.terminal-page',
                             'icon'  => 'fas fa-terminal',
-                            'can'   => 'composer.index',
+                            'can'   => 'composer.terminal-page',
                         ],
 
                     ],
