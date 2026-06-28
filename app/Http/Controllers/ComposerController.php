@@ -17,7 +17,9 @@ class ComposerController extends Controller
      */
     public function index()
     {
-        $projects = Project::orderBy('name')->get();
+        $projects = Project::orderBy('name')
+            ->limit(5)
+            ->get();
 
         foreach ($projects as $project) {
 

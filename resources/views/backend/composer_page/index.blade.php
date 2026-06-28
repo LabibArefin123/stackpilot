@@ -99,7 +99,9 @@
 
 
     <div class="card">
-
+        {{-- MODALS FOR ACTION PAGE --}}
+        @include('backend.composer_page.modals.modal_json')
+        @include('backend.composer_page.modals.modal_packages')
         <div class="card-header">
 
             <h3 class="card-title">
@@ -114,7 +116,7 @@
 
         <div class="card-body">
 
-            <table id="composerTable" class="table table-bordered table-hover table-striped">
+            <table class="table table-bordered table-hover table-striped" id="dataTables">
 
                 <thead>
 
@@ -250,7 +252,6 @@
                             <td>
 
                                 <div class="btn-group">
-
                                     <button class="btn btn-xs btn-primary btn-composer-json" data-id="{{ $project->id }}">
 
                                         <i class="fas fa-file-code"></i>
@@ -307,3 +308,7 @@
         <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
     </div>
 @endsection
+@push('js')
+    <script src="{{ asset('js/custom_backend/composer_page/index_page/composer_modal.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/composer_page/index_page/composer_packages.js') }}"></script>
+@endpush
