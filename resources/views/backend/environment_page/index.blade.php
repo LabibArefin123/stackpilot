@@ -101,7 +101,7 @@
 
                         <th>Project</th>
 
-                        <th>Environment</th>
+                        <th class="text-center">Environment</th>
 
                         <th>PHP</th>
 

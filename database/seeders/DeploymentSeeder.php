@@ -106,3 +106,4 @@ class DeploymentSeeder extends Seeder
         return $json['version'] ?? null;
     }
 }
+    

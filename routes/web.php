@@ -58,7 +58,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     Route::resource('projects', ProjectController::class);
     Route::resource('gits', GitMonitorController::class);
-    Route::get('/deployments', [DeploymentController::class, 'index'])->name('deployments.index');
+
+    Route::resource('deployments', DeploymentController::class);
 
     Route::resource('optimization', OptimizationController::class)->only(['index']);
     Route::post('optimization/run',[OptimizationController::class, 'run'])->name('optimization.run');
