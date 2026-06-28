@@ -318,7 +318,6 @@
 
         window.repositoryFilterUrl = "{{ route('projects.repository.filter', $project) }}";
     </script>
-    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-highlight.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-toolbar.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-search.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-ui.js') }}"></script>

@@ -11,6 +11,7 @@ class OptimizationController extends Controller
     public function index()
     {
         $projects = Project::with('health')
+            ->where('project_type', 'Laravel')
             ->orderBy('name')
             ->get();
 

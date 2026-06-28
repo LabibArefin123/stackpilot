@@ -1,0 +1,25 @@
+.install-method-card {
+    border: 1px solid #ddd;
+
+    border-radius: 8px;
+
+    padding: 18px;
+
+    margin-bottom: 15px;
+
+    cursor: pointer;
+
+    transition: 0.3s;
+}
+
+.install-method-card:hover {
+    border-color: #007bff;
+
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+.install-arrow {
+    font-size: 22px;
+
+    display: none;
+}

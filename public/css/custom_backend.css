@@ -34,8 +34,10 @@
 html,
 body {
     height: auto;
-    /* avoid forcing full height */
+    background-color: #f8f9fa;
 }
+
+
 
 .hover-box {
     display: inline-block;

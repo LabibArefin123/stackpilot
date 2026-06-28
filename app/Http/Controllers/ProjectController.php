@@ -530,4 +530,13 @@ class ProjectController extends Controller
 
         ]);
     }
+
+    public function projectInstall()
+    {
+        $projects = Project::with([
+            'environment',
+            'health'
+        ])->get();
+        return view('backend.project_page.project_install.index', compact('projects'));
+    }
 }

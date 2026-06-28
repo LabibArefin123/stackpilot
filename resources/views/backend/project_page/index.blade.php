@@ -116,6 +116,14 @@
 
                 </a>
 
+                <a href="{{ route('projects.install') }}" class="btn btn-primary btn-sm">
+
+                    <i class="fas fa-plus"></i>
+
+                    Install Project
+
+                </a>
+
             </div>
 
         </div>
