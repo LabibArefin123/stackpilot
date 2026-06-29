@@ -74,7 +74,6 @@
                 @include('backend.project_page.partials.project_install.part_3')
                 @include('backend.project_page.partials.project_install.part_4')
             </div>
-
         </div>
         <script src="{{ asset('js/custom_backend/project_page/project_install/project-arrow.js') }}"></script>
     </form>

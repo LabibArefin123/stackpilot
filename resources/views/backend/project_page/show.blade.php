@@ -84,17 +84,32 @@
                 <div class="card-body">
                     <div class="tab-content">
                         <div class="active tab-pane" id="overview">
-                            @include('backend.project_page.partials.overview')
+                            {{-- Project Card Section --}}
+                            @include('backend.project_page.partials.show_page.overview_section.part_1')
+                            {{-- General Information Section --}}
+                            @include('backend.project_page.partials.show_page.overview_section.part_2')
+                            {{-- Table Section Section --}}
+                            @include('backend.project_page.partials.show_page.overview_section.part_3')
                         </div>
 
                         <div class="tab-pane" id="environment">
                             <div class="active tab-pane" id="overview">
-                                @include('backend.project_page.partials.environment')
+                                {{-- Server Information  + Project Path --}}
+                                @include('backend.project_page.partials.show_page.environment_section.part_1')
+                                {{-- Environment Card Section 1x3 --}}
+                                @include('backend.project_page.partials.show_page.environment_section.part_2')
+                                {{-- Installed Binaries Section 1x3 --}}
+                                @include('backend.project_page.partials.show_page.environment_section.part_3')
                             </div>
                         </div>
 
                         <div class="tab-pane" id="health">
-                            @include('backend.project_page.partials.health')
+                            {{-- Health Percent + Stat Section --}}
+                            @include('backend.project_page.partials.show_page.health_section.part_1')
+                            {{-- Health Checklist Section --}}
+                            @include('backend.project_page.partials.show_page.health_section.part_2')
+                            {{-- Last Health Scan Section --}}
+                            @include('backend.project_page.partials.show_page.health_section.part_3')
                         </div>
 
                         <div class="tab-pane" id="terminal">
@@ -103,22 +118,23 @@
                         </div>
 
                         <div class="tab-pane" id="git">
-                            @include('backend.project_page.partials.git_section.part_1')
-                            @include('backend.project_page.partials.git_section.part_2')
-                            @include('backend.project_page.partials.git_section.part_3')
-                            @include('backend.project_page.partials.git_section.part_4')
-                            @include('backend.project_page.partials.git_section.part_5')
-                            @include('backend.project_page.partials.git_section.part_6')
-                            @include('backend.project_page.partials.git_section.part_7')
-                            @include('backend.project_page.partials.git_section.part_8')
+                            @include('backend.project_page.partials.show_page.git_section.part_1_a')
+                            @include('backend.project_page.partials.show_page.git_section.part_1_b')
+                            @include('backend.project_page.partials.show_page.git_section.part_2')
+                            @include('backend.project_page.partials.show_page.git_section.part_3')
+                            @include('backend.project_page.partials.show_page.git_section.part_4')
+                            @include('backend.project_page.partials.show_page.git_section.part_5')
+                            @include('backend.project_page.partials.show_page.git_section.part_6')
+                            @include('backend.project_page.partials.show_page.git_section.part_7')
+                            @include('backend.project_page.partials.show_page.git_section.part_8')
                         </div>
 
                         <div class="tab-pane" id="deployments">
-                            @include('backend.project_page.partials.deployment_section.part_1')
-                            @include('backend.project_page.partials.deployment_section.part_2')
-                            @include('backend.project_page.partials.deployment_section.part_3')
-                            @include('backend.project_page.partials.deployment_section.part_4')
-                            @include('backend.project_page.partials.deployment_section.part_5')
+                            @include('backend.project_page.partials.show_page.deployment_section.part_1')
+                            @include('backend.project_page.partials.show_page.deployment_section.part_2')
+                            @include('backend.project_page.partials.show_page.deployment_section.part_3')
+                            @include('backend.project_page.partials.show_page.deployment_section.part_4')
+                            @include('backend.project_page.partials.show_page.deployment_section.part_5')
                         </div>
                     </div>
                 </div>

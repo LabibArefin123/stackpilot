@@ -1,19 +1,12 @@
 <div class="card-header">
-
     <h3 class="card-title">
-
         <i class="fas fa-bolt text-warning"></i>
-
         Quick Git Actions
-
     </h3>
-
 </div>
 
 <div class="card-body">
-
     @php
-
         $actions = [
             [
                 'title' => 'Git Status',
@@ -63,57 +56,28 @@
                 'description' => 'Remote repository',
             ],
         ];
-
     @endphp
 
     <div class="row">
-
         @foreach ($actions as $action)
             <div class="col-md-4 mb-3">
-
                 <div class="card border">
-
                     <div class="card-body text-center">
-
                         <i class="fas fa-{{ $action['icon'] }} fa-2x text-{{ $action['color'] }} mb-3"></i>
-
-                        <h5>
-
-                            {{ $action['title'] }}
-
-                        </h5>
-
-                        <p class="text-muted">
-
-                            {{ $action['description'] }}
-
-                        </p>
-
+                        <h5>{{ $action['title'] }}</h5>
+                        <p class="text-muted">{{ $action['description'] }}</p>
                         <form method="POST" action="{{ route('terminal.run') }}">
-
                             @csrf
-
                             <input type="hidden" name="project_id" value="{{ $project->id }}">
-
                             <input type="hidden" name="command" value="{{ $action['command'] }}">
-
                             <button class="btn btn-{{ $action['color'] }} btn-block">
-
                                 <i class="fas fa-play"></i>
-
                                 Execute
-
                             </button>
-
                         </form>
-
                     </div>
-
                 </div>
-
             </div>
         @endforeach
-
     </div>
-
 </div>
