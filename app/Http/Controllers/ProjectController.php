@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Symfony\Component\Process\Process;
 use App\Services\GitRepositoryScanner;
 use App\Services\ProjectControllerService;
+use Illuminate\Support\Facades\Cache;
 
 class ProjectController extends Controller
 {
@@ -30,14 +31,17 @@ class ProjectController extends Controller
             ->get();
 
         foreach ($projects as $project) {
-            $git = $this->scanner->repositoryStatistics($project);
-            $project->git = $git;
+
+            $project->git = Cache::remember(
+                'repository_stats_' . $project->id,
+                now()->addMinutes(5),
+                function () use ($project) {
+                    return $this->scanner->repositoryStatistics($project);
+                }
+            );
         }
 
-        return view(
-            'backend.project_page.index',
-            compact('projects')
-        );
+        return view('backend.project_page.index', compact('projects'));
     }
 
 

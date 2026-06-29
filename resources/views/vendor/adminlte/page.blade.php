@@ -5,6 +5,7 @@
 
 <link rel="icon" type="image/png" href="{{ asset('uploads/images/icon.png') }}">
 <link rel="stylesheet" href="{{ asset('css/custom_backend.css') }}">
+<link rel="stylesheet" href="{{ asset('css/custom_backend/project_page/project_load/project_load.css') }}">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"> --}}
 
@@ -13,6 +14,7 @@
 
 @section('body')
     <div class="wrapper">
+        @include('backend.project_page.modals.project_load')
         <!-- start of modal animation -->
         <div class="modal fade" id="backConfirmModal" tabindex="-1" role="dialog" aria-labelledby="backConfirmLabel"
             aria-hidden="true">
@@ -104,51 +106,9 @@
         </div>
         <!-- end of edit animation model -->
 
-        <div id="dtErrorToast" class="dt-error-toast">
-            <div class="dt-error-box">
-                <h5>⚠ System Notice</h5>
-                <p id="dtErrorMessage">
-                    Something went wrong while loading data.
-                </p>
-                <button onclick="closeDtToast()" class="btn btn-sm btn-secondary mt-2">
-                    Close
-                </button>
-            </div>
-        </div>
-
-        <!-- Start of Global Error Modal -->
-        <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-md" role="document">
-                <div class="modal-content">
-
-                    <div class="modal-header bg-danger">
-                        <h5 class="modal-title text-white">System Error</h5>
-
-                        <!-- BOOTSTRAP 4 CLOSE BUTTON -->
-                        <button type="button" class="close text-white" data-dismiss="modal">
-                            <span>&times;</span>
-                        </button>
-                    </div>
-
-                    <div class="modal-body">
-                        <pre id="errorMessageText" class="mb-0 text-danger" style="white-space: pre-wrap;"></pre>
-                    </div>
-
-                    <div class="modal-footer justify-content-center">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                            Close
-                        </button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <!-- End Global Error Modal -->
-
-
         <!-- start of delete animation model -->
-        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog"
-            aria-labelledby="deleteConfirmLabel" aria-hidden="true">
+        <div class="modal fade" id="deleteConfirmModal" tabindex="-1" role="dialog" aria-labelledby="deleteConfirmLabel"
+            aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content text-center p-4">
 
@@ -180,32 +140,6 @@
             </div>
         </div>
         <!-- end of delete animation model -->
-
-        <!-- Start Limit Warning Modal -->
-        {{-- <div class="modal fade" id="limitWarningModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content text-center p-4">
-
-                    <div class="mb-3">
-                        <div class="limit-icon">!</div>
-                    </div>
-
-                    <h4 class="text-danger fw-bold">
-                        Maximum Limit Reached
-                    </h4>
-
-                    <p class="text-muted mb-3">
-                        This report is limited to <strong>500 records</strong>.<br>
-                        Please contact the developer for larger data export.
-                    </p>
-
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
-                        Close
-                    </button>
-                </div>
-            </div>
-        </div> --}}
-        <!-- End of Limit Warning Modal -->
 
         {{-- Preloader --}}
         @if ($preloaderHelper->isPreloaderEnabled())
@@ -247,7 +181,7 @@
 @section('adminlte_js')
     @stack('js')
     @yield('js')
-    
+
     <!-- Start of Login / Logout -->
     <script>
         document.addEventListener("DOMContentLoaded", function() {
@@ -701,6 +635,11 @@
             }
         });
     </script>
+
+    <script src="{{ asset('js/custom_backend/project_page/project_load.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/project_load_circle.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/project_load_progress.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/project_load_finish.js') }}"></script>
     {{-- end of warning limit --}}
 @section('plugins.Datatables', true)
 @stop
