@@ -1,120 +1,54 @@
-  <div class="card card-outline card-primary">
+<div class="card shadow-sm border-0">
+    <div class="card-header bg-primary">
+        <h5 class="mb-0">
+            <i class="fas fa-filter mr-2"></i>
+            Repository Filters
+        </h5>
+    </div>
 
-      <div class="card-header">
+    <div class="card-body">
+        <div class="row">
 
-          <h3 class="card-title">
+            <div class="col-md-5">
 
-              <i class="fas fa-filter mr-2"></i>
+                <label>Repository</label>
 
-              Repository Filters
+                <input type="text" id="repositorySearch" class="form-control" placeholder="Search repository...">
 
-          </h3>
+            </div>
 
-      </div>
+            <div class="col-md-3">
 
-      <div class="card-body">
+                <label>Status</label>
 
-          <div class="row">
+                <select id="statusFilter" class="form-control">
 
-              <div class="col-md-4">
+                    <option value="All">All Status</option>
+                    <option value="Healthy">Healthy</option>
+                    <option value="Inactive">Inactive</option>
 
-                  <div class="form-group">
+                </select>
 
-                      <label>
+            </div>
 
-                          Search Repository
+            <div class="col-md-4">
 
-                      </label>
+                <label>Branch</label>
 
-                      <input type="text" id="repositorySearch" class="form-control"
-                          placeholder="Search by project name...">
+                <select id="branchFilter" class="form-control">
 
-                  </div>
+                    <option value="All">All Branches</option>
 
-              </div>
+                    @foreach ($projects->pluck('git_branch')->filter()->unique() as $branch)
+                        <option value="{{ $branch }}">
+                            {{ $branch }}
+                        </option>
+                    @endforeach
 
-              <div class="col-md-3">
+                </select>
 
-                  <div class="form-group">
+            </div>
 
-                      <label>
-
-                          Status
-
-                      </label>
-
-                      <select class="form-control">
-
-                          <option>
-
-                              All
-
-                          </option>
-
-                          <option>
-
-                              Healthy
-
-                          </option>
-
-                          <option>
-
-                              Inactive
-
-                          </option>
-
-                      </select>
-
-                  </div>
-
-              </div>
-
-              <div class="col-md-3">
-
-                  <div class="form-group">
-
-                      <label>
-
-                          Branch
-
-                      </label>
-
-                      <select class="form-control">
-
-                          <option>
-
-                              All Branches
-
-                          </option>
-
-                          @foreach ($projects->pluck('git_branch')->unique() as $branch)
-                              <option>
-
-                                  {{ $branch }}
-
-                              </option>
-                          @endforeach
-
-                      </select>
-
-                  </div>
-
-              </div>
-
-              <div class="col-md-2 d-flex align-items-end">
-
-                  <button class="btn btn-primary btn-block">
-
-                      <i class="fas fa-search mr-1"></i>
-
-                      Search
-
-                  </button>
-
-              </div>
-
-          </div>
-
-      </div>
-
-  </div>
+        </div>
+    </div>
+</div>

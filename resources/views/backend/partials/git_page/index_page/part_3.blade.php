@@ -1,19 +1,13 @@
- <div class="card card-outline card-danger">
-
+ <div class="card card-outline card-danger" id="gitRepositoryContainer">
      <div class="card-header">
-
          <h3 class="card-title">
-
              <i class="fab fa-git-alt mr-2"></i>
-
              Git Repositories
-
          </h3>
-
      </div>
 
-     <div class="card-body table-responsive p-0">
-         <table class="table table-hover table-striped" id="repositoryTable">
+     <div class="card-body table-responsive">
+         <table class="table table-hover table-striped" id="gitTable">
              <thead>
                  <tr>
                      <th width="50">#</th>
@@ -99,7 +93,7 @@
                                      Not Configured
                                  </span>
                              @endif
-                         </td>  
+                         </td>
 
                          <td>
                              <a href="{{ route('gits.show', $project) }}" class="btn btn-sm btn-primary">
@@ -130,4 +124,3 @@
              </table>
          </div>
      </div>
-    

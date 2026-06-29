@@ -38,8 +38,16 @@
         {{-- Repository Table --}}
         @include('backend.partials.git_page.index_page.part_3')
     </div>
+    <div class="card mt-4">
+        <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
+    </div>
 @stop
 
 @section('js')
-    <script src="{{ asset('js/custom_frontend/git_page/index_page/index.js') }}"></script> {{-- Repository Search JS --}}
-@stop
+    <script>
+        const gitAjaxUrl = "{{ route('gits.ajax') }}";
+    </script>
+
+    <script src="{{ asset('js/custom_backend/git_page/index_page/git_ajax.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/git_page/index_page/git_filter.js') }}"></script>
+@endsection

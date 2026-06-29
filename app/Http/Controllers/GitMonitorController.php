@@ -25,10 +25,50 @@ class GitMonitorController extends Controller
         $projects = Project::with([
             'environment',
             'health'
-        ])->get();
+        ])->where('project_type', 'Laravel')
+            ->orderBy('name')->get();
 
         return view(
             'backend.git_page.index',
+            compact('projects')
+        );
+    }
+
+    public function gitAjax(Request $request)
+    {
+        $query = Project::with([
+            'environment',
+            'health'
+        ])->where('project_type', 'Laravel');
+
+        if ($request->filled('search')) {
+            $search = trim($request->search);
+            $query->where(function ($q) use ($search) {
+
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('domain', 'like', "%{$search}%")
+                    ->orWhere('git_branch', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->branch != 'All') {
+            $query->where('git_branch', $request->branch);
+        }
+
+        if ($request->status == 'Healthy') {
+            $query->where('is_active', 1);
+        }
+
+        if ($request->status == 'Inactive') {
+            $query->where('is_active', 0);
+        }
+
+        $projects = $query
+            ->orderBy('name')
+            ->get();
+
+        return view(
+            'backend.partials.git_page.index',
             compact('projects')
         );
     }

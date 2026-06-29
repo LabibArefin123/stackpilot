@@ -66,7 +66,9 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::get('/projects/{project}/repository',[ProjectController::class, 'projectRepository'])->name('projects.repository');
     Route::get('/projects-install',[ProjectController::class, 'projectInstall'])->name('projects.install');
     Route::resource('projects', ProjectController::class);
+
     Route::resource('gits', GitMonitorController::class);
+    Route::get('gits/ajax', [GitMonitorController::class, 'gitAjax'])->name('gits.ajax');
 
     Route::resource('deployments', DeploymentController::class);
 
