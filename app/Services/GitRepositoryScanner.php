@@ -89,9 +89,7 @@ class GitRepositoryScanner
         ];
     }
 
-    /**
-     *Git Repository Commit Broke
-     */
+    /* Git Repository Commit Broke (For Project Index -> Repository Page Show) */
     public function repositoryCommits(string $gitPath): array
     {
         $process = Process::fromShellCommandline(
@@ -176,6 +174,50 @@ class GitRepositoryScanner
         return $commits;
     }
 
+    public function fileDiff(
+        string $repository,
+        string $hash,
+        string $file
+    ): string {
+
+        $process = Process::fromShellCommandline(
+            'git diff ' . escapeshellarg($hash . '^') .
+                ' ' .
+                escapeshellarg($hash) .
+                ' -- ' .
+                escapeshellarg($file),
+            $repository
+        );
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return '';
+        }
+
+        return $process->getOutput();
+    }
+
+    public function fileContent(
+        string $repository,
+        string $hash,
+        string $file
+    ): string {
+
+        $process = Process::fromShellCommandline(
+            'git show ' .
+                escapeshellarg($hash . ':' . $file),
+            $repository
+        );
+
+        $process->run();
+
+        if (!$process->isSuccessful()) {
+            return '';
+        }
+
+        return $process->getOutput();
+    }
     /**
      * Execute git command.
      */
@@ -199,7 +241,7 @@ class GitRepositoryScanner
     {
         foreach ($this->repositories() as $directory) {
 
-            
+
 
             if (strcasecmp(basename($directory), $project->name) === 0) {
                 return $directory;

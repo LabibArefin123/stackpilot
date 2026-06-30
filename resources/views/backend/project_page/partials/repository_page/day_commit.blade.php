@@ -45,6 +45,20 @@
                                          {{ $file['file'] }}
                                      </td>
 
+                                     <td width="230">
+                                         <button class="btn btn-sm btn-outline-primary repository-diff"
+                                             data-hash="{{ $commit['hash'] }}" data-file="{{ $file['file'] }}">
+                                             <i class="fas fa-code-branch mr-1"></i>
+                                             Changed Code
+                                         </button>
+
+                                         <button class="btn btn-sm btn-outline-success repository-file"
+                                             data-hash="{{ $commit['hash'] }}" data-file="{{ $file['file'] }}">
+                                             <i class="far fa-file-code mr-1"></i>
+                                             Full Code
+                                         </button>
+                                     </td>
+
                                      <td class="text-center text-success">
                                          +{{ $file['added'] }}
                                      </td>

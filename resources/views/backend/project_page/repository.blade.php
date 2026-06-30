@@ -45,6 +45,8 @@
 
 @section('content')
     <section class="content">
+        @include('backend.project_page.modals.repository-file-modal')
+        @include('backend.project_page.modals.repository-diff-modal')
         @php
             $authors = collect($timeline)
                 ->flatMap(fn($day) => $day['commits'])
@@ -103,12 +105,20 @@
         window.repositoryProject = {{ $project->id }};
         window.repositorySearchUrl = "{{ route('projects.repository.search', $project) }}";
         window.repositoryFilterUrl = "{{ route('projects.repository.filter', $project) }}";
+        window.repositoryDiffUrl = "{{ route('projects.repository.diff', $project) }}";
+        window.repositoryFileUrl = "{{ route('projects.repository.file', $project) }}";
     </script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-init.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-ajax.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-filter.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-events.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-render.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-modal.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-file.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-copy.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-difference.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-diff-search.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-file-search.js') }}"></script>
     <link id="highlight-theme" rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/github.min.css">
 

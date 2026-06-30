@@ -414,6 +414,47 @@ class ProjectController extends Controller
         ]);
     }
 
+    public function repositoryDiff(Request $request, Project $project)
+    {
+
+        $repository = $this->scanner->findRepository($project);
+        abort_if(!$repository, 404);
+
+        $diff = $this->scanner->fileDiff(
+            $repository,
+            $request->hash,
+            $request->file
+        );
+
+        return response()->json([
+            'success' => true,
+            'hash' => $request->hash,
+            'file' => $request->file,
+            'html' => '<pre>' .
+                e($diff) .
+                '</pre>'
+        ]);
+    }
+
+    public function repositoryFile(Request $request, Project $project)
+    {
+
+        $repository = $this->scanner->findRepository($project);
+        abort_if(!$repository, 404);
+        $code = $this->scanner->fileContent(
+            $repository,
+            $request->hash,
+            $request->file
+        );
+
+        return response()->json([
+            'success' => true,
+            'hash' => $request->hash,
+            'file' => $request->file,
+            'code' => $code
+        ]);
+    }
+
     public function projectInstall()
     {
         $projects = Project::with([

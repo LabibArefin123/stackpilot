@@ -64,6 +64,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::get('projects/{project}/repository/commit/{hash}',[ProjectController::class, 'repositoryCommit'])->name('projects.repository.commit');
     Route::get('projects/{project}/repository/hash/{hash}',[ProjectController::class,'repositoryHash'])->name('projects.repository.hash');
     Route::get('/projects/{project}/repository',[ProjectController::class, 'projectRepository'])->name('projects.repository');
+    Route::get('/projects/{project}/repository/diff', [ProjectController::class, 'repositoryDiff'])->name('projects.repository.diff');
+    Route::get('/projects/{project}/repository/file', [ProjectController::class, 'repositoryFile'])->name('projects.repository.file');
     Route::get('/projects-install',[ProjectController::class, 'projectInstall'])->name('projects.install');
     Route::resource('projects', ProjectController::class);
 
