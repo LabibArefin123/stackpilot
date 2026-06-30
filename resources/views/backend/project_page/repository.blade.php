@@ -100,7 +100,6 @@
 @endsection
 
 @section('js')
-    {{-- TOP SECTION PART --}}
     <script>
         window.repositoryProject = {{ $project->id }};
         window.repositorySearchUrl = "{{ route('projects.repository.search', $project) }}";
@@ -108,15 +107,25 @@
         window.repositoryDiffUrl = "{{ route('projects.repository.diff', $project) }}";
         window.repositoryFileUrl = "{{ route('projects.repository.file', $project) }}";
     </script>
+
+    {{--  Repository Search & Initialization--}}
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-init.js') }}"></script>
-    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-ajax.js') }}"></script>
-    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-filter.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-events.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-filter.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-ajax.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-render.js') }}"></script>
+
+    {{--  Repository Modal Management--}}
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-modal.js') }}"></script>
+
+    {{--  Repository File & Difference Viewer --}}
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-file.js') }}"></script>
-    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-copy.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-difference.js') }}"></script>
+
+    {{-- Repository Utilities --}}
+    <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-copy.js') }}"></script>
+
+    {{--  Repository Code Search --}}
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-diff-search.js') }}"></script>
     <script src="{{ asset('js/custom_backend/project_page/repository_page/repository-file-search.js') }}"></script>
     <link id="highlight-theme" rel="stylesheet"
@@ -126,33 +135,6 @@
 @endsection
 
 {{-- 
-@section('js')
-
-    <script>
-        /*
-    Future Features
-
-    1. Commit search
-
-    2. Commit timeline
-
-    3. File diff
-
     4. Side by side diff
-
-    5. Syntax highlighting
-
-    6. Filter by author
-
-    7. Filter by date
-
     8. Download patch
-
-    9. Copy commit hash
-
-    10. Expand commit changes
-
-    */
-    </script>
-
-@endsection --}}
+--}}

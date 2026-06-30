@@ -58,15 +58,15 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::post('/terminal/run', [TerminalPageController::class, 'run'])->name('terminal.run');
 
     /*PROJECT PART*/
-    Route::get('projects/{project}/repository/search',[ProjectController::class, 'repositorySearch'])->name('projects.repository.search');
-    Route::get('projects/{project}/repository/timeline',[ProjectController::class, 'repositoryTimeline'])->name('projects.repository.timeline');
-    Route::get('projects/{project}/repository/filter',[ProjectController::class, 'repositoryFilter'])->name('projects.repository.filter');
-    Route::get('projects/{project}/repository/commit/{hash}',[ProjectController::class, 'repositoryCommit'])->name('projects.repository.commit');
-    Route::get('projects/{project}/repository/hash/{hash}',[ProjectController::class,'repositoryHash'])->name('projects.repository.hash');
-    Route::get('/projects/{project}/repository',[ProjectController::class, 'projectRepository'])->name('projects.repository');
+    Route::get('projects/{project}/repository/search', [ProjectController::class, 'repositorySearch'])->name('projects.repository.search');
+    Route::get('projects/{project}/repository/timeline', [ProjectController::class, 'repositoryTimeline'])->name('projects.repository.timeline');
+    Route::get('projects/{project}/repository/filter', [ProjectController::class, 'repositoryFilter'])->name('projects.repository.filter');
+    Route::get('projects/{project}/repository/commit/{hash}', [ProjectController::class, 'repositoryCommit'])->name('projects.repository.commit');
+    Route::get('projects/{project}/repository/hash/{hash}', [ProjectController::class, 'repositoryHash'])->name('projects.repository.hash');
+    Route::get('/projects/{project}/repository', [ProjectController::class, 'projectRepository'])->name('projects.repository');
     Route::get('/projects/{project}/repository/diff', [ProjectController::class, 'repositoryDiff'])->name('projects.repository.diff');
     Route::get('/projects/{project}/repository/file', [ProjectController::class, 'repositoryFile'])->name('projects.repository.file');
-    Route::get('/projects-install',[ProjectController::class, 'projectInstall'])->name('projects.install');
+    Route::get('/projects-install', [ProjectController::class, 'projectInstall'])->name('projects.install');
     Route::resource('projects', ProjectController::class);
 
     Route::resource('gits', GitMonitorController::class);
@@ -83,17 +83,18 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::resource('composer', ComposerController::class);
 
     Route::resource('optimization', OptimizationController::class)->only(['index']);
+    Route::post('/optimization/local', [OptimizationController::class, 'localOptimize'])->name('optimization.local');
     Route::post('optimization/run', [OptimizationController::class, 'run'])->name('optimization.run');
 
     Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
-    
+
     /*CRON PART*/
     Route::get('/cron', [CronController::class, 'index'])->name('cron.index');
     Route::post('/cron/{project}/run', [CronController::class, 'run'])->name('cron.run');
     Route::get('/cron/{project}/logs', [CronController::class, 'logs'])->name('cron.logs');
     Route::get('/cron/{project}/status', [CronController::class, 'status'])->name('cron.status');
     Route::get('/cron/{project}/history', [CronController::class, 'history'])->name('cron.history');
-    
+
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
     Route::get('/server-health', [ServerHealthController::class, 'index'])->name('server.index');
     Route::resource('environment', EnvironmentController::class);

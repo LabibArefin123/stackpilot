@@ -16,7 +16,12 @@
     </div>
 @stop
 
+<link rel="stylesheet" href="{{ asset('css/custom_backend/optimize_page/modal/choose_modal.css') }}">
+
 @section('content')
+    @include('backend.optimize_page.modals.choose_optimize_modal')
+    @include('backend.optimize_page.modals.method_local_optimize')
+    @include('backend.optimize_page.modals.method_live_optimize')
     @include('backend.partials.optimize_page.index_page.part_3')
     <div class="row">
         <div class="col-md-12">
@@ -33,76 +38,47 @@
     <div style="height: 50px;"></div>
 @stop
 
-@push('js')
+@section('js')
     <script>
         $(function() {
-
             $('.run-command').click(function() {
-
                 let button = $(this);
-
                 let command = button.data('command');
-
                 button.prop('disabled', true);
-
                 $('#terminalOutput').text('Running ' + command + '...\n');
 
                 $.ajax({
-
                     url: "{{ route('optimization.run') }}",
-
                     method: "POST",
-
                     data: {
-
                         _token: "{{ csrf_token() }}",
-
                         command: command
-
                     },
 
                     success: function(response) {
-
                         $('#terminalOutput').text(response.output);
-
                         $(document).Toasts('create', {
-
-                            class: response.success ?
-                                'bg-success' : 'bg-danger',
-
-                            title: response.success ?
-                                'Completed' : 'Failed',
-
-                            body: response.success ?
-                                'Command executed successfully.' :
+                            class: response.success ? 'bg-success' : 'bg-danger',
+                            title: response.success ? 'Completed' : 'Failed',
+                            body: response.success ? 'Command executed successfully.' :
                                 'Command execution failed.'
-
                         });
-
                     },
 
                     error: function(xhr) {
-
                         $('#terminalOutput').text(
-
                             xhr.responseJSON?.output ??
-
                             'Unknown Error.'
-
                         );
-
                     },
 
                     complete: function() {
-
                         button.prop('disabled', false);
-
                     }
-
                 });
-
             });
-
         });
     </script>
-@endpush
+    <script src="{{ asset('js/custom_backend/optimize_page/optimize_modal.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/optimize_page/local_optimize_modal.js') }}"></script>
+@endsection

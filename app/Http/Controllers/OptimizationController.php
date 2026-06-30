@@ -82,6 +82,46 @@ class OptimizationController extends Controller
         );
     }
 
+    public function localOptimize(Request $request)
+    {
+        $project = Project::findOrFail($request->project_id);
+        $phpVersions = [];
+        $environments = [];
+
+        /* Detect Laragon*/
+        if (is_dir('E:\\laragon')) {
+            $environments[] = 'Laragon';
+            if (is_dir('E:\\laragon\\bin\\php')) {
+                foreach (glob('E:\\laragon\\bin\\php\\*') as $php) {
+                    $phpVersions[] = basename($php);
+                }
+            }
+        }
+
+        /* Detect Laravel Herd*/
+        if (is_dir('C:\\Users\\' . getenv('USERNAME') . '\\.config\\herd')) {
+            $environments[] = 'Laravel Herd';
+        }
+
+        /*Detect XAMPP*/
+        if (is_dir('C:\\xampp')) {
+            $environments[] = 'XAMPP';
+        }
+
+        /* Detect WAMP*/
+        if (is_dir('C:\\wamp64')) {
+            $environments[] = 'WAMP';
+        }
+
+        return response()->json([
+            'success' => true,
+            'environment' => $environments,
+            'php_versions' => $phpVersions,
+            'project_path' => $project->project_path,
+            'artisan' => file_exists($project->project_path . '/artisan')
+        ]);
+    }
+
     public function run(Request $request)
     {
         $request->validate([

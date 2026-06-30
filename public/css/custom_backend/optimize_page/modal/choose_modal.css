@@ -1,0 +1,44 @@
+/* ======================================================
+   Optimize Method Modal
+====================================================== */
+
+#optimizeMethodModal .modal-dialog{
+    max-width:900px;
+}
+
+#optimizeMethodModal .modal-content{
+    border-radius:15px;
+    overflow:hidden;
+}
+
+#optimizeMethodModal .modal-header{
+    padding:18px 25px;
+}
+
+#optimizeMethodModal .modal-body{
+    padding:40px;
+}
+
+#optimizeMethodModal .btn{
+    border-radius:12px;
+    transition:.3s;
+    min-height:230px;
+}
+
+#optimizeMethodModal .btn i{
+    display:block;
+    margin-bottom:20px;
+}
+
+#optimizeMethodModal .btn h5{
+    font-weight:700;
+}
+
+#optimizeMethodModal .btn:hover{
+    transform:translateY(-6px);
+    box-shadow:0 15px 35px rgba(0,0,0,.15);
+}
+
+#optimizeMethodModal small{
+    font-size:14px;
+}
