@@ -75,9 +75,10 @@
         </div>
 
         <div class="card-body">
-            <table class="table table-hover" id="dataTables">
+            <table class="table table-hover" id="projectTables">
                 <thead>
                     <tr>
+                        <th>#</th>
                         <th>Project</th>
                         <th>Domain</th>
                         <th>Branch</th>
@@ -94,6 +95,7 @@
                 <tbody>
                     @forelse($projects as $project)
                         <tr>
+                            <td>{{ $loop->iteration }}</td>
                             <td>
                                 <div>
                                     <strong>{{ $project->name }}</strong><br>
@@ -237,8 +239,8 @@
 
             </div>
         </div>
-
-        <div class="card mt-4">
-            <div class="card-body" style="height:50px;"> <!-- spacing card --> </div>
-        </div>
+        <div style="height: 50px;"></div>
+    @endsection
+    @section('js')
+        <script src="{{ asset('js/custom_backend/project_page/project_table.js') }}"></script>
     @endsection
