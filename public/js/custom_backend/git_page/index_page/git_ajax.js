@@ -7,7 +7,7 @@ function destroyGitTable() {
 }
 
 function initGitTable() {
-    destroyGitTable();
+    destroyGitTable();  
 
     $("#gitTable").DataTable({
         destroy: true,

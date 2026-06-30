@@ -199,6 +199,8 @@ class GitRepositoryScanner
     {
         foreach ($this->repositories() as $directory) {
 
+            
+
             if (strcasecmp(basename($directory), $project->name) === 0) {
                 return $directory;
             }
