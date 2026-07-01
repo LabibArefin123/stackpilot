@@ -35,6 +35,7 @@
 @section('js')
     <script src="{{ asset('js/custom_backend/log_page/index_page/git_log_datatable.js') }}"></script>
     <script src="{{ asset('js/custom_backend/log_page/index_page/server_log_datatable.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/log_page/index_page/live_log_datatable.js') }}"></script>
     <script src="{{ asset('js/custom_backend/log_page/index_page/project_filter.js') }}"></script>
     <script src="{{ asset('js/custom_backend/log_page/index_page/view_modal.js') }}"></script>
 @stop

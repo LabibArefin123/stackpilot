@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             // ProjectSeeder::class,
             // ProjectEnvironmentSeeder::class,
             // ProjectHealthSeeder::class,
-            DeploymentSeeder::class,
+            // DeploymentSeeder::class,
+            LiveProjectSeeder::class,
         ]);
     }
 }

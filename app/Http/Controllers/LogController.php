@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\LiveProject;
 use Illuminate\Support\Facades\File;
 use App\Services\GitRepositoryScanner;
 use Illuminate\Http\Request;
@@ -140,26 +141,31 @@ class LogController extends Controller
             return ($b['date']?->timestamp ?? 0) <=> ($a['date']?->timestamp ?? 0);
         });
 
-        /* ===========================================
-| Live Server Logs (Temporary)
-| Source: https://alamgirart.labib.work
-===========================================*/
-
         $liveServerLogs = [];
 
-        try {
+        $liveProjects = LiveProject::orderBy('project_name')->get();
 
-            $response = Http::acceptJson()
-                ->timeout(15)
-                ->get('https://alamgirart.labib.work/api/system/logs');
+        foreach ($liveProjects as $server) {
 
-            if ($response->successful()) {
+            try {
+
+                $response = Http::acceptJson()
+                    ->timeout(15)
+                    ->get(
+                        rtrim($server->domain, '/') .
+                            '/' .
+                            ltrim($server->api_name, '/')
+                    );
+
+                if (! $response->successful()) {
+                    continue;
+                }
 
                 foreach ($response->json('logs', []) as $log) {
 
                     $liveServerLogs[] = [
 
-                        'project' => 'Alamgir Art',
+                        'project' => $server->project_name,
 
                         'level' => $log['level'] ?? 'INFO',
 
@@ -173,22 +179,24 @@ class LogController extends Controller
 
                     ];
                 }
+            } catch (\Throwable $e) {
+
+                logger()->warning(
+                    "Unable to connect to {$server->project_name}",
+                    [
+                        'url' => $server->domain,
+                        'error' => $e->getMessage(),
+                    ]
+                );
             }
-        } catch (\Throwable $e) {
-
-            logger()->error('Unable to fetch live server logs.', [
-
-                'server' => 'https://alamgirart.labib.work',
-
-                'error' => $e->getMessage(),
-
-            ]);
         }
 
         usort($liveServerLogs, function ($a, $b) {
 
             return ($b['date']?->timestamp ?? 0)
+
                 <=>
+
                 ($a['date']?->timestamp ?? 0);
         });
 
