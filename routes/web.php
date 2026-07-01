@@ -88,6 +88,7 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::post('/optimization/hosting',[OptimizationController::class, 'liveHostingForm'])->name('optimization.hosting');
     Route::post('optimization/run', [OptimizationController::class, 'run'])->name('optimization.run');
     Route::post('/optimization/check-server',[OptimizationController::class, 'checkServer'])->name('optimization.checkServer');
+    Route::post('/optimization/terminal',[OptimizationController::class, 'terminalFunction'])->name('optimization.terminal');
     Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
 
     /*CRON PART*/

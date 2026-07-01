@@ -3,7 +3,7 @@
     <div class="modal-dialog modal-xl modal-dialog-centered">
         <div class="modal-content shadow-lg border-0">
             <!-- Header -->
-            @include('backend.optimize_page.modals.partials.part_1')
+            @include('backend.optimize_page.modals.partials.live_modal.part_1')
             <!-- Body -->
             <div class="modal-body">
                 <!-- Information -->
@@ -16,9 +16,9 @@
 
                 <div class="row">
                     <!-- LEFT SIDE -->
-                   @include('backend.optimize_page.modals.partials.part_2_a')
+                   @include('backend.optimize_page.modals.partials.live_modal.part_2_a')
                    <!-- RIGHT SIDE -->
-                   @include('backend.optimize_page.modals.partials.part_2_b')
+                   @include('backend.optimize_page.modals.partials.live_modal.part_2_b')
                 </div>
             </div>
 

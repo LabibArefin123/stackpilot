@@ -15,59 +15,68 @@ class OptimizationController extends Controller
     public function index()
     {
         $projects = [];
-        $laragonPath = 'E:\\laragon\www';
+        $laragonPath = 'E:\\laragon\\www';
 
         $hostingAccounts = HostingAccount::where('is_active', true)
             ->orderBy('name')
             ->get();
 
         if (File::exists($laragonPath)) {
-            $directories = File::directories($laragonPath);
-            foreach ($directories as $directory) {
-                if (File::exists($directory . DIRECTORY_SEPARATOR . 'artisan')) {
-                    $composer = $directory . DIRECTORY_SEPARATOR . 'composer.json';
-                    $branch = '-';
-                    if (File::exists($directory . DIRECTORY_SEPARATOR . '.git')) {
-                        $branch = trim(
-                            @shell_exec(
-                                'git -C "' . $directory . '" branch --show-current'
-                            )
-                        ) ?: 'Unknown';
-                    }
-
-                    $domain = 'Local Development';
-
-                    if (File::exists($composer)) {
-                        $composerData = json_decode(
-                            File::get($composer),
-                            true
-                        );
-
-                        if (!empty($composerData['name'])) {
-                            $domain = $composerData['name'];
-                        }
-                    }
-
-                    $projects[] = (object) [
-                        'id' => md5($directory),
-                        'name' => basename($directory),
-                        'domain' => $domain,
-                        'git_branch' => $branch,
-                        'project_path' => $directory,
-                        'health' => (object) [
-                            'health_score' => 100
-                        ]
-
-                    ];
+            foreach (File::directories($laragonPath) as $directory) {
+                if (!File::exists($directory . DIRECTORY_SEPARATOR . 'artisan')) {
+                    continue;
                 }
+
+                $composer = $directory . DIRECTORY_SEPARATOR . 'composer.json';
+                $branch = '-';
+                if (File::exists($directory . DIRECTORY_SEPARATOR . '.git')) {
+                    $branch = trim(
+                        @shell_exec(
+                            'git -C "' . $directory . '" branch --show-current'
+                        )
+                    ) ?: 'Unknown';
+                }
+
+                $domain = 'Local Development';
+                if (File::exists($composer)) {
+                    $composerData = json_decode(
+                        File::get($composer),
+                        true
+                    );
+                    $domain = $composerData['name'] ?? 'Local Development';
+                }
+
+                $projects[] = (object)[
+                    'id' => md5($directory),
+                    'name' => basename($directory),
+                    'domain' => $domain,
+                    'git_branch' => $branch,
+                    'project_path' => $directory,
+                    'health' => (object)[
+                        'health_score' => 100
+                    ]
+                ];
             }
         }
 
-        usort($projects, function ($a, $b) {
-            return strcmp($a->name, $b->name);
-        });
+        usort($projects, fn($a, $b) => strcmp($a->name, $b->name));
 
-        $commands = [
+        $commands = $this->getCommands();
+
+        return view(
+            'backend.optimize_page.index',
+            compact(
+                'projects',
+                'commands',
+                'hostingAccounts'
+            )
+        );
+    }
+
+    private function getCommands()
+    {
+        return [
+
             [
                 'title' => 'Optimize',
                 'description' => 'Build all Laravel caches.',
@@ -121,16 +130,8 @@ class OptimizationController extends Controller
                 'icon' => 'fas fa-broadcast-tower',
                 'color' => 'secondary',
             ],
-        ];
 
-        return view(
-            'backend.optimize_page.index',
-            compact(
-                'commands',
-                'projects',
-                'hostingAccounts'
-            )
-        );
+        ];
     }
 
     public function localOptimize(Request $request)
@@ -302,17 +303,9 @@ class OptimizationController extends Controller
         $hosting = HostingAccount::findOrFail($request->hosting_account_id);
 
         try {
-
-            /*
-        |--------------------------------------------------------------------------
-        | Private Key
-        |--------------------------------------------------------------------------
-        */
-
+            /*Private Key */
             $keyPath = storage_path($hosting->private_key_path);
-
             if (!file_exists($keyPath)) {
-
                 return response()->json([
                     'success' => false,
                     'message' => 'Private SSH key not found: ' . $keyPath,
@@ -323,16 +316,9 @@ class OptimizationController extends Controller
                 file_get_contents($keyPath)
             );
 
-            /*
-        |--------------------------------------------------------------------------
-        | SSH Connection
-        |--------------------------------------------------------------------------
-        */
-
+            /* SSH Connection */
             $ssh = new SSH2($hosting->host, (int) $hosting->port);
-
             $ssh->setTimeout(15);
-
             if (!$ssh->login($hosting->username, $privateKey)) {
 
                 return response()->json([
@@ -341,26 +327,15 @@ class OptimizationController extends Controller
                 ], 401);
             }
 
-            /*
-        |--------------------------------------------------------------------------
-        | Server Information
-        |--------------------------------------------------------------------------
-        */
-
+            /* Server Information*/
             $hostname    = trim($ssh->exec('hostname'));
             $currentUser = trim($ssh->exec('whoami'));
             $currentPath = trim($ssh->exec('pwd'));
             $phpVersion  = trim($ssh->exec('php -r "echo PHP_VERSION;"'));
             $phpBinary   = trim($ssh->exec('which php'));
 
-            /*
-        |--------------------------------------------------------------------------
-        | Detect Laravel Projects
-        |--------------------------------------------------------------------------
-        */
-
+            /* Detect Laravel Projects*/
             $searchPath = $hosting->default_project_path;
-
             $artisanFiles = trim(
                 $ssh->exec(
                     'find ' . escapeshellarg($searchPath) . ' -name artisan 2>/dev/null'
@@ -368,72 +343,113 @@ class OptimizationController extends Controller
             );
 
             $laravelProjects = [];
-
             if (!empty($artisanFiles)) {
-
                 foreach (explode("\n", $artisanFiles) as $artisan) {
-
                     if (!empty(trim($artisan))) {
                         $laravelProjects[] = dirname(trim($artisan));
                     }
                 }
             }
 
-            /*
-        |--------------------------------------------------------------------------
-        | PHP Version Check
-        |--------------------------------------------------------------------------
-        */
-
+            /*PHP Version Check */
             $php82 = false;
-
             if (!empty($phpVersion)) {
-
                 $php82 = version_compare($phpVersion, '8.2', '>=');
             }
 
-            /*
-        |--------------------------------------------------------------------------
-        | Response
-        |--------------------------------------------------------------------------
-        */
-
+            /* Response */
             return response()->json([
-
                 'success' => true,
-
                 'provider' => $hosting->provider,
-
                 'host' => $hosting->host,
-
                 'username' => $currentUser,
-
                 'hostname' => $hostname,
-
                 'status' => 'Online',
-
                 'php_version' => $phpVersion ?: 'Unknown',
-
                 'php_binary' => $phpBinary ?: 'Not Found',
-
                 'php82' => $php82,
-
                 'project_path' => $currentPath,
-
                 'laravel_found' => count($laravelProjects) > 0,
-
                 'laravel_projects' => $laravelProjects,
-
             ]);
         } catch (\Throwable $e) {
-
             return response()->json([
-
                 'success' => false,
-
                 'message' => $e->getMessage(),
-
             ], 500);
         }
+    }
+
+    public function terminalFunction(Request $request)
+    {
+        $request->validate([
+            'project_path' => 'required|string',
+            'php_version'  => 'required|string',
+            'command'      => 'required|string',
+        ]);
+
+        $projectPath = $request->project_path;
+        $phpVersion  = $request->php_version;
+        $command     = trim($request->command);
+
+        if (!File::exists($projectPath)) {
+            return response()->json([
+                'success' => false,
+                'output'  => 'Project path not found.',
+            ], 404);
+        }
+
+        /*PHP Executables. Modify these paths according to your Laragon installation.*/
+        $phpVersions = [
+            '81' => 'E:\\laragon\\bin\\php\\php-8.1.31\\php.exe',
+            '82' => 'E:\\laragon\\bin\\php\\php-8.2.27\\php.exe',
+            '83' => 'E:\\laragon\\bin\\php\\php-8.3.8\\php.exe',
+        ];
+
+        if (!isset($phpVersions[$phpVersion])) {
+            return response()->json([
+                'success' => false,
+                'output'  => 'Invalid PHP Version.',
+            ]);
+        }
+
+        $php = $phpVersions[$phpVersion];
+
+        /*Allow only artisan commands*/
+        $allowedCommands = collect($this->getCommands())
+            ->pluck('command')
+            ->toArray();
+
+        /*Custom terminal support*/
+        if (str_starts_with($command, 'php artisan')) {
+            $artisanCommand = trim(str_replace('php artisan', '', $command));
+        } else {
+            $artisanCommand = $command;
+        }
+
+        if (!in_array($artisanCommand, $allowedCommands)) {
+            return response()->json([
+                'success' => false,
+                'output'  => "Command '{$artisanCommand}' is not allowed.",
+            ]);
+        }
+
+        /* Execute */
+        $process = new Process([
+            $php,
+            'artisan',
+            $artisanCommand,
+        ]);
+
+        $process->setWorkingDirectory($projectPath);
+        $process->setTimeout(600);
+        $process->run();
+        return response()->json([
+            'success' => $process->isSuccessful(),
+            'output' =>
+            $process->getOutput() .
+                $process->getErrorOutput(),
+
+        ]);
     }
 }

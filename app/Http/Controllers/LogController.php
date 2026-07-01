@@ -13,15 +13,8 @@ class LogController extends Controller
     public function index(GitRepositoryScanner $scanner)
     {
         $projects = Project::orderBy('name')->get();
-
-        /*
-    |--------------------------------------------------------------------------
-    | Git Logs
-    |--------------------------------------------------------------------------
-    */
-
+        /* Git Logs*/
         $gitLogs = [];
-
         foreach ($scanner->repositories() as $repository) {
 
             $output = $scanner->command(
@@ -39,38 +32,25 @@ class LogController extends Controller
             );
 
             foreach (explode(PHP_EOL, $output) as $line) {
-
                 $parts = explode('|', $line, 4);
-
                 if (count($parts) < 4) {
                     continue;
                 }
 
                 $gitLogs[] = [
-
                     'project' => basename($repository),
-
                     'branch'  => $branch,
-
                     'hash'    => $parts[0],
-
                     'author'  => $parts[1],
-
                     'date'    => $parts[2],
-
                     'message' => $parts[3],
                 ];
             }
         }
 
-        /*
-|--------------------------------------------------------------------------
-| Laravel Logs
-|--------------------------------------------------------------------------
-*/
-
+        /*Laravel Logs*/
         $serverLogs = [];
-
+        
         foreach ($scanner->repositories() as $repository) {
 
             // Only Laravel projects
