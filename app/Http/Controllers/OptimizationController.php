@@ -4,19 +4,64 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Symfony\Component\Process\Process;
+use Illuminate\Support\Facades\File;
 use App\Models\Project;
+use App\Models\HostingAccount;
 
 class OptimizationController extends Controller
 {
     public function index()
     {
-        $projects = Project::with('health')
-            ->where('project_type', 'Laravel')
-            ->orderBy('name')
-            ->get();
+        $projects = [];
+        $laragonPath = 'E:\\laragon\www';
+
+        if (File::exists($laragonPath)) {
+            $directories = File::directories($laragonPath);
+            foreach ($directories as $directory) {
+                if (File::exists($directory . DIRECTORY_SEPARATOR . 'artisan')) {
+                    $composer = $directory . DIRECTORY_SEPARATOR . 'composer.json';
+                    $branch = '-';
+                    if (File::exists($directory . DIRECTORY_SEPARATOR . '.git')) {
+                        $branch = trim(
+                            @shell_exec(
+                                'git -C "' . $directory . '" branch --show-current'
+                            )
+                        ) ?: 'Unknown';
+                    }
+
+                    $domain = 'Local Development';
+
+                    if (File::exists($composer)) {
+                        $composerData = json_decode(
+                            File::get($composer),
+                            true
+                        );
+
+                        if (!empty($composerData['name'])) {
+                            $domain = $composerData['name'];
+                        }
+                    }
+
+                    $projects[] = (object) [
+                        'id' => md5($directory),
+                        'name' => basename($directory),
+                        'domain' => $domain,
+                        'git_branch' => $branch,
+                        'project_path' => $directory,
+                        'health' => (object) [
+                            'health_score' => 100
+                        ]
+
+                    ];
+                }
+            }
+        }
+
+        usort($projects, function ($a, $b) {
+            return strcmp($a->name, $b->name);
+        });
 
         $commands = [
-
             [
                 'title' => 'Optimize',
                 'description' => 'Build all Laravel caches.',
@@ -70,7 +115,6 @@ class OptimizationController extends Controller
                 'icon' => 'fas fa-broadcast-tower',
                 'color' => 'secondary',
             ],
-
         ];
 
         return view(
@@ -125,64 +169,120 @@ class OptimizationController extends Controller
     public function run(Request $request)
     {
         $request->validate([
-
             'command' => 'required|string',
-
         ]);
 
         $allowed = [
-
             'optimize',
-
             'optimize:clear',
-
             'config:cache',
-
             'config:clear',
-
             'route:cache',
-
             'route:clear',
-
             'view:cache',
-
             'view:clear',
-
             'event:cache',
-
             'event:clear',
-
         ];
 
         if (! in_array($request->command, $allowed)) {
-
             return response()->json([
-
                 'success' => false,
-
                 'output' => 'Command not allowed.'
-
             ], 403);
         }
 
         $process = Process::fromShellCommandline(
-
             'php artisan ' . $request->command,
-
             base_path()
-
         );
 
         $process->setTimeout(120);
-
         $process->run();
 
         return response()->json([
-
             'success' => $process->isSuccessful(),
-
             'output' => $process->getOutput() ?: $process->getErrorOutput(),
+        ]);
+    }
 
+    public function liveOptimize(Request $request)
+    {
+        $project = Project::findOrFail($request->project_id);
+        $domain = trim($project->domain);
+        $result = [
+            'success' => true,
+            'domain' => $domain,
+            'hosting_provider' => 'Unknown',
+            'hosting_account' => 'Not Detected',
+            'server_status' => 'Offline',
+            'php_version' => 'Unknown',
+        ];
+
+        /* Check DNS*/
+        $ip = gethostbyname($domain);
+        if ($ip !== $domain) {
+            $result['server_status'] = 'Online';
+        }
+
+        /* Check Website  */
+        try {
+            $headers = @get_headers("https://{$domain}");
+            if (!$headers) {
+                $headers = @get_headers("http://{$domain}");
+            }
+
+            if ($headers) {
+                foreach ($headers as $header) {
+                    if (stripos($header, 'Server:') !== false) {
+                        $result['hosting_provider'] = trim(
+                            str_replace('Server:', '', $header)
+                        );
+                    }
+
+                    if (stripos($header, 'X-Powered-By: PHP/') !== false) {
+                        $result['php_version'] = trim(
+                            str_replace('X-Powered-By:', '', $header)
+                        );
+                    }
+                }
+            }
+        } catch (\Exception $e) {
+            //
+        }
+
+        return response()->json($result);
+    }
+
+    public function liveHostingForm(Request $request)
+    {
+        $request->validate([
+            'name'                 => 'required|max:255',
+            'provider'             => 'required|max:255',
+            'host'                 => 'required|max:255',
+            'port'                 => 'required|integer',
+            'username'             => 'required|max:255',
+            'private_key_path'     => 'required|max:255',
+            'default_project_path' => 'required|max:255',
+            'description'          => 'nullable|max:1000',
+        ]);
+
+        HostingAccount::create([
+            'name'                 => $request->name,
+            'provider'             => $request->provider,
+            'host'                 => $request->host,
+            'port'                 => $request->port,
+            'username'             => $request->username,
+            'private_key_path'     => $request->private_key_path,
+            'default_project_path' => $request->default_project_path,
+            'description'          => $request->description,
+            'is_active'            => $request->has('is_active')
+
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Hosting account created successfully.'
         ]);
     }
 }

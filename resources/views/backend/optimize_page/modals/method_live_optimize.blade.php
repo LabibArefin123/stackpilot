@@ -7,9 +7,16 @@
                     Live Server Optimization
                 </h5>
 
-                <button class="close text-white" data-dismiss="modal">
-                    <span>&times;</span>
-                </button>
+                <div class="ml-auto d-flex align-items-center">
+                    <button type="button" class="btn btn-sm btn-primary mr-3" id="openHostingAccountModal">
+                        <i class="fas fa-plus-circle mr-1"></i>
+                        Add Hosting Account
+                    </button>
+
+                    <button type="button" class="close text-white" data-bs-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
             </div>
 
             <div class="modal-body">
@@ -83,7 +90,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
                     Cancel
                 </button>
 

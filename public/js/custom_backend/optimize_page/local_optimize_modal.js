@@ -1,10 +1,5 @@
 $(document).ready(function () {
-    /*
-    |--------------------------------------------------------------------------
-    | Local Optimize Modal
-    |--------------------------------------------------------------------------
-    */
-
+    /* Local Optimize Modal */
     $("#localOptimizeModal").on("shown.bs.modal", function () {
         $("#environmentResult").html(
             '<i class="fas fa-spinner fa-spin text-primary"></i> Detecting...',
@@ -26,28 +21,22 @@ $(document).ready(function () {
 
         $.ajax({
             url: "/optimization/local",
-
             type: "POST",
-
             dataType: "json",
 
             data: {
                 project_id: $("#selectedProject").val(),
-
                 _token: $('meta[name="csrf-token"]').attr("content"),
             },
 
             success: function (response) {
                 let environments = "Not Found";
-
                 if (response.environment.length > 0) {
                     environments = response.environment.join(", ");
                 }
 
                 $("#environmentResult").html(environments);
-
                 $("#projectPathResult").html(response.project_path ?? "-");
-
                 $("#phpExecutableResult").html(
                     response.artisan
                         ? '<span class="badge badge-success">artisan Found</span>'
@@ -85,38 +74,27 @@ $(document).ready(function () {
                 $("#phpVersionResult").html("-");
                 $("#phpExecutableResult").html("-");
                 $("#projectPathResult").html("-");
-
                 console.log(xhr.responseText);
             },
         });
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Run Local Optimize
-    |--------------------------------------------------------------------------
-    */
-
+    /* Run Local Optimize*/
     $("#runLocalOptimize").click(function () {
         let phpVersion = $("#phpVersionSelect").val();
 
         if (!phpVersion) {
             Swal.fire({
                 icon: "warning",
-
                 title: "PHP Version Required",
-
                 text: "Please select a PHP version.",
             });
-
             return;
         }
 
         Swal.fire({
             title: "Coming Soon",
-
             text: "Local optimization execution will be added next.",
-
             icon: "info",
         });
     });

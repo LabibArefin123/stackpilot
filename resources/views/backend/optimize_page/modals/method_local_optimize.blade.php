@@ -7,7 +7,7 @@
                     Local Laravel Optimization
                 </h5>
 
-                <button class="close text-white" data-dismiss="modal">
+                <button class="close text-white" data-bs-dismiss="modal">
                     <span>&times;</span>
                 </button>
             </div>
@@ -74,7 +74,7 @@
             </div>
 
             <div class="modal-footer">
-                <button class="btn btn-secondary" data-dismiss="modal">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
                     Cancel
                 </button>
 

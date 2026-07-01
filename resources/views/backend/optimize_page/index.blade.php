@@ -22,6 +22,7 @@
     @include('backend.optimize_page.modals.choose_optimize_modal')
     @include('backend.optimize_page.modals.method_local_optimize')
     @include('backend.optimize_page.modals.method_live_optimize')
+    @include('backend.optimize_page.modals.hosting_account_modal')
     @include('backend.partials.optimize_page.index_page.part_3')
     <div class="row">
         <div class="col-md-12">
@@ -80,5 +81,7 @@
         });
     </script>
     <script src="{{ asset('js/custom_backend/optimize_page/optimize_modal.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/optimize_page/hosting_modal.js') }}"></script>
     <script src="{{ asset('js/custom_backend/optimize_page/local_optimize_modal.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/optimize_page/live_optimize_modal.js') }}"></script>
 @endsection

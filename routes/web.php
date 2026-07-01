@@ -84,6 +84,8 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
 
     Route::resource('optimization', OptimizationController::class)->only(['index']);
     Route::post('/optimization/local', [OptimizationController::class, 'localOptimize'])->name('optimization.local');
+    Route::post('/optimization/live', [OptimizationController::class, 'liveOptimize'])->name('optimization.live');
+    Route::post('/optimization/hosting',[OptimizationController::class, 'liveHostingForm'])->name('optimization.hosting');
     Route::post('optimization/run', [OptimizationController::class, 'run'])->name('optimization.run');
 
     Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
