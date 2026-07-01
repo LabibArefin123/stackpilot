@@ -75,20 +75,20 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::resource('deployments', DeploymentController::class);
 
     /*COMPOSER PART*/
-    Route::get('composer/{project}/json', [ComposerController::class, 'show'])->name('composer.json');
-    Route::get('composer/{project}/packages', [ComposerController::class, 'packages'])->name('composer.packages');
-    Route::post('composer/{project}/terminal', [ComposerController::class, 'terminal'])->name('composer.terminal');
+    Route::get('composer/json', [ComposerController::class, 'show'])->name('composer.json');
+    Route::get('composer/packages', [ComposerController::class, 'packages'])->name('composer.packages');
+    Route::post('composer/terminal', [ComposerController::class, 'terminal'])->name('composer.terminal');
     Route::get('composer/installed-packages', [ComposerController::class, 'installedPackages'])->name('composer.installed-packages');
-    Route::get('/composer/terminal', [ComposerController::class, 'terminalPage'])->name('composer.terminal-page');
+    Route::get('/composer/terminal-page', [ComposerController::class, 'terminalPage'])->name('composer.terminal-page');
     Route::resource('composer', ComposerController::class);
 
     Route::resource('optimization', OptimizationController::class)->only(['index']);
     Route::post('/optimization/local', [OptimizationController::class, 'localOptimize'])->name('optimization.local');
     Route::post('/optimization/live', [OptimizationController::class, 'liveOptimize'])->name('optimization.live');
-    Route::post('/optimization/hosting',[OptimizationController::class, 'liveHostingForm'])->name('optimization.hosting');
+    Route::post('/optimization/hosting', [OptimizationController::class, 'liveHostingForm'])->name('optimization.hosting');
     Route::post('optimization/run', [OptimizationController::class, 'run'])->name('optimization.run');
-    Route::post('/optimization/check-server',[OptimizationController::class, 'checkServer'])->name('optimization.checkServer');
-    Route::post('/optimization/terminal',[OptimizationController::class, 'terminalFunction'])->name('optimization.terminal');
+    Route::post('/optimization/check-server', [OptimizationController::class, 'checkServer'])->name('optimization.checkServer');
+    Route::post('/optimization/terminal', [OptimizationController::class, 'terminalFunction'])->name('optimization.terminal');
     Route::get('/queue-monitor', [QueueMonitorController::class, 'index'])->name('queue.index');
 
     /*CRON PART*/

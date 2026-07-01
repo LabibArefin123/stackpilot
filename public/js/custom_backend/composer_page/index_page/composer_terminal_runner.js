@@ -6,51 +6,40 @@ const TerminalRunner = {
     },
 
     run() {
-        let project = $("#project").val();
+        const projectPath = $("#project").val();
+        const command = $("#customCommand").val().trim();
 
-        let command = $("#customCommand").val().trim();
-
-        if (project === "") {
+        if (!projectPath) {
             Swal.fire({
                 icon: "warning",
-
                 title: "Project Required",
-
                 text: "Please select a project.",
             });
-
             return;
         }
 
-        if (command === "") {
+        if (!command) {
             Swal.fire({
                 icon: "warning",
-
                 title: "Command Required",
-
                 text: "Please enter a command.",
             });
-
             return;
         }
 
         TerminalOutput.info("Running composer " + command + "...");
 
         $.ajax({
-            url: "/composer/" + project + "/terminal",
-
-            type: "POST",
-
+            url: composerTerminalRoute,
+            method: "GET",
             data: {
+                project_path: projectPath,
                 command: command,
-
-                _token: $('meta[name="csrf-token"]').attr("content"),
             },
 
             beforeSend() {
                 $("#runCommand")
                     .prop("disabled", true)
-
                     .html('<i class="fas fa-spinner fa-spin"></i> Running');
             },
 
@@ -61,8 +50,11 @@ const TerminalRunner = {
             error(xhr) {
                 let message = "Unknown Error";
 
-                if (xhr.responseJSON && xhr.responseJSON.message) {
-                    message = xhr.responseJSON.message;
+                if (xhr.responseJSON) {
+                    message =
+                        xhr.responseJSON.output ||
+                        xhr.responseJSON.message ||
+                        message;
                 }
 
                 TerminalOutput.error(message);
@@ -71,7 +63,6 @@ const TerminalRunner = {
             complete() {
                 $("#runCommand")
                     .prop("disabled", false)
-
                     .html('<i class="fas fa-play"></i> Run');
             },
         });

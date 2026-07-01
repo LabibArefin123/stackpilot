@@ -249,7 +249,8 @@
                             <td>
 
                                 <div class="btn-group">
-                                    <button class="btn btn-xs btn-primary btn-composer-json" data-id="{{ $project->id }}">
+                                    <button class="btn btn-xs btn-primary btn-composer-json"
+                                        data-path="{{ $project->project_path }}">
 
                                         <i class="fas fa-file-code"></i>
 
@@ -258,7 +259,7 @@
                                     </button>
 
                                     <button class="btn btn-xs btn-success btn-composer-packages"
-                                        data-id="{{ $project->id }}">
+                                        data-path="{{ $project->project_path }}">
 
                                         <i class="fas fa-cubes"></i>
 
@@ -304,6 +305,10 @@
     <div style="height: 50px;"></div>
 @endsection
 @push('js')
+    <script>
+        const composerShowRoute = "{{ route('composer.json') }}";
+        const composerPackagesRoute = "{{ route('composer.packages') }}";
+    </script>
     <script src="{{ asset('js/custom_backend/composer_page/index_page/composer_modal.js') }}"></script>
     <script src="{{ asset('js/custom_backend/composer_page/index_page/composer_packages.js') }}"></script>
 @endpush

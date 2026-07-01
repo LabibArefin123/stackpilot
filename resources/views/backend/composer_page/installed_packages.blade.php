@@ -33,10 +33,8 @@
                             <option value="">Choose Project</option>
 
                             @foreach ($projects as $project)
-                                <option value="{{ $project->id }}">
-
+                                <option value="{{ $project->project_path }}">
                                     {{ $project->name }}
-
                                 </option>
                             @endforeach
 
@@ -91,5 +89,8 @@
 @endsection
 
 @push('js')
+    <script>
+        const composerPackagesRoute = "{{ route('composer.packages') }}";
+    </script>
     <script src="{{ asset('js/custom_backend/composer_page/package_page/package_load.js') }}"></script>
 @endpush

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Services\GitRepositoryScanner;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 
 class ComposerController extends Controller
 {
@@ -15,60 +16,88 @@ class ComposerController extends Controller
     /**
      * Composer Dashboard
      */
-    public function index()
+
+    private function getProjects()
     {
-        $projects = Project::orderBy('name')
-            ->limit(5)
-            ->get();
+        $projects = [];
+        $laragonPath = 'E:\\laragon\\www';
 
-        foreach ($projects as $project) {
+        if (!File::exists($laragonPath)) {
+            return collect();
+        }
 
-            $path = $this->scanner->findRepository($project);
+        foreach (File::directories($laragonPath) as $directory) {
 
-            if (!$path) {
+            if (!File::exists($directory . DIRECTORY_SEPARATOR . 'artisan')) {
                 continue;
             }
 
-            $project->composer = [
+            $packages = $this->scanner->composerPackages($directory);
 
-                'version' => $this->scanner->composerVersion(),
+            $projects[] = (object) [
 
-                'json' => $this->scanner->composerJson($path),
+                'id' => md5($directory),
 
-                'packages' => $this->scanner->composerPackages($path),
+                'name' => basename($directory),
 
-                'package_count' => count(
-                    $this->scanner->composerPackages($path)
-                ),
+                'project_path' => $directory,
 
-                'lock' => $this->scanner->composerLockExists($path),
+                'composer' => [
 
-                'vendor' => $this->scanner->vendorExists($path),
+                    'version' => $this->scanner->composerVersion(),
 
-                'autoload' => $this->scanner->autoloadExists($path),
+                    'json' => $this->scanner->composerJson($directory),
 
-                'php' => $this->scanner->phpVersion($path),
+                    'packages' => $packages,
 
-                'laravel' => $this->scanner->laravelVersion($path),
+                    'package_count' => count($packages),
+
+                    'lock' => $this->scanner->composerLockExists($directory),
+
+                    'vendor' => $this->scanner->vendorExists($directory),
+
+                    'autoload' => $this->scanner->autoloadExists($directory),
+
+                    'php' => $this->scanner->phpVersion($directory),
+
+                    'laravel' => $this->scanner->laravelVersion($directory),
+
+                ],
 
             ];
         }
+
+        usort($projects, fn($a, $b) => strcmp($a->name, $b->name));
+
+        return collect($projects);
+    }
+
+    public function index()
+    {
+        $projects = $this->getProjects();
 
         return view(
             'backend.composer_page.index',
             compact('projects')
         );
     }
-
     /**
      * Ajax
      * Return composer.json
      */
-    public function show(Project $project)
+    public function show(Request $request)
     {
-        $path = $this->scanner->findRepository($project);
+        $request->validate([
+            'project_path' => 'required|string',
+        ]);
 
-        abort_if(!$path, 404);
+        $path = $request->project_path;
+
+        abort_if(
+            !File::exists($path . DIRECTORY_SEPARATOR . 'composer.json'),
+            404,
+            'composer.json not found.'
+        );
 
         return response()->json(
             $this->scanner->composerJson($path)
@@ -78,11 +107,19 @@ class ComposerController extends Controller
     /**
      * Ajax
      */
-    public function packages(Project $project)
+    public function packages(Request $request)
     {
-        $path = $this->scanner->findRepository($project);
+        $request->validate([
+            'project_path' => 'required|string',
+        ]);
 
-        abort_if(!$path, 404);
+        $path = $request->project_path;
+
+        abort_if(
+            !File::exists($path . DIRECTORY_SEPARATOR . 'composer.json'),
+            404,
+            'composer.json not found.'
+        );
 
         return response()->json(
             $this->scanner->composerPackages($path)
@@ -121,7 +158,7 @@ class ComposerController extends Controller
 
     public function installedPackages()
     {
-        $projects = Project::orderBy('name')->get();
+        $projects = $this->getProjects();
 
         return view(
             'backend.composer_page.installed_packages',
@@ -131,7 +168,7 @@ class ComposerController extends Controller
 
     public function terminalPage()
     {
-        $projects = Project::orderBy('name')->get();
+        $projects = $this->getProjects();
 
         return view(
             'backend.composer_page.terminal',

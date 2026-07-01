@@ -18,15 +18,17 @@ const TerminalActions = {
     },
 
     download() {
-        let text = $("#terminalOutput").text();
+        const text = $("#terminalOutput").text();
 
-        let blob = new Blob([text], {
+        const blob = new Blob([text], {
             type: "text/plain",
         });
 
-        let link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
 
-        link.href = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
 
         link.download = "composer_terminal.txt";
 
@@ -35,5 +37,7 @@ const TerminalActions = {
         link.click();
 
         document.body.removeChild(link);
+
+        URL.revokeObjectURL(url);
     },
 };

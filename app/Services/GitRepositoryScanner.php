@@ -402,29 +402,86 @@ class GitRepositoryScanner
 
     public function composerPackages(string $path): array
     {
-        $package = $path . DIRECTORY_SEPARATOR . 'package.json';
+        $packages = [];
 
-        if (!File::exists($package)) {
+        /*
+    |--------------------------------------------------------------------------
+    | composer.lock (Installed Packages)
+    |--------------------------------------------------------------------------
+    */
+
+        $lockFile = $path . DIRECTORY_SEPARATOR . 'composer.lock';
+
+        if (File::exists($lockFile)) {
+
+            $lock = json_decode(File::get($lockFile), true);
+
+            foreach ($lock['packages'] ?? [] as $package) {
+
+                $packages[] = [
+
+                    'name' => $package['name'] ?? '-',
+
+                    'version' => $package['version'] ?? '-',
+
+                    'type' => 'Dependency',
+
+                ];
+            }
+
+            foreach ($lock['packages-dev'] ?? [] as $package) {
+
+                $packages[] = [
+
+                    'name' => $package['name'] ?? '-',
+
+                    'version' => $package['version'] ?? '-',
+
+                    'type' => 'Dev Dependency',
+
+                ];
+            }
+
+            return $packages;
+        }
+
+        /*
+    |--------------------------------------------------------------------------
+    | composer.json (Fallback)
+    |--------------------------------------------------------------------------
+    */
+
+        $composerFile = $path . DIRECTORY_SEPARATOR . 'composer.json';
+
+        if (!File::exists($composerFile)) {
             return [];
         }
 
-        $json = json_decode(File::get($package), true);
+        $composer = json_decode(File::get($composerFile), true);
 
-        $packages = [];
+        foreach ($composer['require'] ?? [] as $name => $version) {
 
-        foreach ($json['dependencies'] ?? [] as $name => $version) {
             $packages[] = [
+
                 'name' => $name,
+
                 'version' => $version,
+
                 'type' => 'Dependency',
+
             ];
         }
 
-        foreach ($json['devDependencies'] ?? [] as $name => $version) {
+        foreach ($composer['require-dev'] ?? [] as $name => $version) {
+
             $packages[] = [
+
                 'name' => $name,
+
                 'version' => $version,
+
                 'type' => 'Dev Dependency',
+
             ];
         }
 

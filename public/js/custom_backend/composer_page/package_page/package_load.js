@@ -1,49 +1,101 @@
 $("#project").change(function () {
-    let id = $(this).val();
+    const projectPath = $(this).val();
 
-    if (id == "") return;
+    if (!projectPath) {
+        return;
+    }
 
-    let tbody = $("#packageTable tbody");
+    const tbody = $("#packageTable tbody");
 
-    tbody.html(
-        '<tr><td colspan="4" class="text-center"><i class="fas fa-spinner fa-spin"></i> Loading...</td></tr>',
-    );
+    tbody.html(`
+        <tr>
+            <td colspan="4" class="text-center">
+                <i class="fas fa-spinner fa-spin"></i>
+                Loading Packages...
+            </td>
+        </tr>
+    `);
 
-    $.get("/composer/" + id + "/packages", function (data) {
-        let html = "";
+    $.ajax({
+        url: composerPackagesRoute,
 
-        let i = 1;
+        method: "GET",
 
-        $.each(data, function (index, item) {
-            html += `
+        data: {
+            project_path: projectPath,
+        },
 
+        success(response) {
+            let html = "";
+
+            let i = 1;
+
+            $.each(response, function (_, item) {
+                html += `
+                    <tr>
+
+                        <td>${i++}</td>
+
+                        <td>${item.name}</td>
+
+                        <td>${item.version}</td>
+
+                        <td>
+
+                            <span class="badge badge-${
+                                item.type === "Dependency"
+                                    ? "success"
+                                    : "warning"
+                            }">
+
+                                ${item.type}
+
+                            </span>
+
+                        </td>
+
+                    </tr>
+                `;
+            });
+
+            if (html === "") {
+                html = `
+                    <tr>
+
+                        <td colspan="4" class="text-center">
+
+                            No Composer Packages Found
+
+                        </td>
+
+                    </tr>
+                `;
+            }
+
+            tbody.html(html);
+        },
+
+        error(xhr) {
+            let message = "Unable to load packages.";
+
+            if (xhr.responseJSON) {
+                message =
+                    xhr.responseJSON.message ||
+                    xhr.responseJSON.output ||
+                    message;
+            }
+
+            tbody.html(`
                 <tr>
 
-                    <td>${i++}</td>
+                    <td colspan="4" class="text-danger text-center">
 
-                    <td>${item.name}</td>
-
-                    <td>${item.version}</td>
-
-                    <td>
-
-                        <span class="badge badge-${item.type == "Dependency" ? "success" : "warning"}">
-
-                            ${item.type}
-
-                        </span>
+                        ${message}
 
                     </td>
 
                 </tr>
-
-            `;
-        });
-
-        if (html == "")
-            html =
-                '<tr><td colspan="4" class="text-center">No packages found.</td></tr>';
-
-        tbody.html(html);
+            `);
+        },
     });
 });

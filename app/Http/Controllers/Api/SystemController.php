@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use Symfony\Component\Process\Process;
 use Carbon\Carbon;
 
 class SystemController extends Controller
@@ -79,9 +80,7 @@ class SystemController extends Controller
     public function logs(Request $request)
     {
         $logs = [];
-
         $logPath = storage_path('logs');
-
         if (!File::isDirectory($logPath)) {
 
             return response()->json([
@@ -118,57 +117,37 @@ class SystemController extends Controller
         $level = null;
 
         while (($line = fgets($handle)) !== false) {
-
             $line = rtrim($line);
-
             if (preg_match('/^\[(.*?)\]\s+\w+\.([A-Z]+):\s(.*)$/', $line, $match)) {
-
                 if ($buffer !== '') {
-
                     $logs[] = [
-
                         'level' => $level,
-
                         'date' => optional($date)->toDateTimeString(),
-
                         'message' => strtok($buffer, "\n"),
-
                         'details' => $buffer,
-
                     ];
                 }
 
                 try {
-
                     $date = Carbon::parse($match[1]);
                 } catch (\Throwable $e) {
-
                     $date = null;
                 }
 
                 $level = $match[2];
-
                 $buffer = $match[3];
             } else {
-
                 $buffer .= PHP_EOL . trim($line);
             }
         }
 
         fclose($handle);
-
         if ($buffer !== '') {
-
             $logs[] = [
-
                 'level' => $level,
-
                 'date' => optional($date)->toDateTimeString(),
-
                 'message' => strtok($buffer, "\n"),
-
                 'details' => $buffer,
-
             ];
         }
 
@@ -178,12 +157,109 @@ class SystemController extends Controller
             ->values();
 
         return response()->json([
-
             'success' => true,
-
             'project' => config('app.name'),
-
             'logs' => $logs,
+        ]);
+    }
+
+    public function artisan(Request $request)
+    {
+        $request->validate([
+            'command' => 'required|string',
+        ]);
+
+        $allowedCommands = [
+            'optimize',
+            'optimize:clear',
+            'config:cache',
+            'config:clear',
+            'route:cache',
+            'route:clear',
+            'view:cache',
+            'view:clear',
+            'event:cache',
+            'event:clear',
+            'cache:clear',
+            'storage:link',
+            'migrate',
+            'migrate:fresh',
+            'db:seed',
+            'queue:restart',
+            'schedule:run',
+            'about',
+            'up',
+            'down',
+            'key:generate',
+        ];
+
+        $command = trim($request->command);
+
+        if (!in_array($command, $allowedCommands)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Command not allowed.'
+            ], 403);
+        }
+
+        try {
+
+            Artisan::call($command);
+            return response()->json([
+                'success' => true,
+                'command' => $command,
+                'output' => Artisan::output(),
+            ]);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function composer(Request $request)
+    {
+        $request->validate([
+            'command' => 'required|string',
+        ]);
+
+        $allowed = [
+            'install',
+            'update',
+            'dump-autoload',
+            'dump-autoload -o',
+            'clear-cache',
+            'diagnose',
+            'show',
+            'outdated',
+        ];
+
+        $command = trim($request->command);
+
+        if (!in_array($command, $allowed)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Composer command not allowed.'
+            ], 403);
+        }
+
+        $composer = 'composer';
+        $process = Process::fromShellCommandline(
+            $composer . ' ' . $command,
+            base_path()
+        );
+
+        $process->setTimeout(1800);
+        $process->run();
+
+        return response()->json([
+            'success' => $process->isSuccessful(),
+            'command' => 'composer ' . $command,
+            'output' =>
+            $process->getOutput() .
+                $process->getErrorOutput(),
 
         ]);
     }
