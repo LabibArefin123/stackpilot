@@ -253,7 +253,7 @@ class ProjectController extends Controller
         });
 
         return redirect()
-            ->route('backend.project_page.show', $project)
+            ->route('projects.index', $project)
             ->with('success', 'Project updated successfully.');
     }
 

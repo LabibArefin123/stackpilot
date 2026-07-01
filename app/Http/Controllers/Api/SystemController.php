@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
 
 class SystemController extends Controller
 {
@@ -71,6 +72,118 @@ class SystemController extends Controller
             'post_max_size' => ini_get('post_max_size'),
 
             'loaded_extensions' => get_loaded_extensions(),
+
+        ]);
+    }
+
+    public function logs(Request $request)
+    {
+        $logs = [];
+
+        $logPath = storage_path('logs');
+
+        if (!File::isDirectory($logPath)) {
+
+            return response()->json([
+                'success' => true,
+                'logs' => [],
+            ]);
+        }
+
+        $latest = collect(File::files($logPath))
+            ->filter(fn($file) => $file->getExtension() === 'log')
+            ->sortByDesc(fn($file) => $file->getMTime())
+            ->first();
+
+        if (!$latest) {
+
+            return response()->json([
+                'success' => true,
+                'logs' => [],
+            ]);
+        }
+
+        $handle = fopen($latest->getRealPath(), 'r');
+
+        if (!$handle) {
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Unable to read log file.',
+            ], 500);
+        }
+
+        $buffer = '';
+        $date = null;
+        $level = null;
+
+        while (($line = fgets($handle)) !== false) {
+
+            $line = rtrim($line);
+
+            if (preg_match('/^\[(.*?)\]\s+\w+\.([A-Z]+):\s(.*)$/', $line, $match)) {
+
+                if ($buffer !== '') {
+
+                    $logs[] = [
+
+                        'level' => $level,
+
+                        'date' => optional($date)->toDateTimeString(),
+
+                        'message' => strtok($buffer, "\n"),
+
+                        'details' => $buffer,
+
+                    ];
+                }
+
+                try {
+
+                    $date = Carbon::parse($match[1]);
+                } catch (\Throwable $e) {
+
+                    $date = null;
+                }
+
+                $level = $match[2];
+
+                $buffer = $match[3];
+            } else {
+
+                $buffer .= PHP_EOL . trim($line);
+            }
+        }
+
+        fclose($handle);
+
+        if ($buffer !== '') {
+
+            $logs[] = [
+
+                'level' => $level,
+
+                'date' => optional($date)->toDateTimeString(),
+
+                'message' => strtok($buffer, "\n"),
+
+                'details' => $buffer,
+
+            ];
+        }
+
+        $logs = collect($logs)
+            ->sortByDesc('date')
+            ->take(100)
+            ->values();
+
+        return response()->json([
+
+            'success' => true,
+
+            'project' => config('app.name'),
+
+            'logs' => $logs,
 
         ]);
     }

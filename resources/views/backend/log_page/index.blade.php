@@ -27,6 +27,8 @@
     @include('backend.partials.log_page.index_page.part_3')
     {{-- Laravel Logs --}}
     @include('backend.partials.log_page.index_page.part_4')
+    {{-- Live Logs --}}
+    @include('backend.partials.log_page.index_page.part_5')
     <div style="height: 50px;"></div>
 @stop
 
