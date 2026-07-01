@@ -7,6 +7,8 @@ use Symfony\Component\Process\Process;
 use Illuminate\Support\Facades\File;
 use App\Models\Project;
 use App\Models\HostingAccount;
+use phpseclib3\Net\SSH2;
+use phpseclib3\Crypt\PublicKeyLoader;
 
 class OptimizationController extends Controller
 {
@@ -14,6 +16,10 @@ class OptimizationController extends Controller
     {
         $projects = [];
         $laragonPath = 'E:\\laragon\www';
+
+        $hostingAccounts = HostingAccount::where('is_active', true)
+            ->orderBy('name')
+            ->get();
 
         if (File::exists($laragonPath)) {
             $directories = File::directories($laragonPath);
@@ -121,7 +127,8 @@ class OptimizationController extends Controller
             'backend.optimize_page.index',
             compact(
                 'commands',
-                'projects'
+                'projects',
+                'hostingAccounts'
             )
         );
     }
@@ -284,5 +291,149 @@ class OptimizationController extends Controller
             'success' => true,
             'message' => 'Hosting account created successfully.'
         ]);
+    }
+
+    public function checkServer(Request $request)
+    {
+        $request->validate([
+            'hosting_account_id' => 'required|exists:hosting_accounts,id',
+        ]);
+
+        $hosting = HostingAccount::findOrFail($request->hosting_account_id);
+
+        try {
+
+            /*
+        |--------------------------------------------------------------------------
+        | Private Key
+        |--------------------------------------------------------------------------
+        */
+
+            $keyPath = storage_path($hosting->private_key_path);
+
+            if (!file_exists($keyPath)) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Private SSH key not found: ' . $keyPath,
+                ], 422);
+            }
+
+            $privateKey = PublicKeyLoader::loadPrivateKey(
+                file_get_contents($keyPath)
+            );
+
+            /*
+        |--------------------------------------------------------------------------
+        | SSH Connection
+        |--------------------------------------------------------------------------
+        */
+
+            $ssh = new SSH2($hosting->host, (int) $hosting->port);
+
+            $ssh->setTimeout(15);
+
+            if (!$ssh->login($hosting->username, $privateKey)) {
+
+                return response()->json([
+                    'success' => false,
+                    'message' => 'SSH authentication failed. Please verify host, username and private key.',
+                ], 401);
+            }
+
+            /*
+        |--------------------------------------------------------------------------
+        | Server Information
+        |--------------------------------------------------------------------------
+        */
+
+            $hostname    = trim($ssh->exec('hostname'));
+            $currentUser = trim($ssh->exec('whoami'));
+            $currentPath = trim($ssh->exec('pwd'));
+            $phpVersion  = trim($ssh->exec('php -r "echo PHP_VERSION;"'));
+            $phpBinary   = trim($ssh->exec('which php'));
+
+            /*
+        |--------------------------------------------------------------------------
+        | Detect Laravel Projects
+        |--------------------------------------------------------------------------
+        */
+
+            $searchPath = $hosting->default_project_path;
+
+            $artisanFiles = trim(
+                $ssh->exec(
+                    'find ' . escapeshellarg($searchPath) . ' -name artisan 2>/dev/null'
+                )
+            );
+
+            $laravelProjects = [];
+
+            if (!empty($artisanFiles)) {
+
+                foreach (explode("\n", $artisanFiles) as $artisan) {
+
+                    if (!empty(trim($artisan))) {
+                        $laravelProjects[] = dirname(trim($artisan));
+                    }
+                }
+            }
+
+            /*
+        |--------------------------------------------------------------------------
+        | PHP Version Check
+        |--------------------------------------------------------------------------
+        */
+
+            $php82 = false;
+
+            if (!empty($phpVersion)) {
+
+                $php82 = version_compare($phpVersion, '8.2', '>=');
+            }
+
+            /*
+        |--------------------------------------------------------------------------
+        | Response
+        |--------------------------------------------------------------------------
+        */
+
+            return response()->json([
+
+                'success' => true,
+
+                'provider' => $hosting->provider,
+
+                'host' => $hosting->host,
+
+                'username' => $currentUser,
+
+                'hostname' => $hostname,
+
+                'status' => 'Online',
+
+                'php_version' => $phpVersion ?: 'Unknown',
+
+                'php_binary' => $phpBinary ?: 'Not Found',
+
+                'php82' => $php82,
+
+                'project_path' => $currentPath,
+
+                'laravel_found' => count($laravelProjects) > 0,
+
+                'laravel_projects' => $laravelProjects,
+
+            ]);
+        } catch (\Throwable $e) {
+
+            return response()->json([
+
+                'success' => false,
+
+                'message' => $e->getMessage(),
+
+            ], 500);
+        }
     }
 }

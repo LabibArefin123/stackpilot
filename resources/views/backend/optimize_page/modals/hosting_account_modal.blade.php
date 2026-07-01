@@ -12,7 +12,7 @@
                 </button>
             </div>
             <form id="hostingAccountForm">
-
+                @csrf
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6">
@@ -43,8 +43,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <hr>
 
                     <div class="row">
                         <div class="col-md-8">
@@ -110,19 +108,19 @@
                         </label>
                     </div>
                 </div>
+
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save mr-1"></i>
+                        Save Hosting Account
+                    </button>
+                </div>
             </form>
-
-            <div class="modal-footer">
-                <button class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
-                </button>
-
-                <button type="submit" class="btn btn-success">
-                    <i class="fas fa-save mr-1"></i>
-                    Save Hosting Account
-                </button>
-            </div>
-
         </div>
     </div>
 </div>

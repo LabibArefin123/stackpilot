@@ -84,4 +84,5 @@
     <script src="{{ asset('js/custom_backend/optimize_page/hosting_modal.js') }}"></script>
     <script src="{{ asset('js/custom_backend/optimize_page/local_optimize_modal.js') }}"></script>
     <script src="{{ asset('js/custom_backend/optimize_page/live_optimize_modal.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/optimize_page/live_server_ajax.js') }}"></script>
 @endsection

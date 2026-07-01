@@ -1,102 +1,37 @@
-<div class="modal fade" id="serverOptimizeModal">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header bg-warning">
-                <h5 class="modal-title">
-                    <i class="fas fa-server mr-2"></i>
-                    Live Server Optimization
-                </h5>
-
-                <div class="ml-auto d-flex align-items-center">
-                    <button type="button" class="btn btn-sm btn-primary mr-3" id="openHostingAccountModal">
-                        <i class="fas fa-plus-circle mr-1"></i>
-                        Add Hosting Account
-                    </button>
-
-                    <button type="button" class="close text-white" data-bs-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-            </div>
-
+<!-- Live Server Optimization Modal -->
+<div class="modal fade" id="serverOptimizeModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content shadow-lg border-0">
+            <!-- Header -->
+            @include('backend.optimize_page.modals.partials.part_1')
+            <!-- Body -->
             <div class="modal-body">
-                <div class="alert alert-info">
-                    The system will first verify whether this domain
-                    belongs to one of your hosting providers.
+                <!-- Information -->
+                <div class="alert alert-info shadow-sm">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    The system will verify the selected hosting account,
+                    detect the Laravel installation, check the PHP version,
+                    and confirm SSH/API access before optimization.
                 </div>
 
-                <table class="table table-bordered">
-                    <tr>
-                        <th width="220">
-                            Project Domain
-                        </th>
-
-                        <td id="liveDomain">
-                            --
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>
-                            Hosting Provider
-                        </th>
-
-                        <td id="hostingProvider">
-                            Checking...
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>
-                            Hosting Account
-                        </th>
-
-                        <td id="hostingAccount">
-                            Checking...
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>
-                            Server Status
-                        </th>
-
-                        <td id="serverStatus">
-                            Checking...
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <th>
-                            PHP Version
-                        </th>
-
-                        <td id="serverPhpVersion">
-                            Checking...
-                        </td>
-                    </tr>
-                </table>
-
-                <div class="alert alert-warning">
-                    Before running optimization, the system will verify:
-                    <ul class="mb-0">
-                        <li>Domain exists</li>
-                        <li>Hosting account found</li>
-                        <li>Laravel installation detected</li>
-                        <li>PHP 8.2+</li>
-                        <li>SSH/API access available</li>
-                    </ul>
+                <div class="row">
+                    <!-- LEFT SIDE -->
+                   @include('backend.optimize_page.modals.partials.part_2_a')
+                   <!-- RIGHT SIDE -->
+                   @include('backend.optimize_page.modals.partials.part_2_b')
                 </div>
             </div>
 
-            <div class="modal-footer">
+            <!-- Footer -->
+            <div class="modal-footer justify-content-between">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
+                    <i class="fas fa-times mr-2"></i>
+                    Close
                 </button>
 
-                <button class="btn btn-success" id="runServerOptimize">
-                    <i class="fas fa-bolt"></i>
-                    Optimize Server
+                <button class="btn btn-success btn-lg" id="runServerOptimize">
+                    <i class="fas fa-bolt mr-2"></i>
+                    Optimize Laravel Server
                 </button>
             </div>
         </div>
