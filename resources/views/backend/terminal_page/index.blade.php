@@ -19,6 +19,7 @@
 @stop
 
 @section('content')
+    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal.css') }}">
 
     <div class="container-fluid">
 
@@ -43,13 +44,7 @@
     </div>
 
     @include('backend.terminal_page.partials.part_4_shortcut_modal')
-
-@stop
-
-@section('css')
-
-    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal.css') }}">
-
+    <div style="height: 50px;"></div>
 @stop
 
 @section('js')
@@ -61,8 +56,11 @@
     <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_local_versions.js') }}"></script>
     <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_local_init.js') }}"></script>
 
-    <script src="{{ asset('js/terminal_live.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_live_terminal.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_live_project.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_live_server.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_live_init.js') }}"></script>
 
-    <script src="{{ asset('js/terminal_shortcuts.js') }}"></script>
+    <script src="{{ asset('js/custom_backend/terminal_page/shortcut_modal_init.js') }}"></script>
 
 @stop

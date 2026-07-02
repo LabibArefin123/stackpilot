@@ -1,4 +1,5 @@
-<div class="modal fade" id="shortcutModal" tabindex="-1">
+<div class="modal fade" id="shortcutModal" tabindex="-1" role="dialog" aria-labelledby="shortcutModalLabel"
+    aria-hidden="true">
 
     <div class="modal-dialog modal-xl">
 
@@ -14,7 +15,7 @@
 
                 </h4>
 
-                <button class="close" data-dismiss="modal">
+                <button class="close" data-bs-dismiss="modal">
 
                     ×
 
@@ -215,7 +216,7 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-secondary" data-dismiss="modal">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
 
                     Close
 
