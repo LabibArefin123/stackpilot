@@ -225,40 +225,70 @@ class TerminalController extends Controller
      */
     public function serverStatus(Request $request)
     {
-        $project = LiveProject::find($request->project_id);
+        $request->validate([
+            'project_id' => 'required|exists:live_projects,id',
+        ]);
 
-        if (!$project) {
+        $project = LiveProject::findOrFail($request->project_id);
 
-            return response()->json([
-                'success' => false,
-                'message' => 'Project not found.'
-            ]);
-        }
+        $url = rtrim($project->domain, '/') . '/' . ltrim($project->api_name, '/');
 
         try {
 
-            $url = rtrim($project->domain, '/') . $project->api_name;
+            $response = Http::acceptJson()
+                ->timeout(15)
+                ->retry(2, 500)
+                ->get($url);
 
-            $response = Http::timeout(10)->get($url);
+            if (!$response->successful()) {
+
+                return response()->json([
+
+                    'success' => false,
+
+                    'project' => $project->project_name,
+
+                    'url' => $url,
+
+                    'status' => $response->status(),
+
+                    'message' => 'Remote server returned HTTP ' . $response->status(),
+
+                ]);
+            }
+
+            $data = $response->json();
 
             return response()->json([
 
                 'success' => true,
+
                 'project' => $project->project_name,
+
                 'url' => $url,
+
                 'status' => $response->status(),
-                'online' => $response->successful(),
+
+                'online' => true,
+
+                'data' => $data,
 
             ]);
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
 
             return response()->json([
 
                 'success' => false,
+
                 'project' => $project->project_name,
+
+                'url' => $url,
+
+                'online' => false,
+
                 'message' => $e->getMessage(),
 
-            ]);
+            ], 500);
         }
     }
 

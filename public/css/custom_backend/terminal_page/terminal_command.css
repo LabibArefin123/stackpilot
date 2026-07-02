@@ -1,0 +1,67 @@
+/* =========================================================
+   Command Bar
+========================================================= */
+
+.terminal-command-bar {
+    background: #0f172a;
+    padding: 16px 18px;
+    border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.terminal-input-group {
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.22);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.terminal-prompt {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    color: #fff;
+    border: 0;
+    font-weight: 700;
+    min-width: 90px;
+    justify-content: center;
+}
+
+#terminalCommand {
+    border: 0;
+    box-shadow: none !important;
+    font-family: Consolas, Monaco, monospace;
+    font-size: 14px;
+    height: 48px;
+    background: #fff;
+    color: #0f172a;
+}
+
+#terminalCommand::placeholder {
+    color: #94a3b8;
+}
+
+.terminal-execute-btn {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    color: #fff;
+    border: 0;
+    padding: 0 18px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.terminal-execute-btn:hover {
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.terminal-clear-btn {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    color: #fff;
+    border: 0;
+    padding: 0 16px;
+    font-weight: 700;
+    transition: all 0.2s ease;
+}
+
+.terminal-clear-btn:hover {
+    color: #fff;
+    transform: translateY(-1px);
+}

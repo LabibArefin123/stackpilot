@@ -1,0 +1,141 @@
+/* =========================================================
+   Terminal Header
+========================================================= */
+
+.terminal-card-header {
+    background:
+        radial-gradient(
+            circle at top right,
+            rgba(59, 130, 246, 0.18),
+            transparent 28%
+        ),
+        linear-gradient(135deg, #0f172a, #1e293b);
+    border-bottom: 0;
+    padding: 18px 22px;
+}
+
+.terminal-header-inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+}
+
+.terminal-header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+}
+
+.terminal-header-icon {
+    width: 52px;
+    height: 52px;
+    min-width: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 21px;
+    box-shadow:
+        inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+        0 10px 24px rgba(0, 0, 0, 0.18);
+}
+
+.terminal-header-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+}
+
+.terminal-title {
+    color: #ffffff;
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    line-height: 1.2;
+}
+
+.terminal-subtitle {
+    color: rgba(255, 255, 255, 0.74);
+    margin-top: 5px;
+    font-size: 12.5px;
+    line-height: 1.45;
+    letter-spacing: 0.15px;
+    display: block;
+}
+
+.terminal-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.terminal-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(34, 197, 94, 0.16);
+    color: #d1fae5;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    white-space: nowrap;
+}
+
+.terminal-status-badge i {
+    font-size: 9px;
+}
+
+.terminal-shortcut-btn {
+    background: linear-gradient(135deg, #f59e0b, #f97316);
+    color: #fff;
+    border: 0;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(249, 115, 22, 0.25);
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.terminal-shortcut-btn:hover {
+    color: #fff;
+    transform: translateY(-1px);
+    box-shadow: 0 14px 28px rgba(249, 115, 22, 0.3);
+}
+
+@media (max-width: 767.98px) {
+    .terminal-header-inner {
+        align-items: flex-start;
+    }
+
+    .terminal-header-left {
+        width: 100%;
+    }
+
+    .terminal-header-right {
+        width: 100%;
+    }
+
+    .terminal-header-icon {
+        width: 44px;
+        height: 44px;
+        min-width: 44px;
+        border-radius: 13px;
+        font-size: 18px;
+    }
+
+    .terminal-shortcut-btn,
+    .terminal-status-badge {
+        width: 100%;
+        justify-content: center;
+    }
+}

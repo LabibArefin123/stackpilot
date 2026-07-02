@@ -19,7 +19,12 @@
 @stop
 
 @section('content')
-    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal_layout.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal_header.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal_info_cards.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal_console.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal_command.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/custom_backend/terminal_page/terminal_footer.css') }}">
 
     <div class="container-fluid">
 
@@ -51,6 +56,7 @@
 
     <script src="{{ asset('js/custom_backend/terminal_page/working_terminal.js') }}"></script>
 
+    <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_execute.js') }}"></script>
     <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_local_terminal.js') }}"></script>
     <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_local_projects.js') }}"></script>
     <script src="{{ asset('js/custom_backend/terminal_page/part_2_terminal_local_versions.js') }}"></script>
