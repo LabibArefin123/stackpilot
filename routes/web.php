@@ -9,7 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DashboardController;
 
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\TerminalPageController;
+use App\Http\Controllers\TerminalController;
 use App\Http\Controllers\GitMonitorController;
 use App\Http\Controllers\DeploymentController;
 use App\Http\Controllers\ComposerController;
@@ -54,8 +54,13 @@ Route::group(['middleware' => ['auth', 'permission']], function () {
     Route::get('/user_profile_edit', [ProfileController::class, 'user_profile_edit'])->name('user_profile_edit');
     Route::put('/user_profile_update', [ProfileController::class, 'user_profile_update'])->name('user_profile_update');
 
-    Route::get('/terminal', [TerminalPageController::class, 'index'])->name('terminal.index');
-    Route::post('/terminal/run', [TerminalPageController::class, 'run'])->name('terminal.run');
+    Route::get('/terminal', [TerminalController::class, 'index'])->name('terminal.index');
+    Route::get('/terminal/projects', [TerminalController::class, 'projects'])->name('terminal.projects');
+    Route::post('/terminal/create-folder', [TerminalController::class, 'createFolder'])->name('terminal.createFolder');
+    Route::get('/terminal/php', [TerminalController::class, 'detectPHP'])->name('terminal.detectPHP');
+    Route::get('/terminal/node', [TerminalController::class, 'detectNode'])->name('terminal.detectNode');
+    Route::get('/terminal/git', [TerminalController::class, 'detectGit'])->name('terminal.detectGit');
+    Route::post('/terminal/server-status', [TerminalController::class, 'serverStatus'])->name('terminal.serverStatus');
 
     /*PROJECT PART*/
     Route::get('projects/{project}/repository/search', [ProjectController::class, 'repositorySearch'])->name('projects.repository.search');
